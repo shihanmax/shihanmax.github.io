@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+
+  
+  <title>序列标注实践 | Shihanmax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。 序列标注问题的定义是：给定序列$S$，期望通过模型M得到序列中每一个token对应的标签序列$Z$，这里定义，$S$中每个词token的可能情况有$n_{word}$中，标签序列$Z$中的每一个标签tag的可能情况有$n_{tag}$种。 本文从噪声信道模型的角度对序列标注问题进行建模，并通过维特比算法优化最优路径的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="序列标注实践">
+<meta property="og:url" content="https://shihanmax.github.io/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="Shihanmax">
+<meta property="og:description" content="序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。 序列标注问题的定义是：给定序列$S$，期望通过模型M得到序列中每一个token对应的标签序列$Z$，这里定义，$S$中每个词token的可能情况有$n_{word}$中，标签序列$Z$中的每一个标签tag的可能情况有$n_{tag}$种。 本文从噪声信道模型的角度对序列标注问题进行建模，并通过维特比算法优化最优路径的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-10T09:16:03.000Z">
+<meta property="article:modified_time" content="2020-05-13T16:21:17.570Z">
+<meta property="article:author" content="MaShihan">
+<meta property="article:tag" content="pos tagging">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="http://shihanmax.top/20200319095233_93P1eu_banner3.jpeg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Shihanmax" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shihanmax</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">“不为斗粮，拉马车  却为风声，过万重山”</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">时间线</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shihanmax.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-序列标注实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/" class="article-date">
+  <time datetime="2020-05-10T09:16:03.000Z" itemprop="datePublished">2020-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      序列标注实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。</p>
+<p>序列标注问题的定义是：给定序列$S$，期望通过模型M得到序列中每一个token对应的标签序列$Z$，这里定义，$S$中每个词token的可能情况有$n_{word}$中，标签序列$Z$中的每一个标签tag的可能情况有$n_{tag}$种。</p>
+<p>本文从噪声信道模型的角度对序列标注问题进行建模，并通过维特比算法优化最优路径的搜索。</p>
+<a id="more"></a>
+
+<p>定义：$S=w_1w_2w_3…w_{N}$，对应的任一种标签序列为$Z=z_1z_2z_3…z_{N}$，目标是寻找最优的标签序列$\hat{Z}$。</p>
+<p>$$\begin{equation}\begin{aligned}  \hat{Z}&amp;=\mathop{argmax}_\limits{z}(P(Z\vert S)) \&amp;=\mathop{argmax}_\limits{z}(P(S\vert Z)\cdot P(Z)) \&amp;=\mathop{argmax}_\limits{z}(P(w_1w_2…w_N\vert z_1z_2…z_N) \cdot  P(z_1z_2…z_N))   \end{aligned}  \end{equation}$$</p>
+<p>上式中乘积的第一项为Translation model（TM）、第二项为Language model（LM）。</p>
+<p>在TM中引入独立假设，在LM中引入bi-gram假设，可得：</p>
+<p>$$\hat{Z}=\mathop{argmax}<em>\limits{z}( \prod_\limits{i=1}^{N}P(w_i\vert z_i)\cdot P(z_1)\cdot \prod_\limits{j=2}^N P(z_j\vert z</em>{j-1}))$$</p>
+<p>对概率进行对数化：</p>
+<p>$$\hat{Z}=\mathop{argmax}<em>\limits{z}( \sum_\limits{i=1}^{N} logP(w_i\vert z_i)+ log P(z_1)+ \sum_\limits{j=2}^N logP(z_j\vert z</em>{j-1}))$$</p>
+<p>相加的三项中，第一项为由标签到词的条件概率，记为$A$；第二项为标签出现在句首的概率，记为$B$，第三项为标签之间的转移概率，记为$\pi$。</p>
+<p>在有标注的数据集上，上述三项的概率能够通过统计得到。</p>
+<p>对于一条待标注的文本$S_u$，长度为$N$，其所有可能的标签序列有$n_{tag}^N$种，对所有情况可以计算概率$P(Z_i\vert S)$，取概率最大的标签序列即可。</p>
+<p>实际应用中，枚举所有种可能的效率是非常低的，因此需要使用更高效的算法来对路径进行剪枝。维特比算法是一种动态规划算法，用于多个步骤且每个步骤中有多种选择的问题的最优路径选择。维特比算法通过计算所有前序步骤到当前步骤的最小代价（或最大收益），以及当前步骤做选择时的代价（收益）来进行步骤的选择，最后，通过回溯法来选择最优路径。</p>
+<p>下面是上述过程在词性标注任务上的一种实现。</p>
+<p>训练数据的格式为：每行：词/词性</p>
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_mapper</span><span class="params">(train_data)</span>:</span></span><br><span class="line">    <span class="string">""" build token mapper and tag mapper """</span></span><br><span class="line">    tag2id = &#123;&#125;</span><br><span class="line">    id2tag = &#123;&#125;</span><br><span class="line">    word2id = &#123;&#125;</span><br><span class="line">    id2word = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    word_count = <span class="number">0</span></span><br><span class="line">    tag_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(train_data) <span class="keyword">as</span> fr:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">            sp_line = line.strip().split(<span class="string">"/"</span>)</span><br><span class="line">            <span class="keyword">if</span> len(sp_line) != <span class="number">2</span>:</span><br><span class="line">                tag = sp_line[<span class="number">-1</span>]</span><br><span class="line">                word = <span class="string">"/"</span>.join(sp_line[:<span class="number">-1</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                word = sp_line[<span class="number">0</span>]</span><br><span class="line">                tag = sp_line[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> word2id:</span><br><span class="line">                word2id[word] = word_count</span><br><span class="line">                id2word[word_count] = word</span><br><span class="line"></span><br><span class="line">                word_count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> tag <span class="keyword">not</span> <span class="keyword">in</span> tag2id:</span><br><span class="line">                tag2id[tag] = tag_count</span><br><span class="line">                id2tag[tag_count] = tag</span><br><span class="line"></span><br><span class="line">                tag_count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    n_word = len(word2id)</span><br><span class="line">    n_tag = len(tag2id)</span><br><span class="line">    print(<span class="string">"word size:&#123;&#125;"</span>.format(n_word))</span><br><span class="line">    print(<span class="string">"tag size:&#123;&#125;"</span>.format(n_tag))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> word2id, id2word, tag2id, id2tag, n_word, n_tag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_params</span><span class="params">(word2id, tag2id, n_tag, n_word, train_data)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    build params of HMM: theta = (pi, A, B)</span></span><br><span class="line"><span class="string">    - pi is a vector marks the probe of each tag to be the first tag</span></span><br><span class="line"><span class="string">      of a sentence, size: [1, n_tag]</span></span><br><span class="line"><span class="string">    - A is a matrix of condition probe of words given tags,size: [n_tag, n_word]</span></span><br><span class="line"><span class="string">    - B is a matrix of transition probe between tags, size: [n_tag, n_tag]"""</span></span><br><span class="line"></span><br><span class="line">    pi = np.zeros(n_tag)  <span class="comment"># probe of starting tag</span></span><br><span class="line">    a = np.zeros((n_tag, n_word))  <span class="comment"># condition probe p(word|tag)</span></span><br><span class="line">    b = np.zeros((n_tag, n_tag))  <span class="comment"># transition probe p(tag_i|tag_j)</span></span><br><span class="line"></span><br><span class="line">    at_start_of_sentence = <span class="literal">True</span></span><br><span class="line">    last_tag_id = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(train_data) <span class="keyword">as</span> fr:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">            word, tag = line.strip().split(<span class="string">"/"</span>)</span><br><span class="line">            word_id = word2id.get(word)</span><br><span class="line">            tag_id = tag2id.get(tag)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> at_start_of_sentence:</span><br><span class="line">                pi[tag_id] += <span class="number">1</span>  <span class="comment"># starting prob</span></span><br><span class="line">                a[tag_id, word_id] += <span class="number">1</span>  <span class="comment"># cond. prob</span></span><br><span class="line">                at_start_of_sentence = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                a[tag_id, word_id] += <span class="number">1</span>  <span class="comment"># cond. prob</span></span><br><span class="line">                b[last_tag_id, tag_id] += <span class="number">1</span>  <span class="comment"># trans. probe</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> word == <span class="string">"."</span>:</span><br><span class="line">                at_start_of_sentence = <span class="literal">True</span></span><br><span class="line">                last_tag_id = <span class="literal">None</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                last_tag_id = tag_id</span><br><span class="line"></span><br><span class="line">    <span class="comment"># done counting, normalize...</span></span><br><span class="line">    pi /= sum(pi)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_tag):</span><br><span class="line">        a[i] /= sum(a[i])</span><br><span class="line">        b[i] /= sum(b[i])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pi, a, b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(num)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> num == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> np.log(<span class="number">1e-8</span>)</span><br><span class="line">    <span class="keyword">return</span> np.log(num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">viterbi</span><span class="params">(sentence, pi, a, b, word2id, id2tag)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    decode with viterbi</span></span><br><span class="line"><span class="string">    :param sentence: sentence to decode</span></span><br><span class="line"><span class="string">    :param pi: init probe of tag</span></span><br><span class="line"><span class="string">    :param a: cond probe of words given tags</span></span><br><span class="line"><span class="string">    :param b: trans probe between tags</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    x = [word2id[word] <span class="keyword">for</span> word <span class="keyword">in</span> sentence.split()]  <span class="comment"># words of sentence</span></span><br><span class="line"></span><br><span class="line">    t = len(x)</span><br><span class="line">    n_tag = len(tag2id)</span><br><span class="line"></span><br><span class="line">    dp = np.zeros((t, n_tag))</span><br><span class="line">    path_record = np.array([[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(n_tag)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(n_tag)])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n_tag):</span><br><span class="line">        dp[<span class="number">0</span>][j] = log(pi[j]) + log(a[j, x[<span class="number">0</span>]])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># dp</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, t):  <span class="comment"># 每个单词</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n_tag):  <span class="comment"># 每个词性</span></span><br><span class="line">            dp[i][j] = <span class="number">-1e6</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(n_tag):</span><br><span class="line">                score = dp[i<span class="number">-1</span>][k] + log(b[k][j]) + log(a[j, x[i]])</span><br><span class="line">                <span class="keyword">if</span> score &gt; dp[i, j]:</span><br><span class="line">                    dp[i, j] = score</span><br><span class="line">                    path_record[i, j] = k</span><br><span class="line"></span><br><span class="line">    <span class="comment"># find best sequence</span></span><br><span class="line">    best_tag_sequence = [<span class="number">0</span>] * t</span><br><span class="line"></span><br><span class="line">    best_tag_sequence[t<span class="number">-1</span>] = np.argmax(dp[t<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(t<span class="number">-2</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">        best_tag_sequence[i] = path_record[i + <span class="number">1</span>, best_tag_sequence[i+<span class="number">1</span>]]</span><br><span class="line"></span><br><span class="line">    tag_sequence = [id2tag[idx] <span class="keyword">for</span> idx <span class="keyword">in</span> best_tag_sequence]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tag_sequence</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">train_data_path = <span class="string">"./resource/traindata.txt"</span></span><br><span class="line">test_sentence = <span class="string">"The big question is whether the president will have the strength ."</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. build mapper of words and tags</span></span><br><span class="line">word2id, id2word, tag2id, id2tag, n_word, n_tag = build_mapper(train_data_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. \theta = (\pi, A, B), build them</span></span><br><span class="line">pi, a, b = build_params(word2id, tag2id, n_tag, n_word, train_data_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. find optimal path with viterbi</span></span><br><span class="line"></span><br><span class="line">tag_sequence = viterbi(test_sentence, pi, a, b, word2id, id2tag)</span><br><span class="line">print(tag_sequence)  <span class="comment"># ['DT', 'JJ', 'NN', 'VBZ', 'IN', 'DT', 'NN', 'MD', 'VB', 'DT', 'NN', '.']</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/" data-id="ckbok1pqx000yyuuzfkjl0aij" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pos-tagging/" rel="tag">pos tagging</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">动态时间规整（DTW）算法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-learning/">Machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NLP/">NLP</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CP/" style="font-size: 20px;">CP</a> <a href="/tags/Chatbot/" style="font-size: 10px;">Chatbot</a> <a href="/tags/DTW/" style="font-size: 10px;">DTW</a> <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/GC/" style="font-size: 10px;">GC</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/LR/" style="font-size: 10px;">LR</a> <a href="/tags/NB/" style="font-size: 10px;">NB</a> <a href="/tags/PGM/" style="font-size: 10px;">PGM</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/language/" style="font-size: 10px;">language</a> <a href="/tags/pos-tagging/" style="font-size: 10px;">pos tagging</a> <a href="/tags/text-classification/" style="font-size: 10px;">text classification</a> <a href="/tags/transfer-learning/" style="font-size: 10px;">transfer learning</a> <a href="/tags/%E5%85%83%E7%B1%BB/" style="font-size: 10px;">元类</a> <a href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 10px;">序列相似度</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">机器学习</a> <a href="/tags/%E6%A6%82%E7%8E%87/" style="font-size: 10px;">概率</a> <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">概率图模型</a> <a href="/tags/%E7%94%98%E8%82%83/" style="font-size: 10px;">甘肃</a> <a href="/tags/%E9%9D%92%E6%B5%B7/" style="font-size: 10px;">青海</a> <a href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" style="font-size: 10px;">青海湖</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MaShihan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">时间线</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

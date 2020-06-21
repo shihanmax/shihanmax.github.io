@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+
+  
+  <title>动态时间规整（DTW）算法 | Shihanmax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="工作中遇到了涉及不等长序列的近似度计算的问题，这里把阅读过的资料整理一下，方便以后参考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态时间规整（DTW）算法">
+<meta property="og:url" content="https://shihanmax.github.io/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Shihanmax">
+<meta property="og:description" content="工作中遇到了涉及不等长序列的近似度计算的问题，这里把阅读过的资料整理一下，方便以后参考。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://shihanmax.top/20200225190714_4seWYG_Screenshot.jpeg">
+<meta property="og:image" content="http://shihanmax.top/20200225190809_bC3SkL_Screenshot.jpeg">
+<meta property="og:image" content="http://shihanmax.top/20200225174006_6P6yzF_20130620200949125.jpeg">
+<meta property="article:published_time" content="2020-02-25T10:02:20.000Z">
+<meta property="article:modified_time" content="2020-03-18T05:07:32.550Z">
+<meta property="article:author" content="MaShihan">
+<meta property="article:tag" content="序列相似度">
+<meta property="article:tag" content="DTW">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://shihanmax.top/20200225190714_4seWYG_Screenshot.jpeg">
+  
+  
+    <link rel="icon" href="http://shihanmax.top/20200319095233_93P1eu_banner3.jpeg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Shihanmax" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shihanmax</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">“不为斗粮，拉马车  却为风声，过万重山”</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">时间线</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shihanmax.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-动态时间规整DTW算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-02-25T10:02:20.000Z" itemprop="datePublished">2020-02-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Algorithm/">Algorithm</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      动态时间规整（DTW）算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>工作中遇到了涉及不等长序列的近似度计算的问题，这里把阅读过的资料整理一下，方便以后参考。</p>
+<a id="more"></a>
+
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>在序列相似度比较的任务中，对于一些在某个维度上可以延展或者压缩的信号来说，如果直接使用传统的序列距离计算方法（如欧式距离）来衡量序列的相似度的话，是不合适的。（如同一个人慢速和快速讲同一句话。）</p>
+<p>这个时候，我们需要对待比较的若干组序列信息从某个维度上进行延展或压缩，使得序列之间更好地对其（如波峰、波谷的对其），对语音信号来说，也就是对语音波形在时间轴上进行规整，DTW算法称这种操作为Wrapping。</p>
+<p><img src="http://shihanmax.top/20200225190714_4seWYG_Screenshot.jpeg" alt="dtw_1"></p>
+<h2 id="2-DTW"><a href="#2-DTW" class="headerlink" title="2. DTW"></a>2. DTW</h2><p>这里以两个待比较的时间序列$P$、$Q$为例：$P$的长度为$m$、$Q$的长度为$n$，则序列$P$、$Q$分别为：</p>
+<p>$$P=p_1,p_2,…p_i,…p_m$$</p>
+<p>$$Q=q_1,q_2,…,q_j,…q_n$$</p>
+<p>目标：合理地计算出序列$P$、$Q$的相似度</p>
+<p>无论$m$和$n$是否相等，我们都需要对序列中的元素进行对齐，（比如线性缩放，但线性缩放明显不满足我们的要求。）</p>
+<p>为了对其$P$和$Q$，需要构造一个$m \times n$的矩阵$A$，其中$A(i,j)$代表$P_i$和$Q_j$两个元素的距离$d(P_i,Q_j)$，这个距离计算函数$d(\cdot)$可以是适合的相似度计算方法，如简单的欧氏距离。对齐点的寻找相当于在矩阵A中寻找一个经过若干个格点的一条路径，该路径上任一点$P(x,y)$表示序列中$P_x$与$Q_y$对齐。</p>
+<p><img src="http://shihanmax.top/20200225190809_bC3SkL_Screenshot.jpeg" alt="dtw_matrix"></p>
+<p>我们将；路径定义为Wrapping Path，用$W$表示，$W$的第$k$个元素为：</p>
+<p>$$W_k=(i,j)_k$$</p>
+<p>$$W=w_1,w_2,…,w_K\quad \quad max(m,n)\le K\lt m+n-1$$</p>
+<p>路径W应满足一下约束：</p>
+<ol>
+<li>边界条件：$W_1=(1,1)$，$W_K=(m,n)$，即两序列的起始和终止位置必须对齐</li>
+<li>连续性：如果$W_{k-1}=(a’,b’)$，则$W_k=(a,b)$必须满足$(a-a’) \le 1$且$(b-b’) \le 1$</li>
+<li>单调性：如果$W_{k-1}=(a’,b’)$，则$W_k=(a,b)$必须满足$(a-a’) \ge 0$ 且$(b-b’) \ge 0$，此条保证路径随时间单调进行</li>
+</ol>
+<p>通过2、3两个条件的约束，在路径$W$的任意位置，寻找下一个路径点时，路径的行进方向仅有三种可能：</p>
+<p><img src="http://shihanmax.top/20200225174006_6P6yzF_20130620200949125.jpeg" alt="下一个路径点的寻找方向"></p>
+<p>满足上述约束条件的路径数量有指数多种，我们要寻找的是，使得规整代价最小的路径:</p>
+<p>$$DTW(P,Q)=min(\sqrt{\sum_{k=1}^K} /K)$$</p>
+<p>DTW的思想是将两个序列在时间维度上进行延伸和压缩，最终得到一个最短的路径，这个距离也即是两个序列的距离度量。</p>
+<p>最短路径可以使用动态规划计算，定义累加距离$\gamma$，在矩阵$A$的某一格$A(i,j)$上，累加距离的递推公式为：</p>
+<p>$$\gamma_{i,j}=d(p_i,q_j)+min(\gamma_{i-1,j-1},\gamma_{i-1,j},\gamma_{i, j-1})$$</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.csdn.net/zouxy09/article/details/9140207" target="_blank" rel="noopener">1. 语音信号处理之（一）动态时间规整（DTW）</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Dynamic_time_warping" target="_blank" rel="noopener">2. Wikipedia-DTW</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/" data-id="ckbok1pqw000vyuuz5bzmdbpg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DTW/" rel="tag">DTW</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" rel="tag">序列相似度</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          序列标注实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">How transferable are features in deep neural networks</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-learning/">Machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NLP/">NLP</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CP/" style="font-size: 20px;">CP</a> <a href="/tags/Chatbot/" style="font-size: 10px;">Chatbot</a> <a href="/tags/DTW/" style="font-size: 10px;">DTW</a> <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/GC/" style="font-size: 10px;">GC</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/LR/" style="font-size: 10px;">LR</a> <a href="/tags/NB/" style="font-size: 10px;">NB</a> <a href="/tags/PGM/" style="font-size: 10px;">PGM</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/language/" style="font-size: 10px;">language</a> <a href="/tags/pos-tagging/" style="font-size: 10px;">pos tagging</a> <a href="/tags/text-classification/" style="font-size: 10px;">text classification</a> <a href="/tags/transfer-learning/" style="font-size: 10px;">transfer learning</a> <a href="/tags/%E5%85%83%E7%B1%BB/" style="font-size: 10px;">元类</a> <a href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 10px;">序列相似度</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">机器学习</a> <a href="/tags/%E6%A6%82%E7%8E%87/" style="font-size: 10px;">概率</a> <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">概率图模型</a> <a href="/tags/%E7%94%98%E8%82%83/" style="font-size: 10px;">甘肃</a> <a href="/tags/%E9%9D%92%E6%B5%B7/" style="font-size: 10px;">青海</a> <a href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" style="font-size: 10px;">青海湖</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MaShihan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">时间线</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

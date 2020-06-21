@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+
+  
+  <title>Shihanmax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Shihanmax">
+<meta property="og:url" content="https://shihanmax.github.io/index.html">
+<meta property="og:site_name" content="Shihanmax">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="MaShihan">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="http://shihanmax.top/20200319095233_93P1eu_banner3.jpeg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Shihanmax" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shihanmax</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">“不为斗粮，拉马车  却为风声，过万重山”</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">时间线</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shihanmax.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-序列标注实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/" class="article-date">
+  <time datetime="2020-05-10T09:16:03.000Z" itemprop="datePublished">2020-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。</p>
+<p>序列标注问题的定义是：给定序列$S$，期望通过模型M得到序列中每一个token对应的标签序列$Z$，这里定义，$S$中每个词token的可能情况有$n_{word}$中，标签序列$Z$中的每一个标签tag的可能情况有$n_{tag}$种。</p>
+<p>本文从噪声信道模型的角度对序列标注问题进行建模，并通过维特比算法优化最优路径的搜索。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/" data-id="ckbok1pqx000yyuuzfkjl0aij" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pos-tagging/" rel="tag">pos tagging</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-动态时间规整DTW算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-02-25T10:02:20.000Z" itemprop="datePublished">2020-02-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Algorithm/">Algorithm</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>工作中遇到了涉及不等长序列的近似度计算的问题，这里把阅读过的资料整理一下，方便以后参考。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/" data-id="ckbok1pqw000vyuuz5bzmdbpg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DTW/" rel="tag">DTW</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" rel="tag">序列相似度</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-How transferable are features in deep neural networks" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/" class="article-date">
+  <time datetime="2019-08-22T11:38:33.000Z" itemprop="datePublished">2019-08-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson</p>
+<p>本文通过实验考察从网络第一层的强泛化能力的特征到最后一层的任务相关的特征之间的转变过程。对神经元的泛化能力（generality）以及特异性（specificity）进行量化分析。</p>
+<p>迁移能力 受两个因素影响：</p>
+<ul>
+<li>后层的神经元更专注于特定的任务</li>
+<li>优化自适应（co-adapted）神经元的困难</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/" data-id="ckbok1pqn0009yuuzdj9p72sq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transfer-learning/" rel="tag">transfer learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-青甘环线" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/" class="article-date">
+  <time datetime="2019-06-20T08:18:22.000Z" itemprop="datePublished">2019-06-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>以此文纪念印象深刻的西北毕业旅行。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/" data-id="ckbok1pr4001cyuuzgd2rdp05" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%94%98%E8%82%83/" rel="tag">甘肃</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%92%E6%B5%B7/" rel="tag">青海</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" rel="tag">青海湖</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-语义相似度" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" class="article-date">
+  <time datetime="2019-03-27T16:00:00.000Z" itemprop="datePublished">2019-03-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:<br>A STUDY AND AN OPEN TASK》阅读笔记</p>
+<p>文章整理并开源了首个保险领域的问答数据集，在此数据集上探讨了不同CNN架构以及不同的相似度评价方法对语义相似度模型效果的影响。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" data-id="ckbok1pr10018yuuz6f7g5rvt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/text-classification/" rel="tag">text classification</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Chatbot研究进展" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/" class="article-date">
+  <time datetime="2019-03-25T16:00:00.000Z" itemprop="datePublished">2019-03-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/">Recent advances in conversational NLP</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>论文《Recent advances in conversational NLP :<br>Towards the standardization of Chatbot building》阅读笔记</p>
+<p>From：Maali Mnasri（<a href="mailto:maali@opla.ai">maali@opla.ai</a>）</p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>chatbot在日常生活中越来越重要，易用程度也在不断提升。本文针对目前的对话系统作了综述性研究，再文章最后讨论了各个实现方法的优缺点对比，并提出了对话系统标准化的思考。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>Conversational agents（与后文dialogue system、以及工业和媒体使用的chatbots义同，简称CA）越来越常见，如个人手持设备的个人助理、商业网站的售货机器人等，这些系统旨在通过语音或文本与人类进行流畅的对话沟通。在AI领域，建立智能的CA仍是一个未解决的难题。本文总结了目前流行的对话系统实现方法，并对主流实现方法进行了对比。</p>
+<p>尽管距第一个CA被提出已经过去很多年了，但这个领域仍然越来越活跃，这与近年来AI、NLP领域技术的迅速发展有关。目前有很多丰富的方法来实现CA，但能够使研究者专注于CA性能提升的工具却很缺乏，本文第6节会讨论相关问题。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/" data-id="ckbok1pqg0001yuuzcp5k90wn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Chatbot/" rel="tag">Chatbot</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-逻辑回归(Logistic Regression)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/" class="article-date">
+  <time datetime="2019-03-18T16:00:00.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/">机器学习算法之逻辑回归(Logistic Regression)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="A-模型推导"><a href="#A-模型推导" class="headerlink" title="A. 模型推导"></a>A. 模型推导</h3><p>现有样本集合${X,y}$，$X$为特征${x_1,x_2,…,x_n}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y=h_\theta(x)$，其中，</p>
+<p>$$h_\theta(x)=\sum \theta_ ix_i$$</p>
+<p>在逻辑回归中，$y$属于集合${0,1}$，$1$表示属于某类别，而$0$表示不属于该类别。</p>
+<p>期望得到模型$M$，使得$M(x)\in[0,1]$，这样能够较为方便地衡量$x$属于该类别的概率。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/" data-id="ckbok1pr00016yuuz5s0k7me0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LR/" rel="tag">LR</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Tensorflow同时加载多个模型的问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/18/Tensorflow%E5%90%8C%E6%97%B6%E5%8A%A0%E8%BD%BD%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2019-03-18T09:38:00.000Z" itemprop="datePublished">2019-03-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/18/Tensorflow%E5%90%8C%E6%97%B6%E5%8A%A0%E8%BD%BD%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98/">使用Tensotflow同时加载多个模型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用单个模型时，一种模型的保存和加载的方式如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入/输出定义</span></span><br><span class="line">x = tf.placeholder(dtype, name)</span><br><span class="line">y = tf.placeholder(dtype, name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 权重定义</span></span><br><span class="line">weight = tf.Variable(shape, dtype)</span><br><span class="line"></span><br><span class="line"><span class="comment"># op定义</span></span><br><span class="line">output = some_operation(x, weight)</span><br><span class="line">loss = tf.calc_loss(output, y)</span><br><span class="line">train_op = optimizer.minimize(loss, name)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(tf.global_variables_initializer())</span><br><span class="line">    saver = tf.train.Saver()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># do some train 训练</span></span><br><span class="line">    </span><br><span class="line">    saver.save(sess, <span class="string">"./model/model_path"</span>)  <span class="comment"># 保存模型</span></span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/03/18/Tensorflow%E5%90%8C%E6%97%B6%E5%8A%A0%E8%BD%BD%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/18/Tensorflow%E5%90%8C%E6%97%B6%E5%8A%A0%E8%BD%BD%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckbok1pqu000oyuuz0vvz1n7v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow/" rel="tag">Tensorflow</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-RNN-Training-Tips-and-Tricks" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/25/RNN-Training-Tips-and-Tricks/" class="article-date">
+  <time datetime="2019-01-24T16:00:00.000Z" itemprop="datePublished">2019-01-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/25/RNN-Training-Tips-and-Tricks/">RNN Training Tips and Tricks</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文是一些在训练RNN模型的技巧和建议，来自<a href="https://github.com/karpathy/char-rnn#tips-and-tricks" target="_blank" rel="noopener">Andrej Karpathy</a>.</p>
+<h2 id="监视训练集和验证集损失"><a href="#监视训练集和验证集损失" class="headerlink" title="监视训练集和验证集损失"></a>监视训练集和验证集损失</h2><p>机器学习、神经网络方面的新手可能需要掌握更多的技巧才能训练出一个好的模型。首要关注的是训练集损失（训练时输出）和验证集损失（指定迭代次数后将模型在验证集上跑一遍，得到验证集损失），特别地：</p>
+<ul>
+<li>如果训练集损失比验证集损失低很多，这意味着我们的模型可能过拟合了，解决办法是，减小网络的规模，或者增大dropout率，比如调整到0.5</li>
+<li>如果训练集/测试集误差处在同一个水平上，模型很有可能欠拟合，此时需要增大网络规模（网络层数或者每层的神经元个数）</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/25/RNN-Training-Tips-and-Tricks/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/01/25/RNN-Training-Tips-and-Tricks/" data-id="ckbok1pqr000gyuuz1i5m07lu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-CRF,HMM,MEMM的区别和联系" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/22/CRF,HMM,MEMM%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB/" class="article-date">
+  <time datetime="2018-12-21T16:00:00.000Z" itemprop="datePublished">2018-12-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/22/CRF,HMM,MEMM%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB/">CRF,HMM,MEMM的区别和联系</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="生成式模型和判别式模型"><a href="#生成式模型和判别式模型" class="headerlink" title="生成式模型和判别式模型"></a>生成式模型和判别式模型</h2><p>已知输入$x$和标签$y$：</p>
+<ul>
+<li>判别式模型估计条件概率分布$p(y\mid x)$，常见的算法有：LR，SVM，神经网络，KNN，CRF，LDA，线性回归</li>
+<li>生成式模型估计联合概率$p(x,y)$，常见的的有Naive Bayes，HMM</li>
+</ul>
+<h2 id="CRF、HMM、MEMM的对比"><a href="#CRF、HMM、MEMM的对比" class="headerlink" title="CRF、HMM、MEMM的对比"></a>CRF、HMM、MEMM的对比</h2><p>CRF、HMM、MEMM（最大熵隐马模型）是序列标注任务中常用的三种模型，他们各有优缺点，以下从不同的角度对比这三者。</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/22/CRF,HMM,MEMM%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2018/12/22/CRF,HMM,MEMM%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB/" data-id="ckbok1pqd0000yuuzdkvue5k6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PGM/" rel="tag">PGM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" rel="tag">概率图模型</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-一种检测CP结构和社区结构的联合算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/20/%E4%B8%80%E7%A7%8D%E6%A3%80%E6%B5%8BCP%E7%BB%93%E6%9E%84%E5%92%8C%E7%A4%BE%E5%8C%BA%E7%BB%93%E6%9E%84%E7%9A%84%E8%81%94%E5%90%88%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2018-12-19T16:00:00.000Z" itemprop="datePublished">2018-12-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/20/%E4%B8%80%E7%A7%8D%E6%A3%80%E6%B5%8BCP%E7%BB%93%E6%9E%84%E5%92%8C%E7%A4%BE%E5%8C%BA%E7%BB%93%E6%9E%84%E7%9A%84%E8%81%94%E5%90%88%E7%AE%97%E6%B3%95/">一种检测CP结构和社区结构的联合算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Bing-Bing Xiang et.al</p>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>C-P结构和社区结构是复杂网络中的两种典型的中尺度结构。社区发现已经被广泛研究，而C-P结构的定义和检测相关的研究却不多。并且，目前社区结构的检测和C-P结构的检测是分开进行的。本文中，我们提出了一种同时检测复杂网络中的C-P结构和社区结构的联合框架（在两种结构之间搭建了一个桥梁）。我们的算法具有以下优点：可以检测多C-P结构；可以检测社区之间的重叠节点；通过调整参数，可以检测大小不同的核心（core）。我们在人工网络和真实网络上验证了我们算法的优良效果。总结一下：我们提出了一种同时检测复杂网络中的C-P结构和社区结构的联合框架。</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/20/%E4%B8%80%E7%A7%8D%E6%A3%80%E6%B5%8BCP%E7%BB%93%E6%9E%84%E5%92%8C%E7%A4%BE%E5%8C%BA%E7%BB%93%E6%9E%84%E7%9A%84%E8%81%94%E5%90%88%E7%AE%97%E6%B3%95/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2018/12/20/%E4%B8%80%E7%A7%8D%E6%A3%80%E6%B5%8BCP%E7%BB%93%E6%9E%84%E5%92%8C%E7%A4%BE%E5%8C%BA%E7%BB%93%E6%9E%84%E7%9A%84%E8%81%94%E5%90%88%E7%AE%97%E6%B3%95/" data-id="ckbok1pqv000syuuz9sny03mj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CP/" rel="tag">CP</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-朴素贝叶斯" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/" class="article-date">
+  <time datetime="2018-12-18T16:00:00.000Z" itemprop="datePublished">2018-12-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Machine-learning/">Machine learning</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/">朴素贝叶斯</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、优缺点"><a href="#一、优缺点" class="headerlink" title="一、优缺点"></a>一、优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>过程简单，速度快</p>
+</li>
+<li><p>适用于多类分类，且不会造成复杂度大幅上升</p>
+</li>
+<li><p>在样本分布独立的假设下，效果很好</p>
+</li>
+<li><p>与逻辑回归相比，需要更少的样本</p>
+</li>
+<li><p>对类别型的特征变量和符合正态分布的数值型变量效果好</p></li></ul>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/#more">阅读更多</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/" data-id="ckbok1pqz0013yuuzaqqp8mhr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NB/" rel="tag">NB</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-learning/">Machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NLP/">NLP</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CP/" style="font-size: 20px;">CP</a> <a href="/tags/Chatbot/" style="font-size: 10px;">Chatbot</a> <a href="/tags/DTW/" style="font-size: 10px;">DTW</a> <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/GC/" style="font-size: 10px;">GC</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/LR/" style="font-size: 10px;">LR</a> <a href="/tags/NB/" style="font-size: 10px;">NB</a> <a href="/tags/PGM/" style="font-size: 10px;">PGM</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/language/" style="font-size: 10px;">language</a> <a href="/tags/pos-tagging/" style="font-size: 10px;">pos tagging</a> <a href="/tags/text-classification/" style="font-size: 10px;">text classification</a> <a href="/tags/transfer-learning/" style="font-size: 10px;">transfer learning</a> <a href="/tags/%E5%85%83%E7%B1%BB/" style="font-size: 10px;">元类</a> <a href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 10px;">序列相似度</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">机器学习</a> <a href="/tags/%E6%A6%82%E7%8E%87/" style="font-size: 10px;">概率</a> <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">概率图模型</a> <a href="/tags/%E7%94%98%E8%82%83/" style="font-size: 10px;">甘肃</a> <a href="/tags/%E9%9D%92%E6%B5%B7/" style="font-size: 10px;">青海</a> <a href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" style="font-size: 10px;">青海湖</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MaShihan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">时间线</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

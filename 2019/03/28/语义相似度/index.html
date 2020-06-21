@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+
+  
+  <title>语义相似度 | Shihanmax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:A STUDY AND AN OPEN TASK》阅读笔记 文章整理并开源了首个保险领域的问答数据集，在此数据集上探讨了不同CNN架构以及不同的相似度评价方法对语义相似度模型效果的影响。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语义相似度">
+<meta property="og:url" content="https://shihanmax.github.io/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/index.html">
+<meta property="og:site_name" content="Shihanmax">
+<meta property="og:description" content="论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:A STUDY AND AN OPEN TASK》阅读笔记 文章整理并开源了首个保险领域的问答数据集，在此数据集上探讨了不同CNN架构以及不同的相似度评价方法对语义相似度模型效果的影响。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-19T13:37:44.530Z">
+<meta property="article:author" content="MaShihan">
+<meta property="article:tag" content="text classification">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="http://shihanmax.top/20200319095233_93P1eu_banner3.jpeg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Shihanmax" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shihanmax</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">“不为斗粮，拉马车  却为风声，过万重山”</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">时间线</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shihanmax.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-语义相似度" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" class="article-date">
+  <time datetime="2019-03-27T16:00:00.000Z" itemprop="datePublished">2019-03-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      语义相似度
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:<br>A STUDY AND AN OPEN TASK》阅读笔记</p>
+<p>文章整理并开源了首个保险领域的问答数据集，在此数据集上探讨了不同CNN架构以及不同的相似度评价方法对语义相似度模型效果的影响。</p>
+<a id="more"></a>
+
+<h1 id="1-问题设定"><a href="#1-问题设定" class="headerlink" title="1. 问题设定"></a>1. 问题设定</h1><p>在QA任务中，给定问题$q$和答案候选集${a_1, a_2, …, a_n}$，目标是从候选集中选出最正确的答案$a_k$（如果存在）。这个问题可以转化为一个文本二分类任务：针对一个问题-答案对${q,a_i}$，确定是否是一对正确的QA对，而关于”正确”，则需要一种文本距离衡量手段，经典的有cosine similarity，本文提出了两种相似度计算方案GESD和 AESD（包含超参数），并在数据集上对比了超参数不同的情况下，各种相似度计算方案的效果。</p>
+<h1 id="2-模型架构"><a href="#2-模型架构" class="headerlink" title="2. 模型架构"></a>2. 模型架构</h1><p>在训练时，使用预训练的词向量，将词向量求和作为问题$q$，候选答案$a$的表示向量。</p>
+<p>总体思路是：首先通过CNN计算出问题$q$和答案$a$的向量表示，然后使用相似度衡量指标来计算二者之间的相似度。</p>
+<p>本文提出了六种基于CNN的文本分类架构：</p>
+<ol>
+<li>$q$和$a$进入独立的隐藏层和卷积层，进入pooling层后得到各自的表示向量</li>
+<li>$q$和$a$进入共享的隐藏层和卷积层，进入pooling层后得到各自的表示向量</li>
+<li>$q$和$a$进入共享的隐藏层和卷积层，进入pooling层后，进入独立的隐藏层，得到各自的表示向量</li>
+<li>$q$和$a$进入共享的隐藏层和卷积层，进入pooling层后，进入共享的隐藏层，得到各自的表示向量</li>
+<li>$q$和$a$进入共享的隐藏层和卷积层1、卷积层2，进入pooling层后得到各自的表示向量</li>
+<li>$q$和$a$进入共享的隐藏层和卷积层1、卷积层2，将卷积层1的跳远连接和卷积层2求和后进入pooling层后得到各自的表示向量</li>
+</ol>
+<h1 id="3-相似度计算方法汇总"><a href="#3-相似度计算方法汇总" class="headerlink" title="3. 相似度计算方法汇总"></a>3. 相似度计算方法汇总</h1><ol>
+<li><p>Cosine</p>
+<p>$$k(x,y)=\cfrac{xy^T}{\lVert x\rVert \lVert y\rVert}$$</p>
+</li>
+<li><p>Polinomial</p>
+<p>$$k(x,y)=(\gamma xy^T+c)d$$</p>
+</li>
+<li><p>Sigmoid</p>
+<p>$$k(x,y)=tanh(\gamma xy^T+c)$$</p>
+</li>
+<li><p>RBF</p>
+<p>$$k(x,y)=exp(-\gamma \lVert x-y \rVert_2)$$</p>
+</li>
+<li><p>euclidean</p>
+<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}$$</p>
+</li>
+<li><p>exponential</p>
+<p>$$k(x,y)=exp(-\gamma \lVert x-y \rVert_1)$$</p>
+</li>
+<li><p>manhattan</p>
+<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}_1$$</p>
+</li>
+<li><p>GESD（Geometric mean of Euclidean and Sigmoid Dot product）</p>
+<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert} \cdot \cfrac{1}{1+exp(-\gamma (xy^T+c))}$$</p>
+</li>
+<li><p>AESD（Arithmetic mean of Euclidean and Sigmoid Dot product）</p>
+<p>$$k(x,y)=\cfrac{0.5}{1+\lVert x-y \rVert} \cdot \cfrac{0.5}{1+exp(-\gamma (xy^T+c))}$$</p>
+</li>
+</ol>
+<h1 id="4-结果讨论"><a href="#4-结果讨论" class="headerlink" title="4. 结果讨论"></a>4. 结果讨论</h1><ol>
+<li><p>CNN模型较baseline模型有很大的提升</p>
+</li>
+<li><p>在现有数据上，结构2的表现最优，分析原因：$q$与$a$共享卷积层能够保证抽取的特征在同一个空间中，如果不共享卷积层，在数据集有限的情况下，模型很难将两个并列的卷积层的统一；</p>
+</li>
+<li><p>卷积层后再加一层隐藏层会降低模型的性能，卷积层已经将有用的特征抽取出来了，没有必要再将特征映射到另一个空间中</p>
+</li>
+<li><p>增加卷积核数量可以抽取出更多的特征，对模型性能提升有明显帮助</p>
+</li>
+<li><p>两层CNN能够对特征进行更高层次的抽象</p>
+</li>
+<li><p>深层次的DNN训练有一定难度，加入类似于resNet中的跳远连接结构有助于缓解这个现象</p>
+</li>
+<li><p>相似度衡量方法也很重要</p>
+<p>第3节中讨论的相似度计算方法大致分类三类：</p>
+<ol>
+<li>基于L1范数的：semantic distance of Q and A summed from each coordinate axis</li>
+<li>基于L2范数的：straight-line semantic distance of Q and A</li>
+<li>基于内积的：the angle between Q and A</li>
+</ol>
+<p>我们提出的*ESD是基于L2和基于内积的结合，在模型评估中表现最好。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" data-id="ckbok1pr10018yuuz6f7g5rvt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/text-classification/" rel="tag">text classification</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          青甘环线
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Recent advances in conversational NLP</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-learning/">Machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NLP/">NLP</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CP/" style="font-size: 20px;">CP</a> <a href="/tags/Chatbot/" style="font-size: 10px;">Chatbot</a> <a href="/tags/DTW/" style="font-size: 10px;">DTW</a> <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/GC/" style="font-size: 10px;">GC</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/LR/" style="font-size: 10px;">LR</a> <a href="/tags/NB/" style="font-size: 10px;">NB</a> <a href="/tags/PGM/" style="font-size: 10px;">PGM</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/language/" style="font-size: 10px;">language</a> <a href="/tags/pos-tagging/" style="font-size: 10px;">pos tagging</a> <a href="/tags/text-classification/" style="font-size: 10px;">text classification</a> <a href="/tags/transfer-learning/" style="font-size: 10px;">transfer learning</a> <a href="/tags/%E5%85%83%E7%B1%BB/" style="font-size: 10px;">元类</a> <a href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 10px;">序列相似度</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">机器学习</a> <a href="/tags/%E6%A6%82%E7%8E%87/" style="font-size: 10px;">概率</a> <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">概率图模型</a> <a href="/tags/%E7%94%98%E8%82%83/" style="font-size: 10px;">甘肃</a> <a href="/tags/%E9%9D%92%E6%B5%B7/" style="font-size: 10px;">青海</a> <a href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" style="font-size: 10px;">青海湖</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MaShihan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">时间线</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

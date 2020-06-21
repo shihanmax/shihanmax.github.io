@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+
+  
+  <title>Recent advances in conversational NLP | Shihanmax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="论文《Recent advances in conversational NLP :Towards the standardization of Chatbot building》阅读笔记 From：Maali Mnasri（maali@opla.ai） Abstractchatbot在日常生活中越来越重要，易用程度也在不断提升。本文针对目前的对话系统作了综述性研究，再文章最后讨论了各个实现方法的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Recent advances in conversational NLP">
+<meta property="og:url" content="https://shihanmax.github.io/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/index.html">
+<meta property="og:site_name" content="Shihanmax">
+<meta property="og:description" content="论文《Recent advances in conversational NLP :Towards the standardization of Chatbot building》阅读笔记 From：Maali Mnasri（maali@opla.ai） Abstractchatbot在日常生活中越来越重要，易用程度也在不断提升。本文针对目前的对话系统作了综述性研究，再文章最后讨论了各个实现方法的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2019-08-17T07:44:11.890Z">
+<meta property="article:author" content="MaShihan">
+<meta property="article:tag" content="Chatbot">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="http://shihanmax.top/20200319095233_93P1eu_banner3.jpeg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Shihanmax" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shihanmax</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">“不为斗粮，拉马车  却为风声，过万重山”</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">时间线</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shihanmax.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Chatbot研究进展" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/" class="article-date">
+  <time datetime="2019-03-25T16:00:00.000Z" itemprop="datePublished">2019-03-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NLP/">NLP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Recent advances in conversational NLP
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>论文《Recent advances in conversational NLP :<br>Towards the standardization of Chatbot building》阅读笔记</p>
+<p>From：Maali Mnasri（<a href="mailto:maali@opla.ai">maali@opla.ai</a>）</p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>chatbot在日常生活中越来越重要，易用程度也在不断提升。本文针对目前的对话系统作了综述性研究，再文章最后讨论了各个实现方法的优缺点对比，并提出了对话系统标准化的思考。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>Conversational agents（与后文dialogue system、以及工业和媒体使用的chatbots义同，简称CA）越来越常见，如个人手持设备的个人助理、商业网站的售货机器人等，这些系统旨在通过语音或文本与人类进行流畅的对话沟通。在AI领域，建立智能的CA仍是一个未解决的难题。本文总结了目前流行的对话系统实现方法，并对主流实现方法进行了对比。</p>
+<p>尽管距第一个CA被提出已经过去很多年了，但这个领域仍然越来越活跃，这与近年来AI、NLP领域技术的迅速发展有关。目前有很多丰富的方法来实现CA，但能够使研究者专注于CA性能提升的工具却很缺乏，本文第6节会讨论相关问题。</p>
+<a id="more"></a>
+
+<p>下文如下组织：</p>
+<ul>
+<li>分析当下CA设计的SOTA技术</li>
+<li>关于CA设计标准化提出了新的思考</li>
+</ul>
+<h1 id="2-Chatbots-categories"><a href="#2-Chatbots-categories" class="headerlink" title="2 Chatbots categories"></a>2 Chatbots categories</h1><p>我们将CA分为两类：聊天机器人（social chatbots）和任务型对话机器人（task oriented chatbots）。</p>
+<h2 id="2-1-Social-chatbots"><a href="#2-1-Social-chatbots" class="headerlink" title="2.1 Social chatbots"></a>2.1 Social chatbots</h2><p>聊天机器人（也常常被称为chit-chat bots）的娱乐意义多一些，但在最开始，它们的设计目的是作为心理诊疗顾问，甚至有一些现在仍在使用。ELIZA,PARRY,ALICE,CLEVER,微软小冰等在CA领域迈出了第一步。</p>
+<h2 id="2-2-Task-oriented-chatbots"><a href="#2-2-Task-oriented-chatbots" class="headerlink" title="2.2 Task oriented chatbots"></a>2.2 Task oriented chatbots</h2><p>我们将任务型对话机器人也分为两类：通用任务型和特殊任务型。</p>
+<h3 id="2-2-1-Generalist-task-oriented-chatbots"><a href="#2-2-1-Generalist-task-oriented-chatbots" class="headerlink" title="2.2.1 Generalist task oriented chatbots"></a>2.2.1 Generalist task oriented chatbots</h3><p>能够回答一些通用问题（和chit-chat类似），可以进行简单的对话，并能够完成一些日常的任务，如设置闹钟、打电话、发短信等。</p>
+<h3 id="2-2-2-Specialist-task-oriented-chatbots"><a href="#2-2-2-Specialist-task-oriented-chatbots" class="headerlink" title="2.2.2 Specialist task oriented chatbots"></a>2.2.2 Specialist task oriented chatbots</h3><p>针对某些特殊领域设计，通常以来这些领域的知识来解决稍微复杂的问题，如预定航班、订餐、分析健康问题等。</p>
+<h1 id="3-Chatbot-building-approches"><a href="#3-Chatbot-building-approches" class="headerlink" title="3 Chatbot building approches"></a>3 Chatbot building approches</h1><p>本章介绍两种主流的CA设计方法：基于规则的和基于数据的。前者在设计时主要依赖模式-动作规则（<a href="https://stackoverflow.com/questions/380724/what-is-the-action-design-pattern" target="_blank" rel="noopener">pattern-action</a>），而后者则需要大量的对话语料。</p>
+<h2 id="3-1-rule-based-chatbots"><a href="#3-1-rule-based-chatbots" class="headerlink" title="3.1 rule-based chatbots"></a>3.1 rule-based chatbots</h2><p>基于规则的CA使用前缀规则进行设计，它按照特定的规则与用户交互，例如，如果用户的话中包含 [Hello”, ”Good morning”, ”Hi”] 中的一个，则CA应该回复”Hello”。规则对话机器人由于设计简单、能够完成简单的额任务，目前很受欢迎，但对复杂任务则需要设计大量的人工规则，很费时费力。ELIZA是第一个规则对话系统，设计目的是为了模仿一位心理诊疗师，它的设计原则是应用模式和转变规则（applying pattern and transform rules），每一条转换规则都对应一个关键词，关键词按”特别-&gt;一般”来排序。针对每一条用户的话，chatbot通过对照知识库，按照转变规则来寻找排序最靠前的关键词。以下面的一句话为例：</p>
+<p>$$You \space hate\space me$$</p>
+<p>这句话和如下的模式匹配：</p>
+<p>$$(0\space YOU\space 0\space ME)$$</p>
+<p>0表示一段文字的长度变量，我们假设关键词YOU使用下述的转变规则：</p>
+<p>$$(\space YOU\space 0\space ME) \rightarrow (WHAT\space MAKES \space YOU \space THINK\space I\space 3\space YOU)$$</p>
+<p>3表示用户的话中的第3个词，本例中也就是”hate”，应用转变规则后，规则对话机器人应该返回如下答案：</p>
+<p>$$WHAT\space MAKES \space YOU \space THINK\space I\space hate\space YOU$$</p>
+<p>在ELIZA后，PARRY系统也使用了类似的规则系统，不同的是，PARRY在设计时加入了影响变量（affect variables），能够表现出生气、害怕等情绪。</p>
+<h2 id="3-2-Data-driven-chatbots"><a href="#3-2-Data-driven-chatbots" class="headerlink" title="3.2 Data-driven chatbots"></a>3.2 Data-driven chatbots</h2><p>目前多数CA使用基于数据驱动的手段。它依赖大量的对话语料，不需要手工规则设计，我们接下来介绍基于信息抽取的对话机器人和基于机器学习的对话机器人。</p>
+<h3 id="3-2-1-Information-retrieval-based-chatbots"><a href="#3-2-1-Information-retrieval-based-chatbots" class="headerlink" title="3.2.1 Information retrieval based chatbots"></a>3.2.1 Information retrieval based chatbots</h3><p>Clever-Bot设计于1988年，1997年发布，它依赖数据库中与问题相似的答案来回答人类的问题。就像一个搜索引擎一样。针对用户的问题Q，IR CA会从数据库中寻找与Q最相近的问答对(Q’,R’)，将其回答返回给用户。那么如何衡量语句之间的相似性？一种方式是基于字向量计算余弦距离；另外一些基于TF-IDF的检索模型使用discourse tree和RST（Rhetorical Structure Theory）来对语句生成或相似答案进行建模。除了一些对话语料之外，也可以使用WikiAnswers、YahooAnswers、推特对话等构建语料库。</p>
+<h3 id="3-2-2-Machine-learning-based-chatbots"><a href="#3-2-2-Machine-learning-based-chatbots" class="headerlink" title="3.2.2 Machine learning based chatbots"></a>3.2.2 Machine learning based chatbots</h3><p>目前，主要的深度学习方法有seq2seq learning和强化学习两种，下面分别介绍。</p>
+<h4 id="3-2-2-1-Seq2seq-learning"><a href="#3-2-2-1-Seq2seq-learning" class="headerlink" title="3.2.2.1 Seq2seq learning"></a>3.2.2.1 Seq2seq learning</h4><p>Seq2seq使用RNN对复杂语段进行建模，用于机器翻译、图片描述、语音识别、文本摘要、自动问答等领域。在机器翻译领域的成功显示出Seq2seq技术的优越性。在对话机器人设计中，类似地，可以看作将用户的话翻译为机器人的回答。seq2seq模型可以对输入和输出进行映射，二者的长度可以不同，技术上，它由一个编码器和一个解码器组成，编码器接收输入，并把他转化为中间向量（context vector），中间向量被输入到解码器中，得到seq2seq的输出。seq2seq可以回答简单的问题，抽取相关信息，并具有一些简单的推理能力，但还不能进行合理的对话。（显然，由于RNN的设计特点，长距离特征的保持和记忆的能力与Attention模型有一定的差距。）</p>
+<p>后来也有研究者在seq2seq模型中加入对用户情绪的建模，在语句生成阶段考虑到了情绪的影响。</p>
+<h4 id="3-2-2-2-Reinforcement-learning"><a href="#3-2-2-2-Reinforcement-learning" class="headerlink" title="3.2.2.2 Reinforcement learning"></a>3.2.2.2 Reinforcement learning</h4><p>强化学习使机器能够像人一样学习，也即通过与环境的交互，最大化某种累计奖励。</p>
+<p>在神经网络建模流行之前，人们将对话系统建模为一个马尔可夫决策过程（Markov Decision Processes<br>，MDPs），为了使用强化学习，使用一组与对话相关的状态来表示对话系统。目标是最大化通过满足用户请求而得到的奖励。后来，使用部分可见马尔可夫决策过程来对对话建模（Partially Observed Markov Decision Pro-<br>cesses ，POMDPs），此方法假设对话有一个初始状态$s_0$，后续的状态由前一个状态和前一轮action $a_t$决定：</p>
+<p>$$p(s_t \mid s_{t-1}, a_{t-1})$$</p>
+<p>为了将SLU模块误差考虑进来，$s_t$部分可见，至此，每一轮的用户输入转化为概率$p(o_t \mid s_t)$，其中$o_t$是$t$时刻的观察状态。观察概率和转移概率由对话模型$M$决定。可能的系统action将转移给策略模型，在对话过程中，如果系统执行了正确的action，会得到相应的奖励。</p>
+<h3 id="3-2-3-Hybrid-approches"><a href="#3-2-3-Hybrid-approches" class="headerlink" title="3.2.3 Hybrid approches"></a>3.2.3 Hybrid approches</h3><p>有研究将上述方法结合，如Alibaba购物机器人，使用IR手段检索最合适的几个答案，并通过seq2seq对它们进行重排序，并生成答案。</p>
+<h1 id="4-Chatbots-evaluation"><a href="#4-Chatbots-evaluation" class="headerlink" title="4 Chatbots evaluation"></a>4 Chatbots evaluation</h1><p>对对话系统进行人工评估耗费巨大，一些IR based CA可以使用简单的PR指标进行评估。自动化的方法BLEU、ROUGE等分别用于机器翻译和文本摘要，他们通过计算系统输出和参考答案之间的n-gram重合度来评估。对话系统中，这些评估方式可以计算系统回答和人类回答的匹配度。但这种方式也有缺点，在一些场景下，两段文本可能n-gram完全没有重合，但语义却是相似的。</p>
+<p>困惑度（Perplexity）也可以用来做CA评估，它最开始用于评估语言模型，我们假设测试集由$w_1,w_2,…,w_n$组成，那么语言模型预测出这些词的困惑度为：</p>
+<p>$$Perplexity=e^{-\frac{1}{N} \sum log( P_{w_i})}$$</p>
+<p>意味着，Perplexity越小越好。</p>
+<h1 id="5-Discussion"><a href="#5-Discussion" class="headerlink" title="5 Discussion"></a>5 Discussion</h1><p>各种类型的CA都各有优缺点，应该根据已有的数据（数据量、结构化/非结构化）和CA的用途来决定使用哪一种。</p>
+<p>机器学习占据了目前对话领域的主流，而强化学习在对话系统设计中已经广泛使用，编码-解码学习成为主流。</p>
+<p>强化学习使得模型更能对长距离多轮回话进行建模，因为如果长轮次会话中模型出现错误决策时，也会受到惩罚。但强化学习有两个缺点：</p>
+<ol>
+<li>需要大量的训练时间和训练轮次</li>
+<li>不是语言生成的最佳选项</li>
+</ol>
+<p>生成式seq2seq模型已经部分克服了上述缺点，但他也有一些缺点，如倾向于生成安全回答，而且无法考虑重复现象，如：</p>
+<blockquote>
+<p>Cus: Goodbye!</p>
+<p>Bot: Goodbye!</p>
+<p>Cus: Goodbye!</p>
+<p>Bot: Goodbye!</p>
+<p>…</p>
+</blockquote>
+<p>强化学习和seq2seq结合的策略有望解决上述问题。</p>
+<h1 id="6-Opinion-piece-towards-the-standardization-of-the-field"><a href="#6-Opinion-piece-towards-the-standardization-of-the-field" class="headerlink" title="6 Opinion piece : towards the standardization of the field"></a>6 Opinion piece : towards the standardization of the field</h1><p>关于当前对话机器人设计的思考：目前许多研究者在设计对话系统时，由于没有统一框架和标准，大家都是在重复造轮子，其实有一些模块是可以复用的，所以下面的对话机器人研究是否能够着眼于基础架构的搭建，然后使研究者以插件的形式设计对话机器人。</p>
+<h1 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7 Conclusion"></a>7 Conclusion</h1><p>单一模型不能解决实际问题，模型整合才能更好适应工业需求。</p>
+<p>对话框架的标准化。</p>
+<h1 id="后记-阅读心得"><a href="#后记-阅读心得" class="headerlink" title="后记-阅读心得"></a>后记-阅读心得</h1><ol>
+<li>关于chatbot设计方面作了综述，基本框架与《自然语言处理综论》中相关章节基本相似，其中seq2seq相关部分并没有提到目前SOTA的Attention模型；</li>
+<li>多轮对话没有涉及；</li>
+<li>副标题是Towards the standardization of Chatbot building，但仅指出了目前chatbot设计不统一的现象，关于对话系统设计标准化，作者其实可以写的更丰富些。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shihanmax.github.io/2019/03/26/Chatbot%E7%A0%94%E7%A9%B6%E8%BF%9B%E5%B1%95/" data-id="ckbok1pqg0001yuuzcp5k90wn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Chatbot/" rel="tag">Chatbot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          语义相似度
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">机器学习算法之逻辑回归(Logistic Regression)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+    <aside id="sidebar" class="outer">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-learning/">Machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NLP/">NLP</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CP/" style="font-size: 20px;">CP</a> <a href="/tags/Chatbot/" style="font-size: 10px;">Chatbot</a> <a href="/tags/DTW/" style="font-size: 10px;">DTW</a> <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/GC/" style="font-size: 10px;">GC</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/LR/" style="font-size: 10px;">LR</a> <a href="/tags/NB/" style="font-size: 10px;">NB</a> <a href="/tags/PGM/" style="font-size: 10px;">PGM</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/language/" style="font-size: 10px;">language</a> <a href="/tags/pos-tagging/" style="font-size: 10px;">pos tagging</a> <a href="/tags/text-classification/" style="font-size: 10px;">text classification</a> <a href="/tags/transfer-learning/" style="font-size: 10px;">transfer learning</a> <a href="/tags/%E5%85%83%E7%B1%BB/" style="font-size: 10px;">元类</a> <a href="/tags/%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 10px;">序列相似度</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">机器学习</a> <a href="/tags/%E6%A6%82%E7%8E%87/" style="font-size: 10px;">概率</a> <a href="/tags/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">概率图模型</a> <a href="/tags/%E7%94%98%E8%82%83/" style="font-size: 10px;">甘肃</a> <a href="/tags/%E9%9D%92%E6%B5%B7/" style="font-size: 10px;">青海</a> <a href="/tags/%E9%9D%92%E6%B5%B7%E6%B9%96/" style="font-size: 10px;">青海湖</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/10/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5/">序列标注实践</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/25/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4DTW%E7%AE%97%E6%B3%95/">动态时间规整（DTW）算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/">How transferable are features in deep neural networks</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/20/%E9%9D%92%E7%94%98%E7%8E%AF%E7%BA%BF/">青甘环线</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/">语义相似度</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MaShihan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">时间线</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
