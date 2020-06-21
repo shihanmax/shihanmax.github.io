@@ -97,7 +97,6 @@
       
         <h2 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h2><p><strong>Elasticsearch</strong>是一个高伸缩的开源全文搜索和分析引擎，它可以快速地、近实时的存储，搜索和分析大规模的数据。一般被用作底层引擎/技术，为具有复杂搜索功能和要求的应用提供强有力的支撑。</p>
 <a id="more"></a>
-
 <h2 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h2><ul>
 <li>电商网站，商品的检索</li>
 <li>日志或交易数据的统计、汇报、总结</li>
@@ -130,7 +129,8 @@
 <h2 id="ES初探"><a href="#ES初探" class="headerlink" title="ES初探"></a>ES初探</h2><h3 id="安装、启动"><a href="#安装、启动" class="headerlink" title="安装、启动"></a>安装、启动</h3><p>安装过程参考ES官网，注意ES依赖Java8环境。</p>
 <p>启动方法：</p>
 <pre><code>cd elasticsearch-5.4.1
-./bin/elasticsearch</code></pre><h3 id="REST-API"><a href="#REST-API" class="headerlink" title="REST API"></a>REST API</h3><p>ES提供了非常强大的REST API与集群进行通讯。</p>
+./bin/elasticsearch
+</code></pre><h3 id="REST-API"><a href="#REST-API" class="headerlink" title="REST API"></a>REST API</h3><p>ES提供了非常强大的REST API与集群进行通讯。</p>
 <p>API能力：</p>
 <ul>
 <li>检查集群、节点、索引的运行状态和统计信息</li>
@@ -145,11 +145,13 @@ GET /_cat/nodes?v
     # 查看集群节点列表
 
 GET /_cat/indices?v
-    # 查看所有索引，如果集群中只有一个节点，则此索引的健康值为yellow（副本未分配）</code></pre><h4 id="索引的创建和删除"><a href="#索引的创建和删除" class="headerlink" title="索引的创建和删除"></a>索引的创建和删除</h4><pre><code>PUT /bank?pretty
+    # 查看所有索引，如果集群中只有一个节点，则此索引的健康值为yellow（副本未分配）
+</code></pre><h4 id="索引的创建和删除"><a href="#索引的创建和删除" class="headerlink" title="索引的创建和删除"></a>索引的创建和删除</h4><pre><code>PUT /bank?pretty
     # 创建名为testindex的索引
 
 DELETE /bank?pretty
-    # 删除testindex索引</code></pre><h4 id="文档的创建、修改和删除"><a href="#文档的创建、修改和删除" class="headerlink" title="文档的创建、修改和删除"></a>文档的创建、修改和删除</h4><pre><code>PUT /bank/account/1?pretty
+    # 删除testindex索引
+</code></pre><h4 id="文档的创建、修改和删除"><a href="#文档的创建、修改和删除" class="headerlink" title="文档的创建、修改和删除"></a>文档的创建、修改和删除</h4><pre><code>PUT /bank/account/1?pretty
 {
     &quot;name&quot;: &quot;John Doe&quot;
 }
@@ -174,7 +176,8 @@ POST /bank/account/1/_update?pretty
     # 对id为1的文档执行更新，ES会删除旧文档，索引新文档
 
 DELETE /bank/account/1?pretty
-    # 删除ID为1的文档</code></pre><h4 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h4><pre><code>POST /bank/account/_bulk?pretty
+    # 删除ID为1的文档
+</code></pre><h4 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h4><pre><code>POST /bank/account/_bulk?pretty
 {&quot;index&quot;: {&quot;_id&quot;: &quot;1&quot;}}
 {&quot;name&quot;: &quot;Tom hanks&quot;}
 {&quot;index&quot;: {&quot;_id&quot;: &quot;2&quot;}}
@@ -183,7 +186,8 @@ DELETE /bank/account/1?pretty
 {&quot;doc&quot;: {&quot;name&quot;: &quot;Hello World my name is ES&quot;}}
 {&quot;delete&quot;: {&quot;_id&quot;: &quot;2&quot;}}
 
-    # 上面的请求批量索引了两篇文档，注意：最后要有空行</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><pre><code>GET /_search?q=*&amp;sort=account_number:asc&amp;pretty
+    # 上面的请求批量索引了两篇文档，注意：最后要有空行
+</code></pre><h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><pre><code>GET /_search?q=*&amp;sort=account_number:asc&amp;pretty
     # 在所有索引下查询文档（方式1：通过REST request URI 方式发送查询参数）
 GET /bank/_search?q=*&amp;sort=account_number:asc&amp;pretty
     #在bank下查询文档
@@ -194,7 +198,8 @@ GET /bank/_search
         { &quot;account_number&quot;:&quot;asc&quot; }
   ]
 }
-    # 使用方式二查询（通过REST request body）</code></pre><p>返回结果解释</p>
+    # 使用方式二查询（通过REST request body）
+</code></pre><p>返回结果解释</p>
 <ul>
 <li>took： 查询时间（ms）</li>
 <li>time_out: 是否超时</li>
@@ -216,17 +221,20 @@ GET /bank/_search
     # &quot;size&quot;: 返回结果数
     # &quot;from&quot;: 起始位置
     # &quot;sort&quot;: {&quot;age&quot; : { &quot;order&quot;: &quot;desc&quot;}}  # 按age降序排序
-    # &quot;_source&quot;: {&quot;name&quot;, &quot;age&quot;}</code></pre><p>match</p>
+    # &quot;_source&quot;: {&quot;name&quot;, &quot;age&quot;}
+</code></pre><p>match</p>
 <pre><code>GET /bank/_search
 {
   &quot;query&quot;: { &quot;match&quot;: { &quot;address&quot;: &quot;mail Goodson&quot; } }
 }
-    # &quot;match&quot;: 指针对特定字段或一组字段进行搜索，上例返回address中包含&quot;mail&quot;或&quot;Goodson&quot;的文档</code></pre><p>match_phase</p>
+    # &quot;match&quot;: 指针对特定字段或一组字段进行搜索，上例返回address中包含&quot;mail&quot;或&quot;Goodson&quot;的文档
+</code></pre><p>match_phase</p>
 <pre><code>GET /bank/_search
 {
   &quot;query&quot;: { &quot;match_phrase&quot;: { &quot;address&quot;: &quot;mail Goodson&quot; } }
 }
-    # 返回包含&quot;main Goodson&quot;短语的文档</code></pre><h4 id="bool-query"><a href="#bool-query" class="headerlink" title="bool query"></a>bool query</h4><p>must</p>
+    # 返回包含&quot;main Goodson&quot;短语的文档
+</code></pre><h4 id="bool-query"><a href="#bool-query" class="headerlink" title="bool query"></a>bool query</h4><p>must</p>
 <pre><code>GET /bank/_search
 {
   &quot;query&quot;: {
@@ -238,7 +246,8 @@ GET /bank/_search
     }
   }
 }
-    # 查询address中既包含&quot;mail&quot;又包含&quot;lane&quot;的文档</code></pre><p>should</p>
+    # 查询address中既包含&quot;mail&quot;又包含&quot;lane&quot;的文档
+</code></pre><p>should</p>
 <pre><code>GET /bank/_search
 {
   &quot;query&quot;: {
@@ -250,7 +259,8 @@ GET /bank/_search
     }
   }
 }
-    # should条件中只要有一条满足就可返回</code></pre><p>must_not</p>
+    # should条件中只要有一条满足就可返回
+</code></pre><p>must_not</p>
 <pre><code>GET /bank/_search
 {
   &quot;query&quot;: {
@@ -262,7 +272,8 @@ GET /bank/_search
     }
   }
 }
-    # must_not，所有条件都不应该满足</code></pre><h4 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h4><p>查询结果中_score字段代表查询分数，是一个数值，表示匹配度，越高说明越匹配。</p>
+    # must_not，所有条件都不应该满足
+</code></pre><h4 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h4><p>查询结果中_score字段代表查询分数，是一个数值，表示匹配度，越高说明越匹配。</p>
 <p>布尔查询支持filter子句，它允许使用查询语句限制其它子句的匹配结果，同时不会计算文档的得分。</p>
 <pre><code>GET /bank/_search
 {
@@ -280,7 +291,8 @@ GET /bank/_search
     }
   }
 }
-    # 查询余额balance在20000到30000之间的结果</code></pre><h4 id="执行聚合"><a href="#执行聚合" class="headerlink" title="执行聚合"></a>执行聚合</h4><pre><code>GET /bank/_search
+    # 查询余额balance在20000到30000之间的结果
+</code></pre><h4 id="执行聚合"><a href="#执行聚合" class="headerlink" title="执行聚合"></a>执行聚合</h4><pre><code>GET /bank/_search
 {
   &quot;size&quot;: 0,
   &quot;aggs&quot;: {
@@ -319,13 +331,14 @@ GET /bank/_search
     }
   }
 }
-    # 按年龄段分组，按性别分组，最终得到每个年龄段的男女平均账户余额</code></pre><p>2018/11/23 16:40:32</p>
-<p>参考：[<a href="https://github.com/13428282016/elasticsearch-CN/wiki/es-gettting-started]" target="_blank" rel="noopener">https://github.com/13428282016/elasticsearch-CN/wiki/es-gettting-started]</a></p>
+    # 按年龄段分组，按性别分组，最终得到每个年龄段的男女平均账户余额
+</code></pre><p>2018/11/23 16:40:32</p>
+<p>参考：[<a href="https://github.com/13428282016/elasticsearch-CN/wiki/es-gettting-started" target="_blank" rel="noopener">https://github.com/13428282016/elasticsearch-CN/wiki/es-gettting-started</a>]</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2018/11/23/Elasticsearch/" data-id="ckbokqfpg0005epuzcl701xdb" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2018/11/23/Elasticsearch/" data-id="ckbokzszj0004qeuz3kl9hff6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/language/" rel="tag">language</a></li></ul>

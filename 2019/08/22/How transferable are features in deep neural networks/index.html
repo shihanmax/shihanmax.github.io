@@ -105,7 +105,6 @@
 <li>优化自适应（co-adapted）神经元的困难</li>
 </ul>
 <a id="more"></a>
-
 <p>我们在 ImageNet 上的实验表明，以上两个因素均有占主导的时候，取决于特征的转移过程发生在网络的前、中、后层；另外发现，两个任务的差异性越大，泛化能力就越差，但仍然超过随机特征的效果。最后的发现是，无论初始化时使用了多少层与训练权重，在 finetune 到特定数据集之后，仍然保持泛化能力。</p>
 <p>我们称第一层的特征为general特征，最后一层的特征为specific特征。那么在两层中间一定存在着从 genral到specific之间的转变，那么问题来了：</p>
 <ul>
@@ -114,8 +113,8 @@
 <li>转变发生在网络的前部、中部、还是后部？</li>
 </ul>
 <p>我们关心这些问题的原因是，如果我们能够掌握上述转变发生的位置，我们就能够更有效地利用迁移学习，其有效性已经得到广泛认可。在迁移学习中，我们可以冻结transferred feature，仅训练后层随机初始化的网络，或者将它们随后层任务一起微调（finetune），这取决于新领域的数据集规模。</p>
-<h4 id="Experiment-results"><a href="#Experiment-results" class="headerlink" title="Experiment results"></a>Experiment results</h4><p><img src="http://shihanmax.top/%E6%88%AA%E5%B1%8F2019-08-22%E4%B8%8B%E5%8D%887.35.42.png" alt="The results from this paper’s main experiment."></p>
-<p><img src="http://shihanmax.top/%E6%88%AA%E5%B1%8F2019-08-22%E4%B8%8B%E5%8D%887.36.29.png" alt="Performance degradation vs. layer."></p>
+<h4 id="Experiment-results"><a href="#Experiment-results" class="headerlink" title="Experiment results"></a>Experiment results</h4><p><img src="http://shihanmax.top/截屏2019-08-22下午7.35.42.png" alt="The results from this paper’s main experiment."></p>
+<p><img src="http://shihanmax.top/截屏2019-08-22下午7.36.29.png" alt="Performance degradation vs. layer."></p>
 <h4 id="本文贡献："><a href="#本文贡献：" class="headerlink" title="本文贡献："></a>本文贡献：</h4><ol>
 <li>定义一种量化各层泛化能力的方法</li>
 <li>发现以下两种会破坏性能的点：<ul>
@@ -131,7 +130,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/" data-id="ckbokqfpi000aepuzg5zpcvn3" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2019/08/22/How%20transferable%20are%20features%20in%20deep%20neural%20networks/" data-id="ckbokzszk0005qeuz4ufj8qbg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transfer-learning/" rel="tag">transfer learning</a></li></ul>

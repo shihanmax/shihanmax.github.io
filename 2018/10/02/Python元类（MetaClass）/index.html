@@ -97,25 +97,16 @@
         <h3 id="元类"><a href="#元类" class="headerlink" title="元类"></a>元类</h3><p>类也是对象。</p>
 <p>类可以动态创建（不建议这样做）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">choose_class</span><span class="params">(name)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> name == <span class="string">'foo'</span>:</span><br><span class="line">        <span class="class"><span class="keyword">class</span> <span class="title">Foo</span><span class="params">(object)</span>:</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">return</span> Foo</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="class"><span class="keyword">class</span> <span class="title">Bar</span><span class="params">(object)</span>:</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">return</span> Bar</span><br></pre></td></tr></table></figure>
-
 <p>类型实际是一个类，如 int、str 等。</p>
 <a id="more"></a>
-
 <p>使用 type 创建一个类（强调，这样非常不好）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">test = type(<span class="string">'Dog'</span>, (Animal, ), &#123;&#125;)</span><br><span class="line"><span class="comment"># 参数:(类名，父类元组，属性字典(属性+方法))</span></span><br></pre></td></tr></table></figure>
-
 <p>使用类来创建实例对象，通过元类来创建类，而 type 就是一个元类。int 是创建整型的类，str 是创建字符串的类，type 就是创建类对象的类。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>age = <span class="number">35</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>age.__class__</span><br><span class="line">int</span><br></pre></td></tr></table></figure>
-
-
-
 <p>元类决定了类的创建方式。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upper_attr</span><span class="params">(future_class_name, future_class_parents, future_class_attr)</span>:</span></span><br><span class="line">    newAttr = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> name, value <span class="keyword">in</span> future_class.attr.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> name.startswith(<span class="string">'__'</span>):</span><br><span class="line">            newAttr[name.upper()] = value</span><br><span class="line">    <span class="keyword">return</span> type(future_class_name, future_class_parents, newAttr)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span><span class="params">(object, metaclass=upper_attr)</span>:</span></span><br><span class="line">    bar = <span class="string">'bip'</span></span><br></pre></td></tr></table></figure>
-
-
-
 <blockquote>
-<p>元类是深度的魔法，99%的用户不用使用它，如果你想搞清楚究竟是否需要使用元类，那么你就不需要它，那些实际用到元类的人都非常清楚地知道他们需要做什么，而且不用解释为什么要使用元类。 – Tim Peters</p>
+<p>元类是深度的魔法，99%的用户不用使用它，如果你想搞清楚究竟是否需要使用元类，那么你就不需要它，那些实际用到元类的人都非常清楚地知道他们需要做什么，而且不用解释为什么要使用元类。 — Tim Peters</p>
 </blockquote>
 <p>所以，我可能暂时不需要它 &gt;_~</p>
 <p>The end.</p>
@@ -123,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2018/10/02/Python%E5%85%83%E7%B1%BB%EF%BC%88MetaClass%EF%BC%89/" data-id="ckbokqfpl000hepuzaz67304l" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2018/10/02/Python%E5%85%83%E7%B1%BB%EF%BC%88MetaClass%EF%BC%89/" data-id="ckbokzszr000hqeuz5xg5fmro" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%83%E7%B1%BB/" rel="tag">元类</a></li></ul>

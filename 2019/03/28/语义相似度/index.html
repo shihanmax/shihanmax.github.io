@@ -97,8 +97,7 @@
         <p>论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:<br>A STUDY AND AN OPEN TASK》阅读笔记</p>
 <p>文章整理并开源了首个保险领域的问答数据集，在此数据集上探讨了不同CNN架构以及不同的相似度评价方法对语义相似度模型效果的影响。</p>
 <a id="more"></a>
-
-<h1 id="1-问题设定"><a href="#1-问题设定" class="headerlink" title="1. 问题设定"></a>1. 问题设定</h1><p>在QA任务中，给定问题$q$和答案候选集${a_1, a_2, …, a_n}$，目标是从候选集中选出最正确的答案$a_k$（如果存在）。这个问题可以转化为一个文本二分类任务：针对一个问题-答案对${q,a_i}$，确定是否是一对正确的QA对，而关于”正确”，则需要一种文本距离衡量手段，经典的有cosine similarity，本文提出了两种相似度计算方案GESD和 AESD（包含超参数），并在数据集上对比了超参数不同的情况下，各种相似度计算方案的效果。</p>
+<h1 id="1-问题设定"><a href="#1-问题设定" class="headerlink" title="1. 问题设定"></a>1. 问题设定</h1><p>在QA任务中，给定问题$q$和答案候选集$\{a_1, a_2, …, a_n\}$，目标是从候选集中选出最正确的答案$a_k$（如果存在）。这个问题可以转化为一个文本二分类任务：针对一个问题-答案对$\{q,a_i\}$，确定是否是一对正确的QA对，而关于”正确”，则需要一种文本距离衡量手段，经典的有cosine similarity，本文提出了两种相似度计算方案GESD和 AESD（包含超参数），并在数据集上对比了超参数不同的情况下，各种相似度计算方案的效果。</p>
 <h1 id="2-模型架构"><a href="#2-模型架构" class="headerlink" title="2. 模型架构"></a>2. 模型架构</h1><p>在训练时，使用预训练的词向量，将词向量求和作为问题$q$，候选答案$a$的表示向量。</p>
 <p>总体思路是：首先通过CNN计算出问题$q$和答案$a$的向量表示，然后使用相似度衡量指标来计算二者之间的相似度。</p>
 <p>本文提出了六种基于CNN的文本分类架构：</p>
@@ -112,32 +111,23 @@
 </ol>
 <h1 id="3-相似度计算方法汇总"><a href="#3-相似度计算方法汇总" class="headerlink" title="3. 相似度计算方法汇总"></a>3. 相似度计算方法汇总</h1><ol>
 <li><p>Cosine</p>
-<p>$$k(x,y)=\cfrac{xy^T}{\lVert x\rVert \lVert y\rVert}$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=\cfrac{xy^T}{\lVert x\rVert \lVert y\rVert}</script></li>
 <li><p>Polinomial</p>
-<p>$$k(x,y)=(\gamma xy^T+c)d$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=(\gamma xy^T+c)d</script></li>
 <li><p>Sigmoid</p>
-<p>$$k(x,y)=tanh(\gamma xy^T+c)$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=tanh(\gamma xy^T+c)</script></li>
 <li><p>RBF</p>
-<p>$$k(x,y)=exp(-\gamma \lVert x-y \rVert_2)$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=exp(-\gamma \lVert x-y \rVert_2)</script></li>
 <li><p>euclidean</p>
-<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}</script></li>
 <li><p>exponential</p>
-<p>$$k(x,y)=exp(-\gamma \lVert x-y \rVert_1)$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=exp(-\gamma \lVert x-y \rVert_1)</script></li>
 <li><p>manhattan</p>
-<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}_1$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=\cfrac{1}{1+\lVert x-y \rVert}_1</script></li>
 <li><p>GESD（Geometric mean of Euclidean and Sigmoid Dot product）</p>
-<p>$$k(x,y)=\cfrac{1}{1+\lVert x-y \rVert} \cdot \cfrac{1}{1+exp(-\gamma (xy^T+c))}$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=\cfrac{1}{1+\lVert x-y \rVert} \cdot \cfrac{1}{1+exp(-\gamma (xy^T+c))}</script></li>
 <li><p>AESD（Arithmetic mean of Euclidean and Sigmoid Dot product）</p>
-<p>$$k(x,y)=\cfrac{0.5}{1+\lVert x-y \rVert} \cdot \cfrac{0.5}{1+exp(-\gamma (xy^T+c))}$$</p>
-</li>
+<script type="math/tex; mode=display">k(x,y)=\cfrac{0.5}{1+\lVert x-y \rVert} \cdot \cfrac{0.5}{1+exp(-\gamma (xy^T+c))}</script></li>
 </ol>
 <h1 id="4-结果讨论"><a href="#4-结果讨论" class="headerlink" title="4. 结果讨论"></a>4. 结果讨论</h1><ol>
 <li><p>CNN模型较baseline模型有很大的提升</p>
@@ -166,7 +156,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" data-id="ckbokqfpx0017epuz83km4hkd" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2019/03/28/%E8%AF%AD%E4%B9%89%E7%9B%B8%E4%BC%BC%E5%BA%A6/" data-id="ckbokzt040011qeuz8bujcla2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/text-classification/" rel="tag">text classification</a></li></ul>

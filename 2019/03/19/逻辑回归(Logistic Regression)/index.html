@@ -7,12 +7,12 @@
   
   <title>机器学习算法之逻辑回归(Logistic Regression) | Shihanmax</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A. 模型推导现有样本集合${X,y}$，$X$为特征${x_1,x_2,…,x_n}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y&#x3D;h_\theta(x)$，其中， $$h_\theta(x)&#x3D;\sum \theta_ ix_i$$ 在逻辑回归中，$y$属于集合${0,1}$，$1$表示属于某类别，而$0$表示不属于该类别。 期望得到模型$M$，使得$M(x)\in[0,1]$">
+  <meta name="description" content="A. 模型推导现有样本集合$\{X,y\}$，$X$为特征$\{x_1,x_2,…,x_n\}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y&#x3D;h_\theta(x)$，其中， h_\theta(x)&#x3D;\sum \theta_ ix_i在逻辑回归中，$y$属于集合$\{0,1\}$，$1$表示属于某类别，而$0$表示不属于该类别。 期望得到模型$M$，使得$M(x)\in[0,1]">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习算法之逻辑回归(Logistic Regression)">
 <meta property="og:url" content="https://shihanmax.github.io/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/index.html">
 <meta property="og:site_name" content="Shihanmax">
-<meta property="og:description" content="A. 模型推导现有样本集合${X,y}$，$X$为特征${x_1,x_2,…,x_n}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y&#x3D;h_\theta(x)$，其中， $$h_\theta(x)&#x3D;\sum \theta_ ix_i$$ 在逻辑回归中，$y$属于集合${0,1}$，$1$表示属于某类别，而$0$表示不属于该类别。 期望得到模型$M$，使得$M(x)\in[0,1]$">
+<meta property="og:description" content="A. 模型推导现有样本集合$\{X,y\}$，$X$为特征$\{x_1,x_2,…,x_n\}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y&#x3D;h_\theta(x)$，其中， h_\theta(x)&#x3D;\sum \theta_ ix_i在逻辑回归中，$y$属于集合$\{0,1\}$，$1$表示属于某类别，而$0$表示不属于该类别。 期望得到模型$M$，使得$M(x)\in[0,1]">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-03-18T16:00:00.000Z">
 <meta property="article:modified_time" content="2020-05-13T16:22:15.110Z">
@@ -94,37 +94,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="A-模型推导"><a href="#A-模型推导" class="headerlink" title="A. 模型推导"></a>A. 模型推导</h3><p>现有样本集合${X,y}$，$X$为特征${x_1,x_2,…,x_n}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y=h_\theta(x)$，其中，</p>
-<p>$$h_\theta(x)=\sum \theta_ ix_i$$</p>
-<p>在逻辑回归中，$y$属于集合${0,1}$，$1$表示属于某类别，而$0$表示不属于该类别。</p>
+        <h3 id="A-模型推导"><a href="#A-模型推导" class="headerlink" title="A. 模型推导"></a>A. 模型推导</h3><p>现有样本集合$\{X,y\}$，$X$为特征$\{x_1,x_2,…,x_n\}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y=h_\theta(x)$，其中，</p>
+<script type="math/tex; mode=display">h_\theta(x)=\sum \theta_ ix_i</script><p>在逻辑回归中，$y$属于集合$\{0,1\}$，$1$表示属于某类别，而$0$表示不属于该类别。</p>
 <p>期望得到模型$M$，使得$M(x)\in[0,1]$，这样能够较为方便地衡量$x$属于该类别的概率。</p>
 <a id="more"></a>
-
 <p>$sigmoid$函数可以满足这个需求：</p>
-<p>$$sigmoid(x)=\cfrac{1}{1+e^{-x}}$$</p>
-<p>逻辑回归的$h_\theta(x)$可以写成：</p>
-<p>$$h_ \theta (x)=\cfrac{1}{1+e^ {- \theta x}}$$</p>
-<p>对正样本:</p>
-<p>$$P({y=1 \mid x, \theta})=h_ \theta(x)$$</p>
-<p>对负样本:</p>
-<p>$$P({y=0 \mid x, \theta})=1-h_ \theta(x)$$</p>
-<p>将二者合并，有:</p>
-<p>$$P({y \mid \theta})={h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}$$</p>
-<p>为方便求解，采用最大化似然函数求解参数$\theta$，对$m$个样本，似然函数$L(\theta)$为：</p>
-<p>$$L(\theta)=\prod P(y \mid \theta)=\prod {h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}$$</p>
-<p>对似然函数取对数并取负，可得损失函数$J(\theta)$：</p>
-<p>$$J(\theta)=-lnL(\theta)=-\sum {yh_ \theta(x)}+{(1-y)(1-h_ \theta(x))}$$</p>
-<p>将$J(\theta)$对$\theta$求导，可得</p>
-<p>$$\cfrac{\partial{}}{\partial{\theta}}J(\theta)=x^T(h_\theta (x)-y)$$</p>
-<p>使用梯度下降法迭代求解：</p>
-<p>$$\theta = \theta - \alpha x^T(h_\theta(x)-y)$$</p>
-<p>其中$\alpha$为学习率。</p>
+<script type="math/tex; mode=display">sigmoid(x)=\cfrac{1}{1+e^{-x}}</script><p>逻辑回归的$h_\theta(x)$可以写成：</p>
+<script type="math/tex; mode=display">h_ \theta (x)=\cfrac{1}{1+e^ {- \theta x}}</script><p>对正样本:</p>
+<script type="math/tex; mode=display">P({y=1 \mid x, \theta})=h_ \theta(x)</script><p>对负样本:</p>
+<script type="math/tex; mode=display">P({y=0 \mid x, \theta})=1-h_ \theta(x)</script><p>将二者合并，有:</p>
+<script type="math/tex; mode=display">P({y \mid \theta})={h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}</script><p>为方便求解，采用最大化似然函数求解参数$\theta$，对$m$个样本，似然函数$L(\theta)$为：</p>
+<script type="math/tex; mode=display">L(\theta)=\prod P(y \mid \theta)=\prod {h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}</script><p>对似然函数取对数并取负，可得损失函数$J(\theta)$：</p>
+<script type="math/tex; mode=display">J(\theta)=-lnL(\theta)=-\sum {yh_ \theta(x)}+{(1-y)(1-h_ \theta(x))}</script><p>将$J(\theta)$对$\theta$求导，可得</p>
+<script type="math/tex; mode=display">\cfrac{\partial{}}{\partial{\theta}}J(\theta)=x^T(h_\theta (x)-y)</script><p>使用梯度下降法迭代求解：</p>
+<script type="math/tex; mode=display">\theta = \theta - \alpha x^T(h_\theta(x)-y)</script><p>其中$\alpha$为学习率。</p>
 <h3 id="B-正则化"><a href="#B-正则化" class="headerlink" title="B. 正则化"></a>B. 正则化</h3><p>为避免过拟合问题，可对模型施加$L1$或$L2$正则化项，$Loss$的定义：</p>
 <p>$Loss_{L1}=\beta \mid\mid\theta\mid\mid_1$</p>
 <p>$Loss_{L2}=\cfrac{1}{2}\beta \mid\mid\theta\mid\mid_2^2$</p>
 <p>其中，$\beta$为正则化超参数。</p>
 <p>训练时，将$Loss_{L1/2}$与$J(\theta)$相加，并执行梯度下降。</p>
-<h3 id="C-多分类"><a href="#C-多分类" class="headerlink" title="C. 多分类"></a>C. 多分类</h3><p>逻辑回归应用于$n$类多分类时，可以针对每一个类别分别训练$n$个逻辑回归模型${h_{\theta1},h_{\theta2},…h_{\theta n}}$，在模型$h _{\theta i}$中，将属于类别$i$的数据视为正类，其余类别设为负类（1 vs others），预测时对样本$i$，计算所有模型的分数，取分数最大的模型的正样本类别作为该样本$i$的类别。</p>
+<h3 id="C-多分类"><a href="#C-多分类" class="headerlink" title="C. 多分类"></a>C. 多分类</h3><p>逻辑回归应用于$n$类多分类时，可以针对每一个类别分别训练$n$个逻辑回归模型$\{h_{\theta1},h_{\theta2},…h_{\theta n}\}$，在模型$h _{\theta i}$中，将属于类别$i$的数据视为正类，其余类别设为负类（1 vs others），预测时对样本$i$，计算所有模型的分数，取分数最大的模型的正样本类别作为该样本$i$的类别。</p>
 <h3 id="D-优缺点"><a href="#D-优缺点" class="headerlink" title="D. 优缺点"></a>D. 优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
 <li>形式简单，模型可解释性强（从权重可以看到各个特征的影响）</li>
 <li>效果较好，尤其是在特征选取适当的情况下，工程上经常作为baseline模型</li>
@@ -140,7 +129,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/" data-id="ckbokqfpy001aepuzfwe638p2" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2019/03/19/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic%20Regression)/" data-id="ckbokzt0c001eqeuz18w23tyl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LR/" rel="tag">LR</a></li></ul>

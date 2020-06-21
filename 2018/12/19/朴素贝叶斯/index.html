@@ -105,7 +105,6 @@
 </li>
 <li><p>对类别型的特征变量和符合正态分布的数值型变量效果好</p>
   <a id="more"></a>
-
 </li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
@@ -125,29 +124,21 @@
 <li>可调参数较少，需要关注数据预处理和特征选择</li>
 <li>不适用bagging、boosting等增强方法，因为这些方法是用来减少过拟合（减少方差）的，但朴素贝叶斯没有方差可以减少。</li>
 </ul>
-<h2 id="四、在垃圾邮件识别中的应用"><a href="#四、在垃圾邮件识别中的应用" class="headerlink" title="四、在垃圾邮件识别中的应用"></a>四、在垃圾邮件识别中的应用</h2><h3 id="贝叶斯公式"><a href="#贝叶斯公式" class="headerlink" title="贝叶斯公式"></a>贝叶斯公式</h3><p>$$P(Y \mid X)=\cfrac{P(X\mid Y)P(Y)}{P(X)}$$</p>
-<p>以垃圾邮件识别为例（以H表示事件“是垃圾邮件”，N表示事件“不是垃圾邮件”）：</p>
-<p>$$P(H\mid mail)=\cfrac{P(mail\mid H)P(H)}{P(mail)}$$</p>
-<p>其中：</p>
+<h2 id="四、在垃圾邮件识别中的应用"><a href="#四、在垃圾邮件识别中的应用" class="headerlink" title="四、在垃圾邮件识别中的应用"></a>四、在垃圾邮件识别中的应用</h2><h3 id="贝叶斯公式"><a href="#贝叶斯公式" class="headerlink" title="贝叶斯公式"></a>贝叶斯公式</h3><script type="math/tex; mode=display">P(Y \mid X)=\cfrac{P(X\mid Y)P(Y)}{P(X)}</script><p>以垃圾邮件识别为例（以H表示事件“是垃圾邮件”，N表示事件“不是垃圾邮件”）：</p>
+<script type="math/tex; mode=display">P(H\mid mail)=\cfrac{P(mail\mid H)P(H)}{P(mail)}</script><p>其中：</p>
 <ul>
 <li>$P(H)$称先验概率</li>
 <li>$P(H\mid mail)$称后验概率</li>
 </ul>
 <p>假设某一封邮件的内容是“我司可办理正规发票”，该邮件是垃圾邮件的概率是：</p>
-<p>$$P(H\mid 我司可办理正规发票)=\cfrac{P(我司可办理正规发票\mid H)P(H)}{P(我司可办理正规发票)}$$</p>
-<p>由于邮件中包含的句子多种多样，不太可能将所有句子在正常邮件和垃圾邮件中出现的次数，考虑将句子特征转化为词的特征，上式变为：</p>
-<p>$$P(H\mid 我;司;可;办理;正规;发票)=\cfrac{P(我;司;可;办理;正规;发票\mid H)P(H)}{P(我;司;可;办理;正规;发票)}  \tag{1}$$</p>
-<h4 id="独立性假设的引入"><a href="#独立性假设的引入" class="headerlink" title="独立性假设的引入"></a>独立性假设的引入</h4><p>针对$P(我;司;可;办理;正规;发票)$，引入“朴素”的<strong>独立性</strong>假设：</p>
-<p>$$P(我;司;可;办理;正规;发票\mid H) \approx P(我\mid H)<em>P(司\mid H)</em>P(可\mid H)<em>P(办理\mid H)</em>P(正规\mid H)*P(发票\mid H)$$</p>
-<p>上式中的分量$P(我\mid H)$表示，垃圾邮件中，“我”出现的概率。</p>
-<p>$$P(我\mid H)=\cfrac{P(我,H)}{P(H)} \approx \cfrac{count(我,H)}{count(H)} \tag{2}$$</p>
-<p>令$C = P(H\mid 我;司;可;办理;正规;发票)$，$\overline C = P(N\mid 我;司;可;办理;正规;发票)$</p>
+<script type="math/tex; mode=display">P(H\mid 我司可办理正规发票)=\cfrac{P(我司可办理正规发票\mid H)P(H)}{P(我司可办理正规发票)}</script><p>由于邮件中包含的句子多种多样，不太可能将所有句子在正常邮件和垃圾邮件中出现的次数，考虑将句子特征转化为词的特征，上式变为：</p>
+<script type="math/tex; mode=display">P(H\mid 我\;司\;可\;办理\;正规\;发票)=\cfrac{P(我\;司\;可\;办理\;正规\;发票\mid H)P(H)}{P(我\;司\;可\;办理\;正规\;发票)}  \tag{1}</script><h4 id="独立性假设的引入"><a href="#独立性假设的引入" class="headerlink" title="独立性假设的引入"></a>独立性假设的引入</h4><p>针对$P(我\;司\;可\;办理\;正规\;发票)$，引入“朴素”的<strong>独立性</strong>假设：</p>
+<script type="math/tex; mode=display">P(我\;司\;可\;办理\;正规\;发票\mid H) \approx P(我\mid H)*P(司\mid H)*P(可\mid H)*P(办理\mid H)*P(正规\mid H)*P(发票\mid H)</script><p>上式中的分量$P(我\mid H)$表示，垃圾邮件中，“我”出现的概率。</p>
+<script type="math/tex; mode=display">P(我\mid H)=\cfrac{P(我,H)}{P(H)} \approx \cfrac{count(我,H)}{count(H)} \tag{2}</script><p>令$C = P(H\mid 我\;司\;可\;办理\;正规\;发票)$，$\overline C = P(N\mid 我\;司\;可\;办理\;正规\;发票)$</p>
 <p>判断该邮件是否是垃圾邮件，只需要比较$(1)$式中的分子即可：</p>
 <p>即比较：</p>
-<p>$$P(我\mid H)<em>P(司\mid H)</em>P(可\mid H)<em>P(办理\mid H)</em>P(正规\mid H)<em>P(发票\mid H)</em>P(H) \tag{3}$$</p>
-<p>与</p>
-<p>$$P(我\mid N)<em>P(司\mid N)</em>P(可\mid N)<em>P(办理\mid N)</em>P(正规\mid N)<em>P(发票\mid N)</em>P(N) \tag{4}$$</p>
-<p>的大小，$(3)、(4)$式中的各项，可以通过对语料的统计，通过式$(2)$得到。</p>
+<script type="math/tex; mode=display">P(我\mid H)*P(司\mid H)*P(可\mid H)*P(办理\mid H)*P(正规\mid H)*P(发票\mid H)*P(H) \tag{3}</script><p>与</p>
+<script type="math/tex; mode=display">P(我\mid N)*P(司\mid N)*P(可\mid N)*P(办理\mid N)*P(正规\mid N)*P(发票\mid N)*P(N) \tag{4}</script><p>的大小，$(3)、(4)$式中的各项，可以通过对语料的统计，通过式$(2)$得到。</p>
 <h2 id="五、其他问题"><a href="#五、其他问题" class="headerlink" title="五、其他问题"></a>五、其他问题</h2><h3 id="5-1-重复词语的三种方式"><a href="#5-1-重复词语的三种方式" class="headerlink" title="5.1 重复词语的三种方式"></a>5.1 重复词语的三种方式</h3><ol>
 <li>多项式模型，重复项的概率为重复项出现次数的指数次方</li>
 <li>伯努利模型，认为任何项仅出现1次</li>
@@ -155,8 +146,7 @@
 </ol>
 <h3 id="5-2-停用词和关键词"><a href="#5-2-停用词和关键词" class="headerlink" title="5.2 停用词和关键词"></a>5.2 停用词和关键词</h3><p>去掉语料中的停用词，可以减少模型训练和判断分类的时间，可以通过对照停用词表实现；而关键词相对普通的词，在训练中往往具有更大的权重，如上述例子中的“发票”。关键词需要人工经验进行指定。</p>
 <h3 id="5-3-平滑技术"><a href="#5-3-平滑技术" class="headerlink" title="5.3 平滑技术"></a>5.3 平滑技术</h3><p>在上述例子中，如果“发票”一词以前没有出现过，则计算概率时，会导致整个分子的值变为0（这种情况很常见）。</p>
-<p>$$P(word \mid H)=\cfrac{count(word)+1}{\sum (count(word)+k)}$$</p>
-<p>其中，$k$是邮件类别数，这里取2。</p>
+<script type="math/tex; mode=display">P(word \mid H)=\cfrac{count(word)+1}{\sum (count(word)+k)}</script><p>其中，$k$是邮件类别数，这里取2。</p>
 <h2 id="六、实验"><a href="#六、实验" class="headerlink" title="六、实验"></a>六、实验</h2><p>待补充</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.csdn.net/han_xiaoyang/article/details/50629608" target="_blank" rel="noopener">1. 朴素贝叶斯实战与进阶</a></p>
 <p><a href="https://blog.csdn.net/suibianshen2012/article/details/51613759" target="_blank" rel="noopener">2. 用朴素贝叶斯进行文本分类</a></p>
@@ -164,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shihanmax.github.io/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/" data-id="ckbokqfpv0013epuz2efrdwqk" class="article-share-link">Share</a>
+      <a data-url="https://shihanmax.github.io/2018/12/19/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/" data-id="ckbokzt02000xqeuz4gr11nab" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NB/" rel="tag">NB</a></li></ul>
