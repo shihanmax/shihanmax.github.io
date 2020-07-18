@@ -1,6 +1,7 @@
 ---
 title:  "序列标注实践"
-date:   2020-05-10 17:16:03
+layout: post
+date: 2020-05-10 17:16:03
 categories: NLP
 tags:  pos tagging
 syntaxHighlighter: yes
