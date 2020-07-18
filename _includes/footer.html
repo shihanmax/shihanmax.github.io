@@ -1,10 +1,12 @@
 <footer class="c-page__footer">
-	<p>{% include fortune.html %}</p>
+	<p>
+    {% include fortune.html %}
+    </p>
 	{% if page.layout != 'amp' %}
 	<hr><br/>
 	{% endif %}
     <br/>
-	<p align="center">&copy; {{ site.author }} {{ 'now' | date: '%Y' }} | Super powered by Jekyll </p>
+	<p>&copy; {{ site.author }} {{ 'now' | date: '%Y' }} | Super powered by Jekyll </p>
 	{% if page.layout != 'amp' %}
 	<br/>
 	{% endif %}
