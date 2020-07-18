@@ -1,5 +1,6 @@
 ---
 title:  "动态时间规整（DTW）算法"
+layout: post
 date:   2020-02-25 18:02:20
 categories: Algorithm
 tags:  ["序列相似度","DTW"]

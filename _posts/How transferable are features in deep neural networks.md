@@ -1,5 +1,6 @@
 ---
 title: How transferable are features in deep neural networks
+layout: post
 categories: 'NLP'
 tags:
   - 'transfer learning'

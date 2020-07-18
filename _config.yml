@@ -9,11 +9,12 @@ url: "https://shihanmax.github.io" # the base hostname & protocol for your site
 twitter_username: YourTwitterNo
 github_username:  YourGitHubNo
 
-disqus_shortname: Test1
+# disqus_shortname: Test1
 
 # Build settings
 include: [_pages]
 markdown: kramdown
+highlighter: rouge
 permalink: /:year/:month/:title
 sass:
     style: compressed
@@ -21,11 +22,3 @@ sass:
 gems:
   - jemoji
   - jekyll-sitemap
-# - amp-jekyll # Acceletrated Mobile Pages
-
-# AMP Settings
-# ampdir: amp/
-# enable_amp: true
-
-# Google Analytics
-# google_analytics: UA-XXXXXXXX-X

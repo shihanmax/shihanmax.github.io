@@ -1,5 +1,6 @@
 ---
 title:  "使用Tensotflow同时加载多个模型"
+layout: post
 date:   2019-03-18 17:38:00
 categories: 深度学习
 tags:  Tensorflow

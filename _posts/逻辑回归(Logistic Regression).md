@@ -1,5 +1,6 @@
 ---
 title:  "机器学习算法之逻辑回归(Logistic Regression)"
+layout: post
 date:   2019-03-19 00:00:00
 categories: 机器学习
 tags:  LR

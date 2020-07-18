@@ -1,5 +1,6 @@
 ---
 title:  "HMM在中文分词中的应用"
+layout: post
 date:   2018-12-07 00:00:00
 categories: NLP
 tags:  机器学习

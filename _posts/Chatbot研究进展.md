@@ -1,5 +1,6 @@
 ---
 title:  "Recent advances in conversational NLP"
+layout: post
 date:   2019-03-26 00:00:00
 categories: NLP
 tags:  Chatbot
