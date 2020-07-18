@@ -1,0 +1,31 @@
+# Site settings
+title: Shihanmax
+description: >
+    My description
+author: Shihanmax
+email: shihanmax@hotmail.com
+baseurl: "/" # the subpath of your site, e.g. /blog
+url: "https://shihanmax.github.io" # the base hostname & protocol for your site
+twitter_username: YourTwitterNo
+github_username:  YourGitHubNo
+
+disqus_shortname: Test1
+
+# Build settings
+include: [_pages]
+markdown: kramdown
+permalink: /:year/:month/:title
+sass:
+    style: compressed
+
+gems:
+  - jemoji
+  - jekyll-sitemap
+# - amp-jekyll # Acceletrated Mobile Pages
+
+# AMP Settings
+# ampdir: amp/
+# enable_amp: true
+
+# Google Analytics
+# google_analytics: UA-XXXXXXXX-X
