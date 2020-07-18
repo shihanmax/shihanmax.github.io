@@ -1,7 +1,7 @@
 # Site settings
 title: Shihanmax
 description: >
-    My description
+    Shihanmax's blog
 author: Shihanmax
 email: shihanmax@hotmail.com
 baseurl: "/" # the subpath of your site, e.g. /blog
