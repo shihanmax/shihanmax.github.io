@@ -8,7 +8,7 @@ syntaxHighlighter: yes
 Mathjax: true
 ---
 
-隐变量模型（Latent Variable Models）指模型中包含不可观测的隐含变量$z$，因变量模型的求解根据$z$的已知与否分为两类：
+隐变量模型（Latent Variable Models）指模型中包含不可观测的隐含变量$z$，隐变量模型的求解根据$z$的已知与否分为两类：
 
 - complete case
 - incomplete case
