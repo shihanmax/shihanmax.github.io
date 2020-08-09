@@ -41,7 +41,7 @@ $$\begin{aligned} L(\theta)-L(\theta_n) & \geqslant \sum_{z} p\left(z \mid x, \t
 
 $$\begin{aligned} \theta_{n+1} &=a r g \max _{\theta} L\left(\theta_{n}\right)+\Delta\left(\theta \mid \theta_{n}\right) \\ &=\arg \max _{\theta} \Delta\left(\theta \mid \theta_{n}\right) \\ &=\arg \max _{\theta} \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln p(x \mid z, \theta) \cdot p(z \mid \theta) \\ &=\arg \max _{\theta} \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln p(x, z \mid \theta) \\ &=\arg \max _{\theta} E_{z \mid x, \theta_{n}} p(x, z \mid \theta)\end{aligned}$$
 
-其中，$E_{z \mid x, \theta_{n}} p(x, z \mid \theta)$为$(z|x,\theta,n)$的期望，由于该项中包含了两个未知变量$\theta,z$，最大化过程分为两步进行：
+其中，$E_{z \mid x, \theta_{n}} p(x, z \mid \theta)$为$(z\mid x,\theta,n)$的期望，由于该项中包含了两个未知变量$\theta,z$，最大化过程分为两步进行：
 
 - E-step：根据当前的$\theta$计算出$z$的期望（在包含两个待求解变量时，E-step固定其中的$\theta$来独立求解$z$，因此EM算法中的E-step可以看作是coordinate decent的一种特例。）
 - M-step：$maximize \ln p(x,z\mid \theta)$（可以认为此时的$z$是已知的，这种comlelte-case可以直接使用MLE等优化方法直接求解。）
