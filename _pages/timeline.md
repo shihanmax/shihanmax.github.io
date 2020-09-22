@@ -17,6 +17,6 @@ permalink: /timeline/
       {% endif %}
     {% endunless %}
 
-    <li>{{ post.date | date:"%Y-%m-%d：" }} <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {{ post.date | date:"%Y-%m-%d：" }} <a href="{{ post.url }}">{{ post.title }}</a>
   {% endfor %}
 </ul>
