@@ -14,11 +14,11 @@ permalink: /timeline/
       {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
       {% if year != nyear %}
       
-      </br><h2>{{ post.date | date: '%Y' }}</h2>
+      <br/><h2>{{ post.date | date: '%Y' }}</h2>
       {% endif %}
     {% endunless %}
 
     &nbsp;{{ post.date | date:"%Y-%m-%d：" }} <a href="{{ post.url }}">{{ post.title }}</a>
-    </br>
+    <br/>
   {% endfor %}
 </ul>
