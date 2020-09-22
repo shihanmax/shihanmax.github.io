@@ -14,7 +14,7 @@ permalink: /timeline/
       {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
       {% if year != nyear %}
       
-      <br/><h2>{{ post.date | date: '%Y' }}</h2>
+      <h2>{{ post.date | date: '%Y' }}</h2>
       {% endif %}
     {% endunless %}
 
