@@ -3,13 +3,6 @@ layout: post
 title: Tags
 permalink: /tags/
 ---
-<ul class="tags">
-    {% for tag in site.tags %}
-    <li>
-        <a href="#{{ tag[0] }}">{{ tag[0] }}</a> <sup>{{ tag[1].size }}</sup>
-    </li>
-    {% endfor %}
-</ul>
 
 <ul class="listing">
     {% for tag in site.tags %}
