@@ -57,6 +57,7 @@ At this time, $\mathbf{a}$ is a vector of $1\times n$, which represents the weig
 For longer sentences or sentences that contain different descriptions or contexts, sometimes we want to express the sentence from different point of views. In order to achieve this, the author replace the vector $w_ {s2}: 1 \times d_a$ with a matrix $W_{s2}: r\times d_a$, which do the same thing like multi-head attention. Note that at this time softmax should be executed line by line.
 
 Finally we got the attention score matrix $A: r\times n$, and do the dot product with the representation matrix $H$ to get the final representation matrix $M$ of the sentence:
+
 $$M=AH$$
 
 ### penalty term
