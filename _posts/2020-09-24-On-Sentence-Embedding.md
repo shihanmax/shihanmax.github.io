@@ -72,6 +72,45 @@ This penalty item will be minimized together with loss of downstream tasks durin
 
 The advantage of the method proposed in this paper is that it can force the attention to be calculated from different angles during the training process, and it can overcome the problem of long-distance dependence to a certain extent. The disadvantage is that this method is relatively dependent on downstream tasks, and can only be trained in a supervised manner, and has limited compatibility between different tasks.
 
+## 3. Distributed Representations of Sentences and Documents
+
+The shortcomings of the current method of obtaining sentence embedding:
+
+- bag-of-words model
+  - lost order info
+  - less semantic
+
+- bag-of-n-grams
+- data sparsity
+- high-dimensionality
+- less semantic
+
+This paper proposes an unsupervised sentence embedding training method for variable length text: Paragraph Vector.
+
+There are two training methods for Paragraph Vector:
+
+### 1. A distributed memory model
+
+For corpus C, suppose it contains $N$ paragraphs, and the embedding dimension of each paragraph is $p$; the corpus contains $M$ words, and the embedding dimension of each word is $q$; The number of parameters the model needs to learn is $N \times p + M \times q$, each paragraph is mapped to a paragraph id (that is, we can treat paragraphs in the corpus as special words).
+
+During the training, for a paragraph, we select a sliding window W. The text in the window is called context, which is the basic unit of training. The context in the same paragraph shares the paragraph embedding, and the words in the entire corpus share words embedding. For context C, use its paragraph vector to concatenate the word embedding of each word in C to predict what the next word of this context is.
+
+At prediction time, for the set of paragraphs to be predicted $\{P\}_{n}$, first, add it to corpus C (that is, add $n$ rows to the paragraph matrix),  then continue to execute the training process on new corpus until convergence, with word embedding fixed.
+
+In this training method, the paragraph vector plays a memory role of the topic and other information of the paragraph, so it is called PV-DM (Distributed Memory Paragraph Vectors).
+
+### 2. Distributed bag of words
+Another method of PV training is as follows, which is similar to training the skip-gram model in Word2vec. In the training process, a window W is sampled from the paragraph P, and given the paragraph vector of the paragraph to which the window belongs, predict the random sampling word w from the window. This method named PV-DBOW because it ignores the order of words.
+
+Experimental results show that combining the sentence vectors obtained by these two methods can get more stable and better results.
+
+### futher observations
+1. The effect of PV-DM is better than PV-DBOW
+2. In PV-DM, concat paragraph vectors and word embedding could achive better result
+3. The selection of window size requires cross-validation
+4. The time cost to obtain the paragraph vector is high, but this problem can be alleviated by parallel computing.
+
+
 
 
 Refs.
@@ -81,3 +120,5 @@ Refs.
 [2. Implementation of SIF](https://github.com/PrincetonML/SIF/blob/master/src/SIF_embedding.py)
 
 [3. A STRUCTURED SELF-ATTENTIVE SENTENCE EMBEDDING ](https://arxiv.org/pdf/1703.03130)
+
+[4. Distributed Representations of Sentences and Documents]( http://cn.arxiv.org/pdf/1405.4053.pdf)
