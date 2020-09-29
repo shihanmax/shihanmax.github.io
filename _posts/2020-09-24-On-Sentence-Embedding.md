@@ -8,7 +8,7 @@ syntaxHighlighter: yes
 Mathjax: true
 ---
 
-This article will briefly introduce two papers on document representation.
+This article will briefly introduce some papers on document representation.
 
 ## 1. A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SENTENCE EMBEDDINGS
 
