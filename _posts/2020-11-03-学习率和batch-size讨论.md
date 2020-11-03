@@ -1,5 +1,5 @@
 ---
-title:  "有关学习率和batch size的讨论"
+title:  "学习率和batch size讨论"
 layout: post
 date:   2020-11-05 22:02:23
 categories: NLP
