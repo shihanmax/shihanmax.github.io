@@ -25,8 +25,8 @@ Mathjax: true
 
    - 初期学习率warmup：训练初期，学习率有一个比较小的值逐渐增加到基础学习率；
    - 学习率衰减：训练过程中，学习率以某种衰减曲线形式逐渐减少；
+   - 循环学习率（Cyclical learning rates）：随着训练过程进行，学习率以循环的方式，逐渐增加至基础学习率，然后逐渐衰减到一个较小值，这个过程循环执行，直至训练结束，过程中，基础学习率本身可能也会以某种方式逐渐衰减。
 
-   3. 循环学习率（Cyclical learning rates）：随着训练过程进行，学习率以循环的方式，逐渐增加至基础学习率，然后逐渐衰减到一个较小值，这个过程循环执行，直至训练结束，过程中，基础学习率本身可能也会以某种方式逐渐衰减。
 
 <img src="http://shihanmax.top/20201028204513_BsaS8K_Screen-Shot-2018-02-25-at-8.44.49-PM.jpeg" alt="cyclical lr" style="zoom: 67%;">
 
@@ -78,10 +78,16 @@ Mathjax: true
 Refs.
 
 [Recent Advances for a Better Understanding of Deep Learning − Part I]( https://towardsdatascience.com/recent-advances-for-a-better-understanding-of-deep-learning-part-i-5ce34d1cc914)
+
 [Setting the learning rate of your neural network]( https://www.jeremyjordan.me/nn-learning-rate/)
+
 [Visualizing the Loss Landscape of Neural Nets](https://arxiv.org/pdf/1712.09913.pdf)
-[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780) 
+
+[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780)
+
 [ON LARGE-BATCH TRAINING FOR DEEP LEARNING: GENERALIZATION GAP AND SHARP MINIMA ](https://arxiv.org/pdf/1609.04836.pdf)
+
+
 
 
 
