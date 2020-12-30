@@ -32,7 +32,7 @@ Mathjax: true
 
 与训练过程中，学习率一直下降相比，学习率在训练过程中增加的一个理论假设是，“短期内，增加学习率会导致损失增加，但长期来看，模型会收敛到一个更优的解”。支撑这一假设的两个偏直觉性的推断是：
 
-1. 从训练目标来看，我们希望训练的到的参数足够鲁棒，也即输入或参数微小的波动不应l该导致目标函数/损失函数发生大幅度的变化，这种变化尤其可能发生在比较狭小的极小值处（sharp minima lead to poor generalization，后文讨论batch size的影响时会提到），训练过程中增加学习率，能够有更大的可能使参数从这种不理想的极小值出跳出；
+1. 从训练目标来看，我们希望训练的到的参数足够鲁棒，也即输入或参数微小的波动不应该导致目标函数/损失函数发生大幅度的变化，这种变化尤其可能发生在比较狭小的极小值处（sharp minima lead to poor generalization，后文讨论batch size的影响时会提到），训练过程中增加学习率，能够有更大的可能使参数从这种不理想的极小值出跳出；
 
 2. 同样的，目标函数表面可能存在非常多的鞍点（在某些参数维度上，目标函数取极小值，同时，在其他参数维度上则取最大值），训练过程中增加学习率有助于更快地脱离鞍点，起到加快收敛的作用。
 
@@ -44,7 +44,7 @@ Mathjax: true
 
 ![skip-connections](http://shihanmax.top/20201029204023_N5naCq_%E6%88%AA%E5%B1%8F2020-10-29%2020.40.15.jpeg)
 
-这篇文章[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780) 证明了，在较大的神经网络中，全局最优解往往不是一个点，而是一个连通的流形（manifold），一个更一般化的说法：如果目标函数存在两个局部最优解，则一定可以通过一条平坦的路径，使得这两点连通。
+这篇文章[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780) 证明了，在较大的神经网络中，全局最优解往往不是一个点，而是一个连通的流形（manifold），一个更一般化的说法：如果目标函数存在两个局部最优解，则一定可以通过一条平坦的路径（flat path），使得这两点连通。
 
 ## 2. batch size
 
