@@ -3,7 +3,7 @@ title:  "Derivation of EM"
 layout: post
 date: 2020-08-09 17:16:03
 categories: NLP
-tags:  EM
+tags: ["Machine Learning"]
 syntaxHighlighter: yes
 Mathjax: true
 ---

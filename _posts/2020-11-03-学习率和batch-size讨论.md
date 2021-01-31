@@ -3,7 +3,7 @@ title:  "学习率和batch size讨论"
 layout: post
 date:   2020-11-05 22:02:23
 categories: NLP
-tags:  optimization
+tags:  ["Machine Learning", "Optimization"]
 syntaxHighlighter: yes
 Mathjax: true
 ---

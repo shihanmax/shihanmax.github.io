@@ -3,7 +3,7 @@ title:  "CRF,HMM,MEMM的区别和联系"
 layout: post
 date:   2018-12-22 00:00:00
 categories: Machine Learning
-tags:  ["概率图模型", "PGM"]
+tags:  ["PGM"]
 syntaxHighlighter: yes
 Mathjax: true
 ---
