@@ -16,6 +16,6 @@ permalink: /tags/
     </li>
 </ul>
 {% endfor %}
-</br>
+<br/>
 {% endfor %}
 <!-- </ul> -->
