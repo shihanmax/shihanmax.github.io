@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>RNN Training Tips and Tricks - Shihanmax</title>
+    <meta name="description" content="本文是一些在训练RNN模型的技巧和建议，来自Andrej Karpathy.">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2019/01/RNN-Training-Tips-and-Tricks">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">RNN Training Tips and Tricks</h1>
+        <p class="c-article__time"><time datetime="2019-01-25T08:00:00+08:00" itemprop="datePublished">Jan 25, 2019</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>本文是一些在训练RNN模型的技巧和建议，来自<a href="https://github.com/karpathy/char-rnn#tips-and-tricks">Andrej Karpathy</a>.</p>
+
+<h2 id="监视训练集和验证集损失">监视训练集和验证集损失</h2>
+
+<p>机器学习、神经网络方面的新手可能需要掌握更多的技巧才能训练出一个好的模型。首要关注的是训练集损失（训练时输出）和验证集损失（指定迭代次数后将模型在验证集上跑一遍，得到验证集损失），特别地：</p>
+
+<ul>
+  <li>如果训练集损失比验证集损失低很多，这意味着我们的模型可能过拟合了，解决办法是，减小网络的规模，或者增大dropout率，比如调整到0.5</li>
+  <li>如果训练集/测试集误差处在同一个水平上，模型很有可能欠拟合，此时需要增大网络规模（网络层数或者每层的神经元个数）</li>
+</ul>
+
+<!--more-->
+
+<h2 id="参数预估">参数预估</h2>
+
+<p>LSTM模型的两个重要参数是lstm_size和num_layers，我建议将num_layers设置为2或者3，lstm_size可以基于训练数据量来调整，你需要关注两个数：</p>
+
+<ul>
+  <li>模型一共包含多少参数</li>
+  <li>数据规模，1MB的数据大约包含一百万个字符</li>
+</ul>
+
+<p>这两者应该有着相同的数量集，可能不太好描述，下面是几个例子：</p>
+
+<ul>
+  <li>如果我的数据集是100MB的，我使用默认的参数设置（包含150k个参数），由于我的数据集数量远大于参数数量（100百万»0.15百万），模型很有可能欠拟合，这个时候，可以放心地将lstm_size调大一些</li>
+  <li>如果我有10MB的数据，而模型拥有一千万个参数，这时候我会密切关注验证集损失，如果它比训练集损失大，我会将dropout调大一些，这样有助于降低验证集损失</li>
+</ul>
+
+<h2 id="最好的模型策略">最好的模型策略</h2>
+
+<p>寻找最优模型参数的“制胜法宝“是，在我们可以忍受的训练时间下，尽可能在更大的网络上试错，并且在(0, 1)之间调整dropout，在验证集上拥有最好的性能的模型，就是我们最终想要的。</p>
+
+<p>通过调整不同的超参数，运行多个模型在深度学习领域十分普遍，最终我们要选择在验证集上表现最好的那个。</p>
+
+<p>另外，训练集/测试集分割比率也是个超参数，要保证验证集包含足够的数据，否则，验证集性能可能会因为有噪声而不能反映出模型真实的信息。</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Deep Learning</span>
+        
+            <span class="c-tag">RNN</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

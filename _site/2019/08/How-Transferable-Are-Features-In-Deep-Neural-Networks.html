@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>How Transferable Are Features In Deep Neural Networks - Shihanmax</title>
+    <meta name="description" content="Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2019/08/How-Transferable-Are-Features-In-Deep-Neural-Networks">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">How Transferable Are Features In Deep Neural Networks</h1>
+        <p class="c-article__time"><time datetime="2019-08-23T03:38:33+08:00" itemprop="datePublished">Aug 23, 2019</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson</p>
+
+<p>本文通过实验考察从网络第一层的强泛化能力的特征到最后一层的任务相关的特征之间的转变过程。对神经元的泛化能力（generality）以及特异性（specificity）进行量化分析。</p>
+
+<p>迁移能力 受两个因素影响：</p>
+
+<ul>
+  <li>后层的神经元更专注于特定的任务</li>
+  <li>优化自适应（co-adapted）神经元的困难</li>
+</ul>
+
+<!--more-->
+
+<p>我们在 ImageNet 上的实验表明，以上两个因素均有占主导的时候，取决于特征的转移过程发生在网络的前、中、后层；另外发现，两个任务的差异性越大，泛化能力就越差，但仍然超过随机特征的效果。最后的发现是，无论初始化时使用了多少层与训练权重，在 finetune 到特定数据集之后，仍然保持泛化能力。</p>
+
+<p>我们称第一层的特征为general特征，最后一层的特征为specific特征。那么在两层中间一定存在着从 genral到specific之间的转变，那么问题来了：</p>
+
+<ul>
+  <li>我们可以量化某一层的general或者specific的度吗？</li>
+  <li>转变发生在某一层，还是分布在几层之间？</li>
+  <li>转变发生在网络的前部、中部、还是后部？</li>
+</ul>
+
+<p>我们关心这些问题的原因是，如果我们能够掌握上述转变发生的位置，我们就能够更有效地利用迁移学习，其有效性已经得到广泛认可。在迁移学习中，我们可以冻结transferred feature，仅训练后层随机初始化的网络，或者将它们随后层任务一起微调（finetune），这取决于新领域的数据集规模。</p>
+
+<h4 id="experiment-results">Experiment results</h4>
+
+<p><img src="http://shihanmax.top/截屏2019-08-22下午7.35.42.png" alt="The results from this paper’s main experiment." /></p>
+
+<p><img src="http://shihanmax.top/截屏2019-08-22下午7.36.29.png" alt="Performance degradation vs. layer." /></p>
+
+<h4 id="本文贡献">本文贡献：</h4>
+
+<ol>
+  <li>定义一种量化各层泛化能力的方法</li>
+  <li>发现以下两种会破坏性能的点：
+    <ul>
+      <li>特征自身的专一性</li>
+      <li>optimization difficulties due to splitting the base network between co-adapted neurons on neighboring layers</li>
+    </ul>
+  </li>
+  <li>量化研究了随着任务差异性的提升，泛化能力如何下降</li>
+  <li>对比了浅层随机初始化和迁移学习的效果，后者更好</li>
+  <li>我们发现前层权重在新的数据集上微调后，在旧的数据集上的效果依然保持</li>
+</ol>
+
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Deep Learning</span>
+        
+            <span class="c-tag">Transfer Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

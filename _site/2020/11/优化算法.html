@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>优化算法 - Shihanmax</title>
+    <meta name="description" content="根据优化目标是否受条件约束，优化算法分为无约束优化算法和带约束优化算法。">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/11/%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">优化算法</h1>
+        <p class="c-article__time"><time datetime="2020-11-25T06:04:26+08:00" itemprop="datePublished">Nov 25, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>根据优化目标是否受条件约束，优化算法分为无约束优化算法和带约束优化算法。</p>
+
+<p>常见的无约束优化算法有：梯度下降法（最速下降法）、牛顿法、拟牛顿法、共轭梯度法、启发式算法（遗传算法、模拟退火、蚁群算法等）。</p>
+
+<p>常见的带约束优化问题可以按照约束条件分为两类：</p>
+<ul>
+  <li>等式约束优化问题</li>
+  <li>不等式约束优化问题</li>
+</ul>
+
+<p>对于第一类，可以使用拉格朗日乘数法，转变为无约束优化问题；
+对于第二类，可引入KKT条件，将不等式约束优化问题转化为等式约束优化问题，然后使用等式约束优化问题的求解方法来处理。</p>
+
+<p>以下简单介绍无约束优化算法：梯度下降法、牛顿法、拟牛顿法和共轭梯度法。</p>
+
+<h3 id="梯度下降法gradient-decent-gd">梯度下降法（Gradient Decent, GD）</h3>
+
+<p>梯度下降法在深度学习中应用非常广泛，梯度下降算法的优化思想是，使用当前目标函数的负梯度方向作为搜索方向，由于这个方向是目标函数下降最快的方向，因此梯度下降法又称为最速下降法。在梯度下降法执行过程中，越接近目标点，梯度越小，每次更新的步长就会越小。
+对于目标函数为凸的情况，GD算法总能找到最优解，但在非凸情况下，则不能保证。
+梯度下降法实现简单，在大量样本上执行速度快。其缺点在于，需要手工调整超参数，如学习率、终止条件等；另外，梯度下降本质上是一个序列算法，无法很好地支持并行计算。</p>
+
+<p>在实际应用中，常使用批梯度下降法（Batch Gradient Decent，BGD）和小批量梯度下降法（mini-Batch Gradient Decent），及随机梯度下降法（Stochastic Gradient Decent，SGD），BGD、mini-BGD、SGD的区别在于，BGD一次迭代使用所有的训练数据计算梯度方向，对于数据量较大的情况，执行速度较慢，mini-BGD和SGD则分别使用一小批样本和单个样本对参数进行更新，SGD每次迭代的目标是最小化单个样本的损失，通过增加迭代次数，来换取执行效率的提升，同时，在大量数据的前提下，其优化方向也趋于最优解。mini-BGD则是BGD和SGD的折衷选择。</p>
+
+<h3 id="牛顿法newtons-method">牛顿法（Newton’s Method）</h3>
+
+<p>牛顿法在机器学习领域的应用也比较多，其基本思想是，利用参数当前位置的一阶导数（梯度）和二阶导数（Hessian矩阵）对目标函数进行二次近似，然后将二次模型的极小点作为新的迭代点，重复上述过程，直至极小值满足精度要求。牛顿法运行速度很快，而且可以高度逼近最优解。</p>
+
+<p>记优化目标函数为$f(x)$，牛顿法在一维情形中的表述如下：</p>
+
+<p>对$f(x)$进行二阶展开，忽略高阶余项（为了方便表述，以下泰勒展开公式中，使用等号，下同），有：</p>
+
+\[f(x) = f(x_{k})+\nabla f(x_{k})^T(x-x_{k})+\frac{1}{2} (x-x_{k})^T \nabla^2 f(x_{k})(x-x_{k})\]
+
+<p>上式求$x$求导，并令其为0，可得：</p>
+
+\[\nabla f(x)=\nabla f(x_{k})+\nabla^{2} f(x_{k})(x-x_{k})=0\]
+
+<p>即：</p>
+
+\[x = x_k - \frac{\nabla f(x_{k})}{\nabla^{2} f(x_{k})}\]
+
+<p>其中，$\nabla^{2} f(x_{k})$为Hassian阵，可简记为H，</p>
+
+\[H(x)=\left[\frac{\partial^{2} f}{\partial x_{i} \partial x_{j}}\right]_{n \times n}\]
+
+<p>牛顿法的执行流程如下：</p>
+
+<ol>
+  <li>设定终止误差$0 \leq \epsilon \ll 1$，设置初始点$x_0 \in \mathrm{R}^n$，$k=0$</li>
+  <li>计算$g_k=\nabla f(x_{k})$，若$\mid\mid g_k \mid\mid \leq \epsilon$，算法终止，输出$x^* =x_k$</li>
+  <li>计算$H_k=\nabla^{2} f(x_{k})$，计算搜索方向$d_k=-H_k^{-1}g_k$，这个搜索方向又称为“牛顿方向“</li>
+  <li>令$x_{k+1}=x_k+\lambda d_k$，$k=k+1$，转至2</li>
+</ol>
+
+<p>在第四步中，需要设置一个接近0的参数$\lambda$，需要这个参数来保证$x_{k+1}$在$x_k$的邻域内，以确保我们可以在泰勒展开时能够忽略高阶项。$\lambda$的选取可以使用直线搜索法（line search），即在一定的区间范围内设定$\lambda$的值，选择函数值下降最快的值作为最优$\lambda$。</p>
+
+<p>从几何的角度，牛顿法使用一个二次曲面来拟合当前所处位置的局部曲面，而梯度下降则是用一个平面来拟合，通常情况下，牛顿法的下降路径更符合实际的最优下降路径，且收敛速度更快（其具有二阶收敛特性），不足之处在于，牛顿法每一次迭代均需要计算一次目标函数的二阶导数（对应高维情况的Hessian矩阵），计算过程比较复杂。</p>
+
+<p>当然，牛顿法也面临一些问题，主要是：</p>
+
+<ol>
+  <li>牛顿法与梯度下降类似，也在寻找梯度为0的点，所以也会面临鞍点和局部极小值的问题</li>
+  <li>Hessian求逆的代价很高</li>
+  <li>在某些情况下Hessian阵可能不可逆</li>
+  <li>每次迭代过程中，牛顿法不能保证收敛到最优解，可以使用直线搜索法或可信域搜索来动态调整牛顿方向的步长，这里可以衍生出可信域牛顿法（Trust Region Newton Methods）。</li>
+</ol>
+
+<h3 id="拟牛顿法quasi-newton-methods">拟牛顿法（Quasi-Newton Methods）</h3>
+
+<p>在牛顿法中提到，迭代过程中在求解线性方程组时，需要计算Hessian矩阵的逆矩阵，Hessian逆矩阵求解比较耗时，且有些情况下Hessian矩阵是不可逆的，为此，提出了一些改进算法，典型的是拟牛顿法，其主要思想是，不直接求解$H$矩阵及其逆矩阵，而是通过其他手段获得它们。具体地，构造一个正定矩阵来替代$H$矩阵（或其逆矩阵），将这个替代矩阵用于牛顿法的求解中。</p>
+
+<p>仿照牛顿法中的处理方式，将$f(x)$在$x_{k+1}$处展开并忽略高阶项，有：</p>
+
+\[f(x)= f(x_{k+1})+\nabla f(x_{k+1})^T(x-x_{k+1})+\frac{1}{2} (x-x_{k+1})^T \nabla^2 f(x_{k})(x-x_{k+1})\]
+
+<p>对等号两侧求梯度，有：</p>
+
+\[\nabla f(x) = \nabla f(x_{k+1})+\nabla^{2} f(x_{k+1})(x-x_{k+1})\]
+
+<p>令$x=x_k$，有：</p>
+
+\[\nabla f(x_{k+1})-\nabla f(x_k) = \nabla^{2} f(x_{k+1})(x_{k+1} - x_k)\]
+
+<p>沿用上述牛顿法中的记号，上式简写为：</p>
+
+\[g_{k+1}-g_{k}=H_{k+1}(x_{k+1}-x_{k})\]
+
+<p>令$x_{k+1}-x_{k}=s_k$，$g_{k+1}-g_{k}=y_k$，则有：</p>
+
+<p>$y_k=H_{k+1}s_k$，即$s_k=H_{k+1}^{-1}y_k$</p>
+
+<p>上述条件称为拟牛顿条件，在拟牛顿方法中构造出的Hessian矩阵需要满足上述条件。</p>
+
+<p>典型的拟牛顿方法有DFP算法（Davidon-Fletcher-Powell）、BFGS算法（Broyden-Fletcher-Goldfarb-Shanno Algorithm）、Broyden类算法（Broyden’s algorithm）、L-BFGS算法（Limited-memory BFGS）、SR1算法（Symmetric rank-one）等，下文主要介绍DFP算法、BFGS算法、Broyden类算法。</p>
+
+<h4 id="dfp算法">DFP算法</h4>
+
+<p>DFP算法使用$G_k$作为$H_k^{-1}$的近似，并假设$G_k$的迭代过程包含两个附加项：</p>
+
+\[G_{k+1}=G_{k}+P_{k}+Q_{k}\]
+
+<p>其中$P_k$和$Q_k$为待定矩阵，有：</p>
+
+\[G_{k+1} y_{k}=G_{k} y_{k}+P_{k} y_{k}+Q_{k} y_{k}\]
+
+<p>为了使$G_{k+1}$满足拟牛顿条件，可以让$P_k$和$Q_k$满足：</p>
+
+\[P_{k} y_{k}=\delta_{k},Q_{k}=-\frac{G_{k} y_{k} y_{k}^{T} G_{k}}{y_{k}^{T} G_{k} y_{k}}\]
+
+<p>带入$G_{k+1}$的迭代公式可得：</p>
+
+\[G_{k+1}=G_{k}+\frac{\delta_{k} \delta_{k}^{T}}{\delta_{k}^{T} y_{k}}-\frac{G_{k} y_{k} y_{k}^{T} G_{k}}{y_{k}^{T} G_{k} y_{k}}\]
+
+<p>如果$G_0$是正定的，则可以证明，迭代过程中的$G_k$都是正定的。</p>
+
+<p>DFP算法流程如下：</p>
+
+<ol>
+  <li>给定初值$x_0$，终止误差$\epsilon$；取$G_0$为正定矩阵，令$k=0$</li>
+  <li>计算$g_k=g(x_0)$，如果$\Vert g_k \Vert \lt \epsilon$则终止迭代，近似解$x^* =x_k$；否则执行下一步</li>
+  <li>计算$p_k=-G_kg_k$</li>
+  <li>执行一维搜索，求$\lambda$使得：
+\(f(x^{(k)}+\lambda_{k} p_{k})=\min_\limits{\lambda \geq 0} f(x^{(k)}+\lambda p_{k})\)</li>
+  <li>$x_{k+1}=x_k+\lambda p_k$</li>
+  <li>计算$g_{k+1}=g(x_{k+1})$，如果$\Vert g_k \Vert \lt \epsilon$则终止迭代，近似解$x^*=x_k$；否则，计算$G_{k+1}=G_{k}+\frac{\delta_{k} \delta_{k}^{T}}{\delta_{k}^{T} y_{k}}-\frac{G_{k} y_{k} y_{k}^{T} G_{k}}{y_{k}^{T} G_{k} y_{k}}$</li>
+  <li>$k=k+1$，执行第3步</li>
+</ol>
+
+<h4 id="bfgs算法">BFGS算法</h4>
+
+<p>BFGS算法的思想是构造Hessian矩阵$H_k$的近似矩阵$B_k$，并通过迭代来更新这个矩阵：</p>
+
+\[B_{k+1}=B_k+\Delta B_k\]
+
+<p>近似矩阵的初值$B_0$为单位阵$I$，每次迭代需要修正$\Delta B_k $，迭代公式为：</p>
+
+\[\Delta B_k=\alpha uu^T+ \beta vv^T\]
+
+<p>其中，$u=y_k$，$v=B_ks_k$，$\alpha=\frac{1}{y_k^T s_k}$，$\beta=-\frac{1}{s_k^TB_k s_k}$</p>
+
+<p>代入$\Delta B_k$得：</p>
+
+\[\Delta B_{k}=\frac{y_{k}{y_{k}^T}}{y_{k}^{T} s_{k}}-\frac{B_{k} s_{k}s_{k}^{T} B_{k}}{s_{k}^{T} B_{k} s_{k}}\]
+
+<p>算法流程如下：</p>
+
+<ol>
+  <li>给定初值$x_0$，终止误差$\epsilon$，令$B_0=I$，$k=0$</li>
+  <li>计算搜索方向$d_k=-B_k^{-1}g_k$</li>
+  <li>计算搜索步长$\lambda_k$，令$s_k=\lambda_kd_k$，$x_{k+1}=x_k+s_k$</li>
+  <li>如果$\Vert g_{k+1}\Vert \lt \epsilon$，则终止迭代</li>
+  <li>计算$y_k=g_{k+1}-g_k$</li>
+  <li>计算$B_{k+1} = B_k + \frac{y_{k}{y_{k}^T}}{y_{k}^{T} s_{k}}-\frac{B_{k} s_{k}s_{k}^{T} B_{k}}{s_{k}^{T} B_{k} s_{k}}$</li>
+  <li>令$k=k+1$，跳转步骤2</li>
+</ol>
+
+<h4 id="broyden类算法">Broyden类算法</h4>
+
+<p>前置：Sherman-Morrison公式：</p>
+
+<p>假设$A$为$n$阶可逆矩阵，$u,v$是$n$维向量，$t$为常量，且$A+uv^T$可逆，则：</p>
+
+\[\left(A+\frac{u v^{T}}{t}\right)^{-1} = A^{-1}- \frac{A^{-1} u v^{T} A^{-1}}{t+v^{T} A^{-1} u}\]
+
+<p>已知BFGS算法的迭代公式如下：</p>
+
+\[B_{k+1}=B_k + \frac{y_{k}{y_{k}^T}}{y_{k}^{T} s_{k}}-\frac{B_{k} s_{k}s_{k}^{T} B_{k}}{s_{k}^{T} B_{k} s_{k}}\]
+
+<p>对上式应用两次Sherman-Morrison公式$^8$，有：</p>
+
+\[B_{k+1}^{-1}=\left(I-\frac{\delta_{k} y_{k}^{T}}{\delta_{k}^{T} y_{k}}\right) B_{k}^{-1}\left(I-\frac{\delta_{k} y_{k}^{T}}{\delta_{k}^{T} y_{k}}\right)^{T}+\frac{\delta_{k} \delta_{k}^{T}}{\delta_{k}^{T} y_{k}}\]
+
+<p>记$G_k=B_k^{-1},G_{k+1}=B_{k+1}^{-1}$</p>
+
+<p>有：</p>
+
+\[G_{k+1}=\left(I-\frac{\delta_{k} y_{k}^{T}}{\delta_{k}^{T} y_{k}}\right) G_{k}\left(I-\frac{\delta_{k} y_{k}^{T}}{\delta_{k}^{T} y_{k}}\right)^{T}+\frac{\delta_{k} \delta_{k}^{T}}{\delta_{k}^{T} y_{k}}\]
+
+<p>称上式为BFGS算法关于$G_k$的迭代公式，由该公式得到的$G_{k+1}$记为$G^{BFGS}$；</p>
+
+<p>同理，也可以得到DFP算法关于$G_k$的迭代公式，由该公式得到的$G_{k+1}$记为$G^{DFP}$；</p>
+
+<p>Broyden类算法将二者进行线性组合：</p>
+
+\[G_{k+1}=\alpha G^{D F P}+(1-\alpha) G^{B F G S}\]
+
+<p>其中$0\le \alpha \le 1$，由于$G^{BFGS}$和$G^{DFP}$均满足拟牛顿条件，二者的线性组合也满足拟牛顿条件，且$G_{k+1}$为正定矩阵，应用这类迭代公式的算法称为Broyden类算法。</p>
+
+<h3 id="共轭梯度法">共轭梯度法</h3>
+
+<p>共轭梯度法是共轭方向法的一种，可以用于求解无约束凸二次规划问题：$\min_\limits{x} f(x)= \frac{1}{2}x^TQx+q^Tx$，其中$Q\in\mathbb{R}^{n\times n}$为对称正定矩阵，$q\in \mathbb{R}^n$，$x\in \mathbb{R}^n$。</p>
+
+<h4 id="q-conjugate">Q-conjugate</h4>
+
+<p>给定正定矩阵$Q$，定义非零向量$x,y$关于Q矩阵Q-conjugate，当且仅当$x^TQy=0$成立，且$x,y$是线性无关的，</p>
+
+<p>如果能够寻找到$n$个Q-conjugate向量$d_i,d_2,…,d_n$，则这组向量组成$\mathbb{R^n}$中的一组基，空间内任意向量均可由这组向量表示。共轭梯度法通过寻找这样一组Q-conjugate的基，将目标函数分为许多方向，并在这些方向上分别求出极值，所有方向上的极值的和作为整体目标函数的极值。</p>
+
+<p>给定目标函数$f(x)$，寻找一组方向向量$d_1,d_2,…,d_n \in \mathbb{R}^n$，依次按照这组方向向量中的方向对点$x_i\in \mathbb{R}^n$进行更新，对每一个方向$d_i \in \mathbb{R}^n$，寻找合适的步长$\lambda_i$，使得$f(x)$在该方向上取得最小值，在上述过程中，要求在在方向向量$d_i$上进行更新时，不会影响方向$d_j$上的更新结果，其中$j\lt i$，也即，$x_{k+1}$使$f(x)$在方向$d_k$上取得最小值，且能够使得$f(x)$在$d_j,0\le j\lt k$上保持最小值。由于这组方向两两共轭，因此这种方法称为共轭梯度法。</p>
+
+<p>如果存在满足上述要求的一组方向，则可以保证经过$n$次迭代后，找到$f(x)$的全局极小值。</p>
+
+<p>执行流程如下：</p>
+
+<ol>
+  <li>任意设置初始点$x_0$，初始方向向量$d_0=\nabla f(x_0)$</li>
+  <li>判断$\nabla f(x_i)=0$，如果是，返回$x_i$，否则，执行3</li>
+  <li>进行点的更新$x_{i+1}=x_i + \lambda_i d_i$，其中，$\lambda_{i}=\frac{-d_{i}^{T} \nabla f\left(x_{i}\right)}{d_{i}^{T} Q d_{i}}$，$d_{i}=-\nabla f\left(x_{i}\right)+\gamma_{i-1} d_{i-1}$，$\gamma_{i-1}=\frac{d_{i-1}^{T} Q \nabla f\left(x_{i}\right)}{d_{i-1}^{T} Q d_{i-1}}$</li>
+  <li>循环执行2～3直至找到最优解</li>
+</ol>
+
+<p>参考</p>
+
+<ol>
+  <li><a href="https://www.zhihu.com/question/38586401/answer/669303256">如何理解拉格朗日乘子法？ - 木小易的回答 - 知乎</a></li>
+  <li><a href="https://icml.cc/2011/papers/210_icmlpaper.pdf">On Optimization Methods for Deep Learning</a></li>
+  <li><a href="https://blog.csdn.net/sunflower_sara/article/details/81321886?utm_medium=distribute.pc_relevant.none-task-blog-title-10&amp;spm=1001.2101.3001.4242">深度学习中的优化器</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Broyden–Fletcher–Goldfarb–Shanno_algorithm">Broyden–Fletcher–Goldfarb–Shanno algorithm</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/144736223">拟牛顿法</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/158206612">限制空间的优化算法：LBFGS，LSR1</a></li>
+  <li><a href="https://arxiv.org/pdf/1609.04747.pdf">An overview of gradient descent optimization algorithms</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/37524275">Broyden类算法：BFGS算法的迭代公式推导</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/37524275">梯度下降法、牛顿法和拟牛顿法</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/28623599">共轭梯度法</a></li>
+</ol>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Optimization</span>
+        
+            <span class="c-tag">Machine Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

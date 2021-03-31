@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Derivation of EM - Shihanmax</title>
+    <meta name="description" content="隐变量模型（Latent Variable Models）指模型中包含不可观测的隐含变量$z$，隐变量模型的求解根据$z$的已知与否分为两类：">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/08/Derivation-of-EM">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">Derivation of EM</h1>
+        <p class="c-article__time"><time datetime="2020-08-10T01:16:03+08:00" itemprop="datePublished">Aug 10, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>隐变量模型（Latent Variable Models）指模型中包含不可观测的隐含变量$z$，隐变量模型的求解根据$z$的已知与否分为两类：</p>
+
+<ul>
+  <li>complete case</li>
+  <li>incomplete case</li>
+</ul>
+
+<p>complete case是指求解过程中，$(x,z)$均已知，此类模型求解可以使用MLE等方法进行求解；incomplete case中，隐变量$z$是未知的，求解该类模型需要使用EM算法。</p>
+
+<p>下文对EM算法进行简单的推导，假设因变量模型相关的参数和变量分别为：</p>
+
+<ul>
+  <li>$\theta$：model parameters</li>
+  <li>$x$：observed variable</li>
+  <li>$z$：latent variable</li>
+</ul>
+
+<p>Objective: $L(\theta)= \ln p(x\mid \theta)$，优化目标为：$\arg \max L(\theta)=\arg \max \ln p(x\mid\theta)$</p>
+
+<p>记EM算法经过$n$轮迭代后的参数为$\theta_n$，目标函数也可以写成如下的形式，即在第$n$次迭代的基础上，最大化当前的目标函数和第$n$轮目标函数的差值：</p>
+
+\[\begin{aligned} \arg \max _{\theta} L(\theta)-L\left(\theta_{n}\right) &amp;=\ln p(x \mid \theta) -\ln p\left(x \mid \theta_{n}\right) \\ &amp;=\ln \sum_{z} p(x, z \mid \theta)-\ln p\left(x \mid \theta_{n}\right) \\ &amp;=\ln \sum_{z} p(x \mid z, \theta) \cdot p(z \mid \theta)-\ln p\left(x \mid \theta_{n}\right) \\ &amp;=\ln \sum_{z} p\left(x \mid z, \theta\right) \cdot p(z \mid \theta) \cdot \frac{p\left(z \mid x, \theta_{n}\right)}{p\left(z \mid x, \theta_{n}\right)}-\ln p\left(x \mid \theta_{n}\right) \\ &amp;=\ln \sum_{z} p\left(z \mid x, \theta_{n}\right) \cdot \frac{p(x \mid z, \theta) \cdot p(z \mid \theta)}{p\left(z \mid x, \theta_{n}\right)}-\ln p\left(x \mid \theta_{n}\right) \end{aligned}\]
+
+<p>$\log\sum$项在求梯度过程中不方便计算，这里引入Jensen不等式：$\ln\sum_\limits{i=1}^{n}\lambda_i x_i \geqslant \sum_\limits{i=1}^{n}\lambda_i\ln x_i \quad s.t. \sum_\limits{i=1}^{n}\lambda_i=1$</p>
+
+<p>由于$\sum_\limits{z} p(z\mid x,\theta_n)=1$，可将该项视为Jensen不等式中的$\lambda$，因此有：</p>
+
+<p>$\arg\max L(\theta)-L(\theta_n) \geqslant \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln \frac{p\left(x \mid z, \theta\right) \cdot p(z \mid \theta)}{p\left(z \mid x, \theta_{n}\right)}-\ln p\left(x \mid \theta_{n}\right)$</p>
+
+<p>至此，得到：</p>
+
+\[\begin{aligned} L(\theta)-L(\theta_n) &amp; \geqslant \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln \frac{p\left(x \mid z, \theta\right) \cdot p(z \mid \theta)}{p\left(z \mid x, \theta_{n}\right)}-\ln p\left(x \mid \theta_{n}\right) \\ &amp;=\sum_{z} p\left(z \mid x, \theta_{n}\right) \ln \frac{p(x\mid z,\theta) \cdot p(z\mid \theta)}{p(x\mid x,\theta_n) \cdot p(x\mid \theta_n)} \\&amp;=\Delta(\theta\mid\theta_n) \end{aligned}\]
+
+<p>即：$L(\theta)\geqslant L(\theta_n) +\Delta(\theta\mid\theta_n)$，此时最大化$L(\theta)$等价于最大化$L(\theta)$的下界，因此，下一轮迭代的最优$\theta_{n+1}$可以表示为：</p>
+
+\[\begin{aligned} \theta_{n+1} &amp;=a r g \max _{\theta} L\left(\theta_{n}\right)+\Delta\left(\theta \mid \theta_{n}\right) \\ &amp;=\arg \max _{\theta} \Delta\left(\theta \mid \theta_{n}\right) \\ &amp;=\arg \max _{\theta} \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln p(x \mid z, \theta) \cdot p(z \mid \theta) \\ &amp;=\arg \max _{\theta} \sum_{z} p\left(z \mid x, \theta_{n}\right) \ln p(x, z \mid \theta) \\ &amp;=\arg \max _{\theta} E_{z \mid x, \theta_{n}} p(x, z \mid \theta)\end{aligned}\]
+
+<p>其中，$E_{z \mid x, \theta_{n}} p(x, z \mid \theta)$为$(z\mid x,\theta,n)$的期望，由于该项中包含了两个未知变量$\theta,z$，最大化过程分为两步进行：</p>
+
+<ul>
+  <li>E-step：根据当前的$\theta$计算出$z$的期望（在包含两个待求解变量时，E-step固定其中的$\theta$来独立求解$z$，因此EM算法中的E-step可以看作是coordinate decent的一种特例。）</li>
+  <li>M-step：$maximize \ln p(x,z\mid \theta)$（可以认为此时的$z$是已知的，这种comlelte-case可以直接使用MLE等优化方法求解。）</li>
+</ul>
+
+<p>迭代执行上述两步，直至收敛，便可以得到最终需要求解的参数$\theta$。</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Machine Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

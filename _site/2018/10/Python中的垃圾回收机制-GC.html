@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Python垃圾回收机制（GC） - Shihanmax</title>
+    <meta name="description" content="Python中的GC机制：">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/10/Python%E4%B8%AD%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6-GC">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">Python垃圾回收机制（GC）</h1>
+        <p class="c-article__time"><time datetime="2018-10-10T08:00:00+08:00" itemprop="datePublished">Oct 10, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <h3 id="python中的gc机制">Python中的GC机制：</h3>
+
+<ul>
+  <li>以引用计数为主</li>
+  <li>分代回收为辅</li>
+</ul>
+
+<p>python对象的核心是一个结构体：PyObject</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">struct_object</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ob_refcnt</span><span class="p">;</span>
+    <span class="n">struct_typeobject</span> <span class="o">*</span><span class="n">ob_type</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">PyObject</span><span class="p">;</span>
+
+<span class="cp">#def Py_INCREF(op) ((op)-&gt;ob_refcnt++)
+#def Py_DECREF(op)
+</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">ob_refcnt</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">;</span>
+<span class="k">else</span>
+    <span class="n">__Py_Dealloc</span><span class="p">((</span><span class="n">PyObject</span> <span class="o">*</span><span class="p">)(</span><span class="n">op</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>ob_refcnt 就是为了做引用计数，当一个对象的引用为0时，会被清除。</p>
+
+<!--more-->
+
+<p>Python在合适的时机会对处在链表中的有循环引用的对象引用减1，这样，原本有引用的对象不会被清除，而原本循环引用的对象，其引用计数被置零并回收。</p>
+
+<p>零代链中的无引用对象，将剩余有引用对象挪到一代链，对一代链同理。这三代链子被清理的频率：零代 » 一代 » 二代</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">gc</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">gc</span><span class="p">.</span><span class="n">get_count</span><span class="p">()</span>  <span class="c1"># 查看当前隔代回收当前状态
+</span><span class="p">(</span><span class="mi">154</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">gc</span><span class="p">.</span><span class="n">get_threshold</span><span class="p">()</span>  <span class="c1"># 新创建的减去释放掉的如果大于此阈值，触发分代回收
+</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10和10表示：清理10次0代链表后清理一代链表，清理10次一代链表后清理一次二代链表。
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">gc</span><span class="p">.</span><span class="n">collect</span><span class="p">()</span>  <span class="c1"># 显式执行垃圾回收
+</span></code></pre></div></div>
+
+<p>Python和Ruby的标记-清除机制对比：</p>
+
+<p>​	Ruby：一次性创建大量可用对象，用完后标记清除。</p>
+
+<p>​	Python：初始化时才创建对象，一旦引用为0立即清除。</p>
+
+<h3 id="一点注意">一点注意</h3>
+
+<p>如果类的__del__方法被重写（未调用父类的del方法），则执行垃圾回收时无法回收该对象。</p>
+
+<h3 id="引用计数相关">引用计数相关</h3>
+
+<h4 id="导致引用计数-1-的情况">导致引用计数 +1 的情况</h4>
+
+<ul>
+  <li>对象被创建</li>
+  <li>对象被引用</li>
+  <li>对象被传入函数中</li>
+  <li>对象作为一个元素存放在容器中</li>
+</ul>
+
+<h4 id="导致引用计数--1-的情况">导致引用计数 -1 的情况：</h4>
+
+<ul>
+  <li>对象被 del 显式销毁</li>
+  <li>对象被赋予新的对象</li>
+  <li>一个对象离开其作用域（如已经执行完毕的函数中的形参）</li>
+  <li>对象所在的容器被销毁</li>
+</ul>
+
+<h4 id="查看对象的引用计数">查看对象的引用计数：</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="s">'Hello world'</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">getrefcount</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="整数对象池">整数对象池</h3>
+
+<h4 id="小整数对象池">小整数对象池</h4>
+
+<p>为了避免整数的频繁申请和销毁内存空间，Python使用了小整数对象池。</p>
+
+<p>[-5, 257)内的整数都在小整数对象池中，他们都已经被提前建立好了，常驻内存，不被回收。</p>
+
+<h4 id="大整数对象池">大整数对象池</h4>
+
+<p>每一个大整数的定义都会创建一个新的对象。</p>
+
+<h5 id="字符串共享机制intern">字符串共享机制（intern）</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">a1</span> <span class="o">=</span> <span class="s">'HelloWorld'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a2</span> <span class="o">=</span> <span class="s">'HelloWorld'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a3</span> <span class="o">=</span> <span class="s">'HelloWorld'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">a3</span><span class="p">)</span>
+<span class="bp">True</span>
+</code></pre></div></div>
+
+<p>a1-a5拥有共同的id（实际指向了同一块内存），但如果字符串中有特殊字符（如空格），则不会触发共享机制共享。</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Garbage Collection</span>
+        
+            <span class="c-tag">Language</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

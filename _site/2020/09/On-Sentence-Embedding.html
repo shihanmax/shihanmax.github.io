@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>On Sentence Embedding - Shihanmax</title>
+    <meta name="description" content="This article will briefly introduce some papers on document representation.">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/09/On-Sentence-Embedding">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">On Sentence Embedding</h1>
+        <p class="c-article__time"><time datetime="2020-09-25T07:34:18+08:00" itemprop="datePublished">Sep 25, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>This article will briefly introduce some papers on document representation.</p>
+
+<h2 id="1-a-simple-but-tough-to-beat-baseline-for-sentence-embeddings">1. A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SENTENCE EMBEDDINGS</h2>
+
+<h3 id="model">model</h3>
+
+<p>This article proposed a method for acquiring sentence embedding called SIF. The method is very simple: for the document collection, first, for each document, the word vector is weighted and averaged with the word frequency as the weight, now we have the representations of each document. Let’s say the number of documents is $D$ and the dimension of the word vector is $E$. Then we get the document set representation matrix $M: D\times E$. Then, perform SVD on the matrix $M$, subtracting its projection in the principal component direction, as the final sentence representation.</p>
+
+<h3 id="mathematical-formulation">mathematical formulation</h3>
+
+\[v_{s} \leftarrow \frac{1}{|s|} \sum_{w \in s} \frac{a}{a+p(w)} v_{w}\]
+
+\[v_{s} \leftarrow v_{s}-u u^{\top} v_{s}\]
+
+<p>todo: theoretical analysis</p>
+
+<h2 id="2-a-structured-self-attentive-sentence-embedding">2. A STRUCTURED SELF-ATTENTIVE SENTENCE EMBEDDING</h2>
+
+<p>At present, the research on paragraph/sentence representation is not rich enough comparing with word embeddings. Research on sentence representation is usually divided into two categories:</p>
+<ol>
+  <li>Sentence-level semantic models trained through unsupervised methods, such as SkipThought, paragraphVector, Recursive auto-encoders, Sequential Denoising Autoencoders (SDAE) FastSent, etc.</li>
+  <li>Obtained through supervised training in specific downstream tasks, involving models such as recurrent networks, recursive networks, and convolutional networks;</li>
+</ol>
+
+<p>This paper proposes a self-attention mechanism for sentences to replace the max/avg pooling operation over tokens at each time step after a traditional RNN layer, and at the same time, it can extract different levels of sentence semantic information.</p>
+
+<h3 id="the-proposed-model">the proposed model</h3>
+
+<p>The sentence representation model proposed in this article is divided into two parts:</p>
+<ol>
+  <li>
+    <p>Bidirectional LSTM layer</p>
+  </li>
+  <li>
+    <p>Self-attention layer</p>
+  </li>
+</ol>
+
+<p>For sentence: $S=(w_1, w_2, …, w_n)$, where $w_i$ represents the $d$-dimensional word embedding of the $i$-th word. $S$ can be expressed as a matrix $S_{n \times d}$ without any relationship along the rows.</p>
+
+<p>Then input $S$ into the bidirectional LSTM:</p>
+
+\[\begin{aligned} \overrightarrow{h_{t}} &amp;=\overrightarrow{L S T M}\left(w_{t}, \overrightarrow{h_{t-1}}\right) \\ \overleftarrow{h_{t}} &amp;=\overleftarrow{L S T M}\left(w_{t}, \overleftarrow{h_{t+1}}\right) \end{aligned}\]
+
+<p>After concat the output of each time step toward the forward and backward directions, the representation matrix $H_{n \times 2u}=(h_1, h_2, …, h_n)$ is obtained, where $u$ is the hidden dimension of LSTM.
+Because it is planned to encode the variable-length sequence into a fixed-size representation vector, it is necessary to aggregate the representation vector of each token of the variable-length sequence, attention mechanism is used to calculate the weight of each token. The weight vector calculation method is as follows:</p>
+
+\[\mathbf{a}=\operatorname{softmax}\left(\mathbf{w}_{\mathbf{s} 2} \tanh \left(W_{s 1} H^{T}\right)\right)\]
+
+<p>$W_{s1}:d_a \times 2u$，$w_{s2}: 1 \times d_a$，$d_a$ is a hyper-parameter.</p>
+
+<p>At this time, $\mathbf{a}$ is a vector of $1\times n$, which represents the weight of each token in the weighted average process. Perform weighted average for each token in the representation matrix $H$ to get the sentence representation $m$ of $1 \times d$.</p>
+
+<p>For longer sentences or sentences that contain different descriptions or contexts, sometimes we want to express the sentence from different point of views. In order to achieve this, the author replace the vector $w_ {s2}: 1 \times d_a$ with a matrix $W_{s2}: r\times d_a$, which do the same thing like multi-head attention. Note that at this time softmax should be executed line by line.</p>
+
+<p>Finally we got the attention score matrix $A: r\times n$, and do the dot product with the representation matrix $H$ to get the final representation matrix $M$ of the sentence:</p>
+
+\[M=AH\]
+
+<h3 id="penalty-term">penalty term</h3>
+
+<p>In order to avoid the loss of diversity of multi-head attention, a penalty item needs to be added to the matrix $A$. The author found in the experiment that using KL divergence to measure the diversity between weights is not stable (a large number of items are close to 0 in $A$ after softmax, This leads to numerical instability in the calculation of KL divergence). In addition, it is obvious that KL divergence cannot be achieved if we want each row vector to focus on a single characteristic as much as possible. The author used the following penalties:</p>
+
+\[P=\left\|\left(A A^{T}-I\right)\right\|_{F}^{2}\]
+
+<p>This penalty item will be minimized together with loss of downstream tasks during traing.</p>
+
+<h3 id="summary">summary</h3>
+
+<p>The advantage of the method proposed in this paper is that it can force the attention to be calculated from different angles during the training process, and it can overcome the problem of long-distance dependence to a certain extent. The disadvantage is that this method is relatively dependent on downstream tasks, and can only be trained in a supervised manner, and has limited compatibility between different tasks.</p>
+
+<h2 id="3-distributed-representations-of-sentences-and-documents">3. Distributed Representations of Sentences and Documents</h2>
+
+<p>The shortcomings of the current method of obtaining sentence embedding:</p>
+
+<ul>
+  <li>bag-of-words model
+    <ul>
+      <li>lost order info</li>
+      <li>less semantic</li>
+    </ul>
+  </li>
+  <li>bag-of-n-grams</li>
+  <li>data sparsity</li>
+  <li>high-dimensionality</li>
+  <li>less semantic</li>
+</ul>
+
+<p>This paper proposes an unsupervised sentence embedding training method for variable length text: Paragraph Vector.</p>
+
+<p>There are two training methods for Paragraph Vector:</p>
+
+<h3 id="1-a-distributed-memory-model">1. A distributed memory model</h3>
+
+<p>For corpus C, suppose it contains $N$ paragraphs, and the embedding dimension of each paragraph is $p$; the corpus contains $M$ words, and the embedding dimension of each word is $q$; The number of parameters the model needs to learn is $N \times p + M \times q$, each paragraph is mapped to a paragraph id (that is, we can treat paragraphs in the corpus as special words).</p>
+
+<p>During the training, for a paragraph, we select a sliding window W. The text in the window is called context, which is the basic unit of training. The context in the same paragraph shares the paragraph embedding, and the words in the entire corpus share words embedding. For context C, use its paragraph vector to concatenate the word embedding of each word in C to predict what the next word of this context is.</p>
+
+<p>At prediction time, for the set of paragraphs to be predicted ${P}_{n}$, first, add it to corpus C (that is, add $n$ rows to the paragraph matrix),  then continue to execute the training process on new corpus until convergence, with word embedding fixed.</p>
+
+<p>In this training method, the paragraph vector plays a memory role of the topic and other information of the paragraph, so it is called PV-DM (Distributed Memory Paragraph Vectors).</p>
+
+<h3 id="2-distributed-bag-of-words">2. Distributed bag of words</h3>
+<p>Another method of PV training is as follows, which is similar to training the skip-gram model in Word2vec. In the training process, a window W is sampled from the paragraph P, and given the paragraph vector of the paragraph to which the window belongs, predict the random sampling word w from the window. This method named PV-DBOW because it ignores the order of words.</p>
+
+<p>Experimental results show that combining the sentence vectors obtained by these two methods can get more stable and better results.</p>
+
+<h3 id="futher-observations">futher observations</h3>
+<ol>
+  <li>The effect of PV-DM is better than PV-DBOW</li>
+  <li>In PV-DM, concat paragraph vectors and word embedding could achive better result</li>
+  <li>The selection of window size requires cross-validation</li>
+  <li>The time cost to obtain the paragraph vector is high, but this problem can be alleviated by parallel computing.</li>
+</ol>
+
+<p>Refs.</p>
+
+<p><a href="https://openreview.net/pdf?id=SyK00v5xx">1. A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SENTENCE EMBEDDINGS</a></p>
+
+<p><a href="https://github.com/PrincetonML/SIF/blob/master/src/SIF_embedding.py">2. Implementation of SIF</a></p>
+
+<p><a href="https://arxiv.org/pdf/1703.03130">3. A STRUCTURED SELF-ATTENTIVE SENTENCE EMBEDDING </a></p>
+
+<p><a href="http://cn.arxiv.org/pdf/1405.4053.pdf">4. Distributed Representations of Sentences and Documents</a></p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Deep Learning</span>
+        
+            <span class="c-tag">Embedding</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

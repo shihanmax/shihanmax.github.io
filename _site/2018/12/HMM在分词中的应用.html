@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>HMM在中文分词中的应用 - Shihanmax</title>
+    <meta name="description" content="前言">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/12/HMM%E5%9C%A8%E5%88%86%E8%AF%8D%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">HMM在中文分词中的应用</h1>
+        <p class="c-article__time"><time datetime="2018-12-07T08:00:00+08:00" itemprop="datePublished">Dec 7, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <h3 id="前言">前言</h3>
+
+<p>分词，命名实体识别，关系抽取，甚至是指代消解，都可以看成是一个序列标注的问题，这是NLP领域的基本问题，掌握序列标注对于更好地理解NLP任务有很大的帮助。这篇文章主要参考<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>，是对这篇博文和网上其他一些资料的阅读笔记。</p>
+
+<!--more-->
+
+<h3 id="分词的背景">分词的背景</h3>
+
+<p>分词是指将一句话中的字串切分成合理的块，组成合理的词语的过程。</p>
+
+<p>一些语言（如英文）使用空格分割词汇，词和词之间有着天然的分割线，对这类语言，一般只需要按空格切词，去除停词，再考虑特殊的词汇（如Mr’s）即可，但中文的字和字之间没有任何分隔符，对于一句话“今天天气很好”，分词的任务是寻找一组最佳的分割方式，使得字和字之间的搭配达到语义上和语法上的概率最大化。</p>
+
+<p>对于示例语句“今天天气很好”，一个合理的分词结果为“今天/天气/很/好”。</p>
+
+<p>目前常用的分词方法有以下三种：</p>
+
+<ol>
+  <li>基于语言学知识的规则化方法（最大匹配、最小切分等）</li>
+  <li>基于大量预料的机器学习方法（如HMM、CRF等模型）</li>
+  <li>规则与统计模型相结合的方法</li>
+</ol>
+
+<h3 id="模型定义">模型定义</h3>
+
+<p>对于分词这种序列标注任务，定义原语句为观测序列O，分词结果为标注序列L。我们的目标是寻找最优的标注序列，使得给定O时，L出现的概率最大，即$argmaxP(L\mid O)$。</p>
+
+<p>一种标注序列的定义方式是BOI标签，B代表词开头，O代表其它，I代表词中间，在分词任务中，可以仅适用B和I，如对示例文本的标注结果为：“今/B天/I天/B气/I很/B好/B”。</p>
+
+<p>对于给定的长度为n的文本，所有可能的序列标注情况为$2^n$种。</p>
+
+<p>待完成。。。</p>
+
+<h3 id="参考">参考</h3>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p><a href="http://www.52nlp.cn/itenyh%E7%89%88-%E7%94%A8hmm%E5%81%9A%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E4%B8%80%EF%BC%9A%E5%BA%8F">用HMM做中文分词</a> <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">PGM</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

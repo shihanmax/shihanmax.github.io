@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Java通过JNI调用C库 - Shihanmax</title>
+    <meta name="description" content="什么是库库是写好的现有的，成熟的，可以复用的代码。现实中每个程序都要依赖很多基础的底层库，不可能每个人的代码都从零开始，因此库的存在意义非同寻常。本质上来说库是一种可执行代码的二进制形式，可以被操作系统载入内存执行。库有两种：静态库（.a、.lib）和动态库（.so、.dll）。所谓静态、动态是指链接。">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/10/Java%E9%80%9A%E8%BF%87JNI%E8%B0%83%E7%94%A8C%E5%BA%93">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">Java通过JNI调用C库</h1>
+        <p class="c-article__time"><time datetime="2018-10-15T08:00:00+08:00" itemprop="datePublished">Oct 15, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <h3 id="什么是库">什么是库</h3>
+<p>库是写好的现有的，成熟的，可以复用的代码。现实中每个程序都要依赖很多基础的底层库，不可能每个人的代码都从零开始，因此库的存在意义非同寻常。本质上来说库是一种可执行代码的二进制形式，可以被操作系统载入内存执行。库有两种：静态库（.a、.lib）和动态库（.so、.dll）。
+所谓静态、动态是指链接。</p>
+
+<!--more-->
+
+<h3 id="静态库">静态库</h3>
+<p>之所以成为【静态库】，是因为在链接阶段，会将汇编生成的目标文件.o与引用到的库一起链接打包到可执行文件中。因此对应的链接方式称为静态链接。
+试想一下，静态库与汇编生成的目标文件一起链接为可执行文件，那么静态库必定跟.o文件格式相似。其实一个静态库可以简单看成是一组目标文件（.o/.obj文件）的集合，即很多目标文件经过压缩打包后形成的一个文件。静态库特点总结：</p>
+<ul>
+  <li>静态库对函数库的链接是放在编译时期完成的。</li>
+  <li>程序在运行时与函数库再无瓜葛，移植方便。</li>
+  <li>浪费空间和资源，因为所有相关的目标文件与牵涉到的函数库被链接合成一个可执行文件。</li>
+</ul>
+
+<h3 id="动态库">动态库</h3>
+<p>通过上面的介绍发现静态库，容易使用和理解，也达到了代码复用的目的，那为什么还需要动态库呢？
+为什么还需要动态库？
+为什么需要动态库，其实也是静态库的特点导致。</p>
+<ul>
+  <li>空间浪费是静态库的一个问题。</li>
+  <li>另一个问题是静态库对程序的更新、部署和发布页会带来麻烦。如果静态库liba.lib更新了，所以使用它的应用程序都需要重新编译、发布给用户（对于玩家来说，可能是一个很小的改动，却导致整个程序重新下载，全量更新）。
+动态库在程序编译时并不会被连接到目标代码中，而是在程序运行是才被载入。不同的应用程序如果调用相同的库，那么在内存里只需要有一份该共享库的实例，规避了空间浪费问题。动态库在程序运行是才被载入，也解决了静态库对程序的更新、部署和发布页会带来麻烦。用户只需要更新动态库即可，增量更新。</li>
+</ul>
+
+<h3 id="动态库特点总结">动态库特点总结：</h3>
+<ul>
+  <li>动态库把对一些库函数的链接载入推迟到程序运行的时期。</li>
+  <li>可以实现进程之间的资源共享。（因此动态库也称为共享库）</li>
+  <li>将一些程序升级变得简单。</li>
+  <li>甚至可以真正做到链接载入完全由程序员在程序代码中控制（显示调用）。</li>
+</ul>
+
+<h3 id="实验linux上编译动态链接库libso的过程">实验(linux上编译动态链接库lib*.so的过程)：</h3>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">1.</span> <span class="c1">//新建Demo.java</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Hello</span> <span class="p">{</span>
+        <span class="k">static</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="n">System</span><span class="p">.</span><span class="n">loadLibrary</span><span class="p">(</span><span class="s">"hello"</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">UnsatisfiedLinkError</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">System</span><span class="p">.</span><span class="n">err</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"cannot load library"</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Hello</span><span class="p">(){</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">native</span> <span class="kt">void</span> <span class="n">sayHello</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">);</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">Hello</span> <span class="n">hello</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="p">();</span>
+            <span class="n">hello</span><span class="p">.</span><span class="n">sayHello</span><span class="p">(</span><span class="s">"jack!"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="mf">2.</span> <span class="c1">//生成Demo.h</span>
+	<span class="n">i</span><span class="p">.</span> <span class="n">javac</span> <span class="n">Demo</span><span class="p">.</span><span class="n">java</span>
+	<span class="n">ii</span><span class="p">.</span> <span class="n">javah</span> <span class="n">Demo</span>
+	<span class="n">iii</span><span class="p">.</span> <span class="c1">//此时目录下生成Demo.h，包含对函数sayHello()的声明</span>
+
+<span class="mf">3.</span> <span class="c1">//新建Demo.cpp，按照Demo.h中的声明格式，实现函数sayHello()</span>
+	<span class="cp">#include "Hello.h"
+</span>	<span class="cp">#include &lt;stdio.h&gt;
+</span>		 <span class="c1">// 与 Hello.h 中函数声明相同</span>
+	<span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">Java_Hello_sayHello</span>  <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span> <span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">arg</span><span class="p">,</span> <span class="n">jstring</span> <span class="n">instring</span><span class="p">)</span>
+	<span class="p">{</span>
+    <span class="c1">// 从 instring 字符串取得指向字符串 UTF 编码的指针</span>
+    <span class="k">const</span> <span class="n">jbyte</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">jbyte</span> <span class="o">*</span><span class="p">)</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">GetStringUTFChars</span><span class="p">(</span> <span class="n">instring</span><span class="p">,</span> <span class="n">JNI_FALSE</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Hello,%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">str</span><span class="p">);</span>
+    <span class="c1">// 通知虚拟机本地代码不再需要通过 str 访问 Java 字符串。</span>
+    <span class="n">env</span><span class="o">-&gt;</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span> <span class="n">instring</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">str</span> <span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+<span class="mf">4.</span> <span class="c1">//编译Demo.cpp</span>
+	<span class="n">i</span><span class="p">.</span> <span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">I</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">java</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="n">oracle</span><span class="o">/</span><span class="n">include</span> <span class="o">-</span><span class="n">I</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">java</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="n">oracle</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">linux</span> <span class="o">-</span><span class="n">fPIC</span> <span class="o">-</span><span class="n">c</span> <span class="n">Hello</span><span class="p">.</span><span class="n">cpp</span>
+	<span class="n">ii</span><span class="p">.</span> <span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">shared</span> <span class="n">Hello</span><span class="p">.</span><span class="n">o</span> <span class="o">-</span><span class="n">o</span> <span class="n">libhello</span><span class="p">.</span><span class="n">so</span>
+
+<span class="mf">5.</span> <span class="c1">//将动态库libhello.so 放入usr/lib中，或者将其路径添加到动态库搜索路径</span>
+
+<span class="mf">6.</span> <span class="c1">//通过Demo.java测试动态库的调用</span>
+	<span class="n">i</span><span class="p">.</span> <span class="n">javac</span> <span class="n">Demo</span><span class="p">.</span><span class="n">java</span>
+	<span class="n">ii</span><span class="p">.</span> <span class="n">java</span> <span class="n">Demo</span>
+	<span class="n">Hello</span><span class="p">,</span><span class="n">jack</span><span class="o">!</span>
+</code></pre></div></div>
+
+<p>References</p>
+
+<p>https://www.cnblogs.com/i80386/p/4442330.html
+https://blog.csdn.net/chlaws/article/details/7650378/</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">JNI</span>
+        
+            <span class="c-tag">Language</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

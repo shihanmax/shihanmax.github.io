@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>多模态学习 - Shihanmax</title>
+    <meta name="description" content="多模态学习旨在搭建能够处理多种模态信息的模型，文章Multimodal Machine Learning: A Survey and Taxonomy  从表示（Representation）、翻译（Translate）、对齐（Alignment）、融合（Fusion）、协同学习（Co-learning）等几个方...">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/09/Multi-Modal-Learning">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">多模态学习</h1>
+        <p class="c-article__time"><time datetime="2020-09-23T06:35:01+08:00" itemprop="datePublished">Sep 23, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>多模态学习旨在搭建能够处理多种模态信息的模型，文章<a href="https://arxiv.org/pdf/1705.09406.pdf">Multimodal Machine Learning: A Survey and Taxonomy </a> 从表示（Representation）、翻译（Translate）、对齐（Alignment）、融合（Fusion）、协同学习（Co-learning）等几个方面对多模态学习进行综述。重点关注语言、图像和声音三种模态。</p>
+
+<ul>
+  <li>表示（representation）：各种模态是异质的（如文本通常基于符号表示，而声学和视觉信息往往通过信号表示），构造使得不同模态信息能够互相融合、摒弃冗余信息的信息表达方式是至关重要的。</li>
+  <li>翻译（translation）：多种模态之间的对应关系开放性、主观性较强，模态间的映射常常不止一种方式，思考：用一段话描述一张图片，有几种方式？</li>
+  <li>对齐（alignment）：模态间的信息需要进行对其，用以确定不同模态内的元素的直接关系</li>
+  <li>融合（fusion）：在实际运用中，应寻找合理的多模态信息融合方式，以最大化多模态共同预测时的效率和准确率</li>
+  <li>协同学习（co-learning）：在某一种模态资源有限时，通过资源丰富的另一种模态辅助训练，以达到多个模态的模块协同训练的目的。</li>
+</ul>
+
+<h2 id="回顾多模态模型的应用历史">回顾多模态模型的应用历史</h2>
+
+<ol>
+  <li>AVSR：（Audio-visual speech recognition）：原本意在通过视觉信息提高语言识别准确率，实验发现视觉信息在语音信息包含噪声较多时变得重要，这一试验表明视觉信息和语音信息这两种模态之间有一定的信息交互；</li>
+  <li>多媒体信息检索：互联网上各种模态信息增长趋势迅猛，需要开发能够直接进行多模态信息检索的模型，来逐渐取代单纯的基于关键词的信息检索方式。一个优秀的数据集：MED（multimedia event detection）；</li>
+  <li>人类多模态交互理解：21世纪初逐渐兴起，数据集有：AMI Meeting Corpus 、SEMAINE corpus，比赛：AVEC challenge；</li>
+  <li>最近兴起了语言和视觉两种模态融合的任务，如image captioning（图像描述），这一任务的难点在于模型的评价，VQA任务通过图片提问的方式尝试解决这个问题。</li>
+</ol>
+
+<h2 id="representations">representations</h2>
+
+<p>多模态表达面临以下几个问题：如何融合多种模态的特征？如何处理不同层级的噪声？如何处理缺失的模态？Bengio认为，一个好的表示，应具有以下特点：平滑性（smoothness），时空一致性（temporal and spatial coherence），稀疏性（sparsity），聚集性（natural clustering amongst others）；至于多模态表达，Srivastava and Salakhutdinov提出，表示空间中的相似表达应能够反映不同模态所包含的概念的相似程度；多模态的表征应是易于获取的，即便某些模态数据缺失，并且，其余模态数据应能够“推理”出缺失模态的表达。</p>
+
+<p>至3</p>
+
+<h2 id="论文笔记">论文笔记</h2>
+<p>多模态学习是深度学习领域中一个比较热门的方向，本文记录一下这个方向的相关论文，方便参考。</p>
+
+<h3 id="1-one-model-to-learn-them-all">1. one model to learn them all</h3>
+
+<p>本文提出了一个多模态模型，将8个任务融合在一个模型中，具体包含：</p>
+
+<ul>
+  <li>Parsing</li>
+  <li>Speech recognization</li>
+  <li>ImageNet classification</li>
+  <li>Image caption</li>
+  <li>Translation</li>
+</ul>
+
+<p>模型在各个任务上都取得了不错的效果，部分超过了一些新模型（虽然还没有达到sota水平）。</p>
+
+<p>作者认为，本文有两个主要贡献（对多模态网络至关重要的两点）：</p>
+
+<ol>
+  <li>信息通过各个模态相关的小型网络转换到一个通用的中间形态，再由该中间形态通过不同的模态网络转化为输出
+    <ul>
+      <li>中间表示层的尺度是可变的</li>
+      <li>同一领域下，不同任务共享模态网络</li>
+    </ul>
+  </li>
+  <li>各种任务对各个子计算模块的重要性依赖程度不同（如，attention机制在翻译任务中的重要程度高于其在image caption任务中的影响）</li>
+</ol>
+
+<h4 id="模型结构">模型结构</h4>
+
+<p>模型的整体结构分为三部分：</p>
+
+<ol>
+  <li>encoder</li>
+  <li>I/O Mixer</li>
+  <li>AR decoder</li>
+</ol>
+
+<p>在encoder和decoder中，主要包含以下计算组件（computational blocks）：</p>
+
+<ol>
+  <li>
+    <p>conv</p>
+
+    <p>局部特征捕获，使用depthwise separable conv</p>
+  </li>
+  <li>
+    <p>attention layer</p>
+
+    <p>关注重要的特征</p>
+  </li>
+  <li>
+    <p>稀疏门限模块集成（Sparsely-gated mixture-of-experts）</p>
+
+    <p>在保证计算复杂度的前提下，增大模型容量，由一系列前馈网络和可训练的门限网络构成，负责从各个输入中选择稀疏的组合</p>
+  </li>
+</ol>
+
+<p>为了适应各个任务的形态，本文提出了一些任务相关的子网络（模态网络，Modality-nets），主要包括：</p>
+
+<ol>
+  <li>语言模态网络</li>
+  <li>图像模态网络</li>
+  <li>类别模态网络（Categorical modality net）</li>
+  <li>语音模态网络</li>
+</ol>
+
+<h4 id="实验部分">实验部分</h4>
+
+<p>实验部分，本文回答了三个问题：</p>
+
+<ol>
+  <li>
+    <p>本文提出的MultiModel在8个子任务上，离sota还有多远？</p>
+
+    <p>看论文结果，应该还是有一段距离，作者表示由于没有仔细调参，当前多模态模型的结果还无法超越经过细致调参的传统模型。</p>
+  </li>
+  <li>
+    <p>同时训练8个子任务，与分别训练有什么差别？</p>
+
+    <p>在训练多模态模型的同时 ，作者在同等条件下同时训练了独立的模型，实验结果表明多模态联合训练时的结果与独立训练各个任务相似，在个别任务上甚至有一些提升，训练数据越少的任务，提升通常会越明显。</p>
+  </li>
+  <li>
+    <p>不同的计算组件（computational blocks）在子任务上的影响如何？</p>
+
+    <p>这些组件的存在，至少不会带来子任务性能的下降。</p>
+  </li>
+</ol>
+
+<p>多模态网络设计的要点在于，任务间能够共享的参数尽量要在模态间共享，这有助于不同模态之间表示空间的统一，同时也能降低task-specific的参数量，控制模型的尺寸。</p>
+
+<p>Refs.</p>
+
+<ol>
+  <li>
+    <p><a href="http://arxiv.org/abs/1610.02357">Depthwise separable conv</a></p>
+  </li>
+  <li>
+    <p><a href="https://arxiv.org/abs/1701.06538">Outrageously large neural networks: The sparsely-gated mixture-of-experts layer</a></p>
+  </li>
+  <li>
+    <p><a href="https://arxiv.org/pdf/1706.05137.pdf">One model to learn them all</a></p>
+  </li>
+</ol>
+
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Multi-modal Learning</span>
+        
+            <span class="c-tag">Deep Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>
