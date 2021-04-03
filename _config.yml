@@ -14,7 +14,7 @@ github_username:  YourGitHubNo
 # Build settings
 include: [_pages]
 markdown: kramdown
-highlighter: rouge
+highlighter: pygments
 permalink: /:year/:month/:title
 sass:
     style: compressed
