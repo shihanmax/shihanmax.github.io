@@ -1,5 +1,7 @@
 # user defined files
 resource/*
+_site/*
+_site/
 output/*
 test.py
 test.ipynb
