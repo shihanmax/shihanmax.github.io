@@ -23,3 +23,5 @@ sass:
 paginate: 10
 paginate_path: "blog/page:num/"
 plugins: [jekyll-paginate, jemoji, jekyll-sitemap]
+collections:
+  protected:
