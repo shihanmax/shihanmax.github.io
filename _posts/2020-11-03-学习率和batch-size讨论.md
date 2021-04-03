@@ -17,7 +17,7 @@ Mathjax: true
 1. 基础学习率的设定
 
    一般使用一个区间内的学习率，在一个epoch中，学习率由最小逐渐增加到最大，观察损失函数的变化情况，一般情况下，我们要寻找的合理的学习率区间内的损失函数应具有较高的下降速率。
-   <img src="http://shihanmax.top/20201028203345_YZu2rk_lr_finder.jpeg" alt="lr" style="zoom:67%;" />
+   <img src="http://qiniu.shihanmax.top/20201028203345_YZu2rk_lr_finder.jpeg" alt="lr" style="zoom:67%;" />
 
 2. 训练过程中的学习率调整
 
@@ -28,7 +28,7 @@ Mathjax: true
    - 循环学习率（Cyclical learning rates）：随着训练过程进行，学习率以循环的方式，逐渐增加至基础学习率，然后逐渐衰减到一个较小值，这个过程循环执行，直至训练结束，过程中，基础学习率本身可能也会以某种方式逐渐衰减。
 
 
-<img src="http://shihanmax.top/20201028204513_BsaS8K_Screen-Shot-2018-02-25-at-8.44.49-PM.jpeg" alt="cyclical lr" style="zoom: 67%;">
+<img src="http://qiniu.shihanmax.top/20201028204513_BsaS8K_Screen-Shot-2018-02-25-at-8.44.49-PM.jpeg" alt="cyclical lr" style="zoom: 67%;">
 
 与训练过程中，学习率一直下降相比，学习率在训练过程中增加的一个理论假设是，“短期内，增加学习率会导致损失增加，但长期来看，模型会收敛到一个更优的解”。支撑这一假设的两个偏直觉性的推断是：
 
@@ -38,11 +38,11 @@ Mathjax: true
 
 训练神经网络基本等价于对一个高维非凸函数求最值的问题，这个问题理论上非常困难，但实践中有时又比较简单：在一些简单的任务上，基于梯度下降算法的优化方法总能寻找到全局最优解。但这并不总能实现，神经网络的可训练性受到网络结构设计、优化器的选择、参数的初始化效果、训练数据分布和其它一些因素的共同影响，针对这些因素，实践中没有一套通用的准则来指导。某些特定的网络结构能够使得训练过程更为容易（如skip connections等），这篇文章[Visualizing the Loss Landscape of Neural Nets ](https://arxiv.org/pdf/1712.09913.pdf)通过可视化的手段分析了神经网络损失函数的结构，概括性分析了这些结构对于训练的影响，以及参数对训练过程的影响。作者发现，随着网络深度的增加，损失函数的非凸性加剧。
 
-![depth](http://shihanmax.top/20201029204158_fSpDaA_%E6%88%AA%E5%B1%8F2020-10-29%2020.41.50.jpeg)
+![depth](http://qiniu.shihanmax.top/20201029204158_fSpDaA_%E6%88%AA%E5%B1%8F2020-10-29%2020.41.50.jpeg)
 
 并通过实验发现，如果在网络中加入一些短路连接，则损失函数表面则倾向于变得光滑。
 
-![skip-connections](http://shihanmax.top/20201029204023_N5naCq_%E6%88%AA%E5%B1%8F2020-10-29%2020.40.15.jpeg)
+![skip-connections](http://qiniu.shihanmax.top/20201029204023_N5naCq_%E6%88%AA%E5%B1%8F2020-10-29%2020.40.15.jpeg)
 
 这篇文章[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780) 证明了，在较大的神经网络中，全局最优解往往不是一个点，而是一个连通的流形（manifold），一个更一般化的说法：如果目标函数存在两个局部最优解，则一定可以通过一条平坦的路径（flat path），使得这两点连通。
 
@@ -57,11 +57,11 @@ Mathjax: true
 
 作者通过统计性实验证明了后两个推论的合理性：增大batch size时，模型倾向于收敛到尖锐的局部最小值处，该处表现为矩阵$\nabla ^2 f$的正特征值更大；相反地，对于较为平坦的局部最小值处对应的$\nabla ^2 f$的特征值则会小得多。 作者强调，由于batch size变化造成的泛化能力差别（generalization gap）并不是由过拟合引起的。
 
-<img src="http://shihanmax.top/20201103203609_IyHglP_%E6%88%AA%E5%B1%8F2020-11-03%2020.36.02.jpeg" alt="flat&amp;sharp local minima " style="zoom:80%;" />
+<img src="http://qiniu.shihanmax.top/20201103203609_IyHglP_%E6%88%AA%E5%B1%8F2020-11-03%2020.36.02.jpeg" alt="flat&amp;sharp local minima " style="zoom:80%;" />
 
 在大型网络中，计算$\nabla ^2 f$的特征值来表征极值点处的尖锐程度的代价十分高昂，因此作者提出了一种替代方案用于表征目标函数任一点处的尖锐程度，并通过实验对比了batch size变化时，目标函数尖锐程度的变化情况：
 
-<img src="http://shihanmax.top/20201103204854_WbTFyO_%E6%88%AA%E5%B1%8F2020-11-03%2020.48.44.jpeg" alt="sharpness-bs " style="zoom:80%;" />
+<img src="http://qiniu.shihanmax.top/20201103204854_WbTFyO_%E6%88%AA%E5%B1%8F2020-11-03%2020.48.44.jpeg" alt="sharpness-bs " style="zoom:80%;" />
 
 为了尝试解决大batch size遇到的问题，作者尝试了数据扩增、使用更加鲁棒的优化器等措施，但实验证明，在较大的batch size下，这些方法仍倾向于收敛到sharp minimizers上，另一种使得大batch size可行的方案是，使用小batch size先进行warmup，然后再将其调整到预设的batch size。
 
