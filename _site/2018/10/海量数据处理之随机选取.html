@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>海量数据之随机选取 - Shihanmax</title>
+    <meta name="description" content="问题：">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/10/%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%B9%8B%E9%9A%8F%E6%9C%BA%E9%80%89%E5%8F%96">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">海量数据之随机选取</h1>
+        <p class="c-article__time"><time datetime="2018-10-25T08:00:00+08:00" itemprop="datePublished">Oct 25, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>问题：</p>
+
+<p>常规情况下，从一个长度为n的数组中等概率选取k个元素的方法：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">selectedIdx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">selectIdx</span><span class="p">:</span>
+        <span class="n">selectIdx</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>当数组长度未知时（如给定一个链表，长度未知），要求只扫描一遍链表的前提下，等概率选取k个数字，此时上述方法就不可用了。</p>
+
+<!--more-->
+
+<p>先看一下基本的情况：</p>
+
+<p>一、从长度未知的链表中等概率、随机选择1个数（Random Pick）</p>
+
+<p>第一次直接选取头结点元素作为choice，而后以二分之一的概率决定是否用下一个替换它，以1/3的概率决定是否使用第三个元素替换choice…</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">randomSelect</span><span class="o">(</span><span class="n">pHead</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">select</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="nc">ListNode</span> <span class="n">pCurr</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+
+    <span class="k">while</span> <span class="o">(</span><span class="n">pCurr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">randomNum</span> <span class="o">=</span> <span class="n">random</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">randomNum</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">select</span> <span class="o">=</span> <span class="n">pCurr</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="n">pCurr</span> <span class="o">=</span> <span class="n">pCurr</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="n">count</span><span class="o">++;</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">select</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>二、从长度未知的链表中等概率、随机选择k个数</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">randomSelect</span><span class="o">(</span><span class="n">pHead</span><span class="o">,</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">ListNode</span> <span class="n">pCurr</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">;</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">choice</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="k">while</span> <span class="o">(</span><span class="n">pCurr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">choice</span><span class="o">[</span><span class="n">r</span><span class="o">]</span> <span class="o">=</span> <span class="n">pCurr</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">pCurr</span> <span class="o">=</span> <span class="n">pCurr</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="n">i</span><span class="o">++;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>证明如下：</p>
+
+<p>对于第1个结点，被选中，且未在后续选取中被替换：</p>
+
+<p>p = k/k+1 * k+1/k+2 * k+2/k+3 * … * n-1/n = k/n</p>
+
+<p>对于第2个结点：</p>
+
+<p>p =           k/k+2 * k+2/k+3 * … * n-1/n = k/n</p>
+
+<p>…</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Probability</span>
+        
+            <span class="c-tag">Algorithm</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

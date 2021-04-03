@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>机器学习算法之逻辑回归(Logistic Regression) - Shihanmax</title>
+    <meta name="description" content="A. 模型推导">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2019/03/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92(Logistic-Regression)">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">机器学习算法之逻辑回归(Logistic Regression)</h1>
+        <p class="c-article__time"><time datetime="2019-03-19T08:00:00+08:00" itemprop="datePublished">Mar 19, 2019</time></p>
+    </header>
+    <div class="c-article__main">
+        <h3 id="a-模型推导">A. 模型推导</h3>
+
+<p>现有样本集合${X,y}$，$X$为特征${x_1,x_2,…,x_n}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y=h_\theta(x)$，其中，</p>
+
+\[h_\theta(x)=\sum \theta_ ix_i\]
+
+<p>在逻辑回归中，$y$属于集合${0,1}$，$1$表示属于某类别，而$0$表示不属于该类别。</p>
+
+<p>期望得到模型$M$，使得$M(x)\in[0,1]$，这样能够较为方便地衡量$x$属于该类别的概率。</p>
+
+<!--more-->
+
+<p>$sigmoid$函数可以满足这个需求：</p>
+
+\[sigmoid(x)=\cfrac{1}{1+e^{-x}}\]
+
+<p>逻辑回归的$h_\theta(x)$可以写成：</p>
+
+\[h_ \theta (x)=\cfrac{1}{1+e^ {- \theta x}}\]
+
+<p>对正样本:</p>
+
+\[P({y=1 \mid x, \theta})=h_ \theta(x)\]
+
+<p>对负样本:</p>
+
+\[P({y=0 \mid x, \theta})=1-h_ \theta(x)\]
+
+<p>将二者合并，有:</p>
+
+\[P({y \mid \theta})={h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}\]
+
+<p>为方便求解，采用最大化似然函数求解参数$\theta$，对$m$个样本，似然函数$L(\theta)$为：</p>
+
+\[L(\theta)=\prod P(y \mid \theta)=\prod {h_ \theta(x)}^y{1-h_ \theta(x)}^{1-y}\]
+
+<p>对似然函数取对数并取负，可得损失函数$J(\theta)$：</p>
+
+\[J(\theta)=-lnL(\theta)=-\sum {yh_ \theta(x)}+{(1-y)(1-h_ \theta(x))}\]
+
+<p>将$J(\theta)$对$\theta$求导，可得</p>
+
+\[\cfrac{\partial{}}{\partial{\theta}}J(\theta)=x^T(h_\theta (x)-y)\]
+
+<p>使用梯度下降法迭代求解：</p>
+
+\[\theta = \theta - \alpha x^T(h_\theta(x)-y)\]
+
+<p>其中$\alpha$为学习率。</p>
+
+<h3 id="b-正则化">B. 正则化</h3>
+
+<p>为避免过拟合问题，可对模型施加$L1$或$L2$正则化项，$Loss$的定义：</p>
+
+<p>$Loss_{L1}=\beta \mid\mid\theta\mid\mid_1$</p>
+
+<p>$Loss_{L2}=\cfrac{1}{2}\beta \mid\mid\theta\mid\mid_2^2$</p>
+
+<p>其中，$\beta$为正则化超参数。</p>
+
+<p>训练时，将$Loss_{L1/2}$与$J(\theta)$相加，并执行梯度下降。</p>
+
+<h3 id="c-多分类">C. 多分类</h3>
+
+<p>逻辑回归应用于$n$类多分类时，可以针对每一个类别分别训练$n$个逻辑回归模型${h_{\theta1},h_{\theta2},…h_{\theta n}}$，在模型$h _{\theta i}$中，将属于类别$i$的数据视为正类，其余类别设为负类（1 vs others），预测时对样本$i$，计算所有模型的分数，取分数最大的模型的正样本类别作为该样本$i$的类别。</p>
+
+<h3 id="d-优缺点">D. 优缺点</h3>
+
+<h4 id="优点">优点</h4>
+
+<ul>
+  <li>形式简单，模型可解释性强（从权重可以看到各个特征的影响）</li>
+  <li>效果较好，尤其是在特征选取适当的情况下，工程上经常作为baseline模型</li>
+  <li>训练速度快，计算量仅与特征量和数据量有关，占用资源小</li>
+</ul>
+
+<h4 id="缺点">缺点</h4>
+
+<ul>
+  <li>应对数据不均衡情况的能力不强</li>
+  <li>不能解决非线性的问题，因为LR的决策面是线性的</li>
+  <li>数据特征缺失或特征空间很大时效果不好</li>
+  <li>包含高度线性相关特征时，不适合使用逻辑回归，会影响特征的解释性</li>
+</ul>
+
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Machine Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

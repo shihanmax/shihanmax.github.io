@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MLE & MAP - Shihanmax</title>
+    <meta name="description" content="绝大部分机器学习的优化过程最终都会转化为求目标函数最值的过程，MLE（Maximum Likelihood Estimation，最大似然估计）和MAP（Maximum A Posteriori，最大后验估计）是两种生成目标函数的思想。下文尝试讨论MLE和MAP的区别和联系。">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/08/MAP&MLE">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">MLE & MAP</h1>
+        <p class="c-article__time"><time datetime="2020-08-16T17:35:03+08:00" itemprop="datePublished">Aug 16, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>绝大部分机器学习的优化过程最终都会转化为求目标函数最值的过程，MLE（Maximum Likelihood Estimation，最大似然估计）和MAP（Maximum A Posteriori，最大后验估计）是两种生成目标函数的思想。下文尝试讨论MLE和MAP的区别和联系。</p>
+
+<p>MLE仅通过观测样本对参数进行估计，MLE的目标函数为$\arg\max P(D\mid \theta)$，而MAP不仅通过观测的样本，同时也通过先验（priori）进行参数的估计，其目标函数为$\arg \max P(\theta \mid D)$。</p>
+
+<h1 id="最优化map">最优化MAP</h1>
+
+\[\begin{aligned} \arg\max P(\theta \mid D) &amp;= \arg\max P(D\mid\theta) \cdot P(\theta)\\ &amp;=\arg\max \log P(D\mid \theta) + \log P(\theta) \end{aligned}\]
+
+<p>由上式可以看出，MAP的目标函数的第一项为MLE的目标函数，第二项$\log(\theta)$相当于优化MAP的过程中，对MLE目标函数施加的正则化项，下文将证明，随着$\theta$分布的不同，正则化项的类型也不同。</p>
+
+<p>下文以Logistic Regression为例：</p>
+
+\[\begin{aligned} objective\ of\ MAP &amp;= \arg\max P(\theta \mid D) \\ &amp;=\arg\max P(D\mid \theta) \cdot P(\theta) \\ &amp;=\arg\max \log P(D\mid \theta) + \log P(\theta) \\&amp;=\arg\max \sum_\limits{i=1}^n \log P(y_i\mid x_i;\theta) + \log P(\theta)  \end{aligned}\]
+
+<h1 id="从高斯先验到l_2正则">从高斯先验到$L_2$正则</h1>
+
+<p>假设参数$\theta$服从高斯分布：</p>
+
+\[\begin{aligned}logP(\theta)&amp;=log(\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{\theta^2}{2\sigma^2})) \\&amp;=-log(\sqrt{2\pi}\sigma) - \frac{\theta^2}{2\sigma^2}  \end{aligned}\]
+
+<p>则MAP的目标函数可写作：</p>
+
+\[\begin{aligned} objective\ of\ MAP &amp;=\arg\max \sum_\limits{i=1}^n \log P(y_i\mid x_i;\theta) -log(\sqrt{2\pi}\sigma) - \frac{\theta^2}{2\sigma^2} \\&amp;=\arg\max \sum_\limits{i=1}^n \log P(y_i\mid x_i;\theta)-\frac{1}{2\sigma^2}\Vert \theta \Vert_2^2 \end{aligned}\]
+
+<p>即：当参数服从高斯分布时，MAP目标函数中的$\log P(\theta	)$项相当于对MLE目标函数施加的$L_2$正则。</p>
+
+<h1 id="从拉普拉斯先验到l_1正则">从拉普拉斯先验到$L_1$正则</h1>
+
+<p>假设参数$\theta \sim Laplace(\mu,b),\mu=0$，则：$P(\theta)=\frac{1}{2b}exp(-\frac{\vert\theta\vert}{b})$</p>
+
+\[\begin{aligned} \log P(\theta)&amp;=\log(\frac{1}{2b}exp(-\frac{\vert\theta\vert}{b})) \\&amp;=log(\frac{1}{2b})-\frac{\vert\theta\vert}{b}\end{aligned}\]
+
+<p>MAP的目标函数可写作：</p>
+
+\[\begin{aligned} objective\ of\ MAP &amp;=\arg\max \sum_\limits{i=1}^n \log P(y_i\mid x_i;\theta)  -\frac{1}{b}\Vert\theta\Vert_1  \end{aligned}\]
+
+<p>即：当参数服从拉普拉斯分布时，MAP目标函数中的$\log P(\theta	)$项相当于对MLE目标函数施加的$L_1$正则。</p>
+
+<p>上述推导以LR为例验证了“Adding Priori is Equivalent to Regularization”的结论，事实上，在MLE的框架下，上述结论可推广至任何模型。</p>
+
+<h1 id="map-approaches-to-mle-solution">MAP approaches to MLE solution</h1>
+
+<p>回顾MAP的目标函数：</p>
+
+\[\begin{aligned} objective\ of\ MAP =\arg\max \sum_\limits{i=1}^n \log P(y_i\mid x_i;\theta) + \log P(\theta)  \end{aligned}\]
+
+<p>目标函数的第一部分是一个概率加项，第二项仅与模型的参数有关，当样本数量趋于无限大，即$n \to \infty$时，正则化项的影响减弱至无，此时MAP退化为MLE。</p>
+
+<h1 id="ref">Ref.</h1>
+
+<p><a href="http://www.cs.cmu.edu/~aarti/Class/10701_Spring14/slides/MLE_MAP_Part1.pdf">1. CMU-10701:2. MLE, MAP, Bayes classification</a></p>
+
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Machine Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CRF,HMM,MEMM的区别和联系 - Shihanmax</title>
+    <meta name="description" content="生成式模型和判别式模型">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/12/CRF,HMM,MEMM%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">CRF,HMM,MEMM的区别和联系</h1>
+        <p class="c-article__time"><time datetime="2018-12-22T08:00:00+08:00" itemprop="datePublished">Dec 22, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <h2 id="生成式模型和判别式模型">生成式模型和判别式模型</h2>
+
+<p>已知输入$x$和标签$y$：</p>
+<ul>
+  <li>判别式模型估计条件概率分布$p(y\mid x)$，常见的算法有：LR，SVM，神经网络，KNN，CRF，LDA，线性回归</li>
+  <li>生成式模型估计联合概率$p(x,y)$，常见的的有Naive Bayes，HMM</li>
+</ul>
+
+<h2 id="crfhmmmemm的对比">CRF、HMM、MEMM的对比</h2>
+<p>CRF、HMM、MEMM（最大熵隐马模型）是序列标注任务中常用的三种模型，他们各有优缺点，以下从不同的角度对比这三者。</p>
+
+<!--more-->
+
+<h1 id="finding-multiple-core-periphery-pairs-in-networks">Finding multiple core-periphery pairs in networks</h1>
+
+<h3 id="1模型种类">1.模型种类</h3>
+<ul>
+  <li>HMM：对转移概率和状态概率进行建模，是生成式模型</li>
+  <li>CRF：在有限样本下建立判别函数（预测函数），是判别式模型</li>
+  <li>MEMM：是一种基于状态分类的有限状态模型，是判别式模型</li>
+</ul>
+
+<h3 id="2拓扑结构">2.拓扑结构</h3>
+<p>HMM和MEMM是一种有向图，CRF是无向图</p>
+
+<h3 id="3全局最优-or-局部最优">3.全局最优 or 局部最优</h3>
+
+<p>全局最优与否要看我们构造出的loss function是否是convex，如是，则存在全局最优解。</p>
+
+<ul>
+  <li>HMM对转移概率和状态概率直接建模，是一种全局最优模型</li>
+  <li>MEMM是对转移概率和状态概率建立联合概率，统计是使用条件概率，由于其只在局部做归一化，容易陷入局部最优</li>
+  <li>CRF是全局范围内统计归一化概率，可以得到全局最优解，解决了MEMM中标注偏置的问题</li>
+</ul>
+
+<h3 id="4比较">4.比较</h3>
+<ul>
+  <li>与HMM比较，CRF不需要严格的独立性假设条件，可以容纳任意范围内的上下文信息，特征设计灵活</li>
+  <li>与MEMM比较，由于CRF计算全局最优输出节点的条件概率，克服了MEMM模型标记偏置的缺点</li>
+</ul>
+
+<h2 id="其他">其他</h2>
+<h3 id="hmm和rnn的比较">HMM和RNN的比较</h3>
+<p>HMM和RNN结构相似，都是通过hidden state来刻画序列建的依赖关系，但二者有较大不同，体现在：</p>
+<ul>
+  <li>HMM本质上是一个概率模型，而RNN不是，RNN没有马尔科夫性假设，可以考虑很长的历史信息</li>
+  <li>隐状态的表示不同：HMM是one hot表示，而RNN则是distributed representation，其表示能力较HMM强很多，在面对高维时，表示效率更高（类似于one hot 和 word2vec）</li>
+  <li>隐状态的转移方式：HMM是线性的，而RNN则是高度非线性</li>
+  <li>深度不同：RNN的堆叠可以使得其表达能力指数提高</li>
+</ul>
+
+<p><a href="https://www.zhihu.com/question/53458773/answer/330396666">1. 概率图模型笔记</a>（详细）
+<a href="https://blog.csdn.net/xingchenhy/article/details/72847543">2. CRF，HMM和MEHMM区别</a></p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">PGM</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

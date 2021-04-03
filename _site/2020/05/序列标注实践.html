@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>序列标注实践 - Shihanmax</title>
+    <meta name="description" content="序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2020/05/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E5%AE%9E%E8%B7%B5">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">序列标注实践</h1>
+        <p class="c-article__time"><time datetime="2020-05-11T01:16:03+08:00" itemprop="datePublished">May 11, 2020</time></p>
+    </header>
+    <div class="c-article__main">
+        <p>序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。</p>
+
+<p>序列标注问题的定义是：给定序列$S$，期望通过模型M得到序列中每一个token对应的标签序列$Z$，这里定义，$S$中每个词token的可能情况有$n_{word}$中，标签序列$Z$中的每一个标签tag的可能情况有$n_{tag}$种。</p>
+
+<p>本文从噪声信道模型的角度对序列标注问题进行建模，并通过维特比算法优化最优路径的搜索。</p>
+
+<!--more-->
+
+<p>定义：$S=w_1w_2w_3…w_{N}$，对应的任一种标签序列为$Z=z_1z_2z_3…z_{N}$，目标是寻找最优的标签序列$\hat{Z}$。</p>
+
+\[\begin{equation}\begin{aligned}  \hat{Z}&amp;=\mathop{argmax}_\limits{z}(P(Z\vert S)) \\&amp;=\mathop{argmax}_\limits{z}(P(S\vert Z)\cdot P(Z)) \\&amp;=\mathop{argmax}_\limits{z}(P(w_1w_2...w_N\vert z_1z_2...z_N) \cdot  P(z_1z_2...z_N))   \end{aligned}  \end{equation}\]
+
+<p>上式中乘积的第一项为Translation model（TM）、第二项为Language model（LM）。</p>
+
+<p>在TM中引入独立假设，在LM中引入bi-gram假设，可得：</p>
+
+\[\hat{Z}=\mathop{argmax}_\limits{z}( \prod_\limits{i=1}^{N}P(w_i\vert z_i)\cdot P(z_1)\cdot \prod_\limits{j=2}^N P(z_j\vert z_{j-1}))\]
+
+<p>对概率进行对数化：</p>
+
+\[\hat{Z}=\mathop{argmax}_\limits{z}( \sum_\limits{i=1}^{N} logP(w_i\vert z_i)+ log P(z_1)+ \sum_\limits{j=2}^N logP(z_j\vert z_{j-1}))\]
+
+<p>相加的三项中，第一项为由标签到词的条件概率，记为$A$；第二项为标签出现在句首的概率，记为$B$，第三项为标签之间的转移概率，记为$\pi$。</p>
+
+<p>在有标注的数据集上，上述三项的概率能够通过统计得到。</p>
+
+<p>对于一条待标注的文本$S_u$，长度为$N$，其所有可能的标签序列有$n_{tag}^N$种，对所有情况可以计算概率$P(Z_i\vert S)$，取概率最大的标签序列即可。</p>
+
+<p>实际应用中，枚举所有种可能的效率是非常低的，因此需要使用更高效的算法来对路径进行剪枝。维特比算法是一种动态规划算法，用于多个步骤且每个步骤中有多种选择的问题的最优路径选择。维特比算法通过计算所有前序步骤到当前步骤的最小代价（或最大收益），以及当前步骤做选择时的代价（收益）来进行步骤的选择，最后，通过回溯法来选择最优路径。</p>
+
+<p>下面是上述过程在词性标注任务上的一种实现。</p>
+
+<p>训练数据的格式为：每行：词/词性</p>
+
+<p>实现：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+
+<span class="k">def</span> <span class="nf">build_mapper</span><span class="p">(</span><span class="n">train_data</span><span class="p">):</span>
+    <span class="s">""" build token mapper and tag mapper """</span>
+    <span class="n">tag2id</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">id2tag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">word2id</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">id2word</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">word_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tag_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fr</span><span class="p">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">sp_line</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sp_line</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="n">sp_line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">word</span> <span class="o">=</span> <span class="s">"/"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">sp_line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">word</span> <span class="o">=</span> <span class="n">sp_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="n">sp_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word2id</span><span class="p">:</span>
+                <span class="n">word2id</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">word_count</span>
+                <span class="n">id2word</span><span class="p">[</span><span class="n">word_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">word</span>
+
+                <span class="n">word_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tag2id</span><span class="p">:</span>
+                <span class="n">tag2id</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag_count</span>
+                <span class="n">id2tag</span><span class="p">[</span><span class="n">tag_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
+
+                <span class="n">tag_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">n_word</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2id</span><span class="p">)</span>
+    <span class="n">n_tag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag2id</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"word size:{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">n_word</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"tag size:{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">n_tag</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">word2id</span><span class="p">,</span> <span class="n">id2word</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">id2tag</span><span class="p">,</span> <span class="n">n_word</span><span class="p">,</span> <span class="n">n_tag</span>
+
+
+<span class="k">def</span> <span class="nf">build_params</span><span class="p">(</span><span class="n">word2id</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">n_tag</span><span class="p">,</span> <span class="n">n_word</span><span class="p">,</span> <span class="n">train_data</span><span class="p">):</span>
+    <span class="s">"""
+    build params of HMM: theta = (pi, A, B)
+    - pi is a vector marks the probe of each tag to be the first tag
+      of a sentence, size: [1, n_tag]
+    - A is a matrix of condition probe of words given tags,size: [n_tag, n_word]
+    - B is a matrix of transition probe between tags, size: [n_tag, n_tag]"""</span>
+
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_tag</span><span class="p">)</span>  <span class="c1"># probe of starting tag
+</span>    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_tag</span><span class="p">,</span> <span class="n">n_word</span><span class="p">))</span>  <span class="c1"># condition probe p(word|tag)
+</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_tag</span><span class="p">,</span> <span class="n">n_tag</span><span class="p">))</span>  <span class="c1"># transition probe p(tag_i|tag_j)
+</span>
+    <span class="n">at_start_of_sentence</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">last_tag_id</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fr</span><span class="p">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">word</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+            <span class="n">word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+            <span class="n">tag_id</span> <span class="o">=</span> <span class="n">tag2id</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">at_start_of_sentence</span><span class="p">:</span>
+                <span class="n">pi</span><span class="p">[</span><span class="n">tag_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># starting prob
+</span>                <span class="n">a</span><span class="p">[</span><span class="n">tag_id</span><span class="p">,</span> <span class="n">word_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># cond. prob
+</span>                <span class="n">at_start_of_sentence</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a</span><span class="p">[</span><span class="n">tag_id</span><span class="p">,</span> <span class="n">word_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># cond. prob
+</span>                <span class="n">b</span><span class="p">[</span><span class="n">last_tag_id</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># trans. probe
+</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="o">==</span> <span class="s">"."</span><span class="p">:</span>
+                <span class="n">at_start_of_sentence</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">last_tag_id</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">last_tag_id</span> <span class="o">=</span> <span class="n">tag_id</span>
+
+    <span class="c1"># done counting, normalize...
+</span>    <span class="n">pi</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pi</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
+
+
+<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">viterbi</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">word2id</span><span class="p">,</span> <span class="n">id2tag</span><span class="p">):</span>
+    <span class="s">"""
+    decode with viterbi
+    :param sentence: sentence to decode
+    :param pi: init probe of tag
+    :param a: cond probe of words given tags
+    :param b: trans probe between tags
+    :return:
+    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">word2id</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">sentence</span><span class="p">.</span><span class="n">split</span><span class="p">()]</span>  <span class="c1"># words of sentence
+</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">n_tag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag2id</span><span class="p">)</span>
+
+    <span class="n">dp</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">t</span><span class="p">,</span> <span class="n">n_tag</span><span class="p">))</span>
+    <span class="n">path_record</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">)])</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">):</span>
+        <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">pi</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+    <span class="c1"># dp
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>  <span class="c1"># 每个单词
+</span>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">):</span>  <span class="c1"># 每个词性
+</span>            <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e6</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tag</span><span class="p">):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]:</span>
+                    <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+                    <span class="n">path_record</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+
+    <span class="c1"># find best sequence
+</span>    <span class="n">best_tag_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span>
+
+    <span class="n">best_tag_sequence</span><span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">best_tag_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_record</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">best_tag_sequence</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">tag_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">id2tag</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">best_tag_sequence</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">tag_sequence</span>
+
+
+<span class="n">train_data_path</span> <span class="o">=</span> <span class="s">"./resource/traindata.txt"</span>
+<span class="n">test_sentence</span> <span class="o">=</span> <span class="s">"The big question is whether the president will have the strength ."</span>
+
+<span class="c1"># 1. build mapper of words and tags
+</span><span class="n">word2id</span><span class="p">,</span> <span class="n">id2word</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">id2tag</span><span class="p">,</span> <span class="n">n_word</span><span class="p">,</span> <span class="n">n_tag</span> <span class="o">=</span> <span class="n">build_mapper</span><span class="p">(</span><span class="n">train_data_path</span><span class="p">)</span>
+
+<span class="c1"># 2. \theta = (\pi, A, B), build them
+</span><span class="n">pi</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">build_params</span><span class="p">(</span><span class="n">word2id</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">n_tag</span><span class="p">,</span> <span class="n">n_word</span><span class="p">,</span> <span class="n">train_data_path</span><span class="p">)</span>
+
+<span class="c1"># 3. find optimal path with viterbi
+</span>
+<span class="n">tag_sequence</span> <span class="o">=</span> <span class="n">viterbi</span><span class="p">(</span><span class="n">test_sentence</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">word2id</span><span class="p">,</span> <span class="n">id2tag</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tag_sequence</span><span class="p">)</span>  <span class="c1"># ['DT', 'JJ', 'NN', 'VBZ', 'IN', 'DT', 'NN', 'MD', 'VB', 'DT', 'NN', '.']
+</span></code></pre></div></div>
+
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Sequence Labeling</span>
+        
+            <span class="c-tag">Machine Learning</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>

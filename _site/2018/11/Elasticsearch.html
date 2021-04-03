@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Elasticsearch初探 - Shihanmax</title>
+    <meta name="description" content="Elasticsearch">
+
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese"rel="stylesheet">
+    <link rel="stylesheet" href="//css/main.css">
+    <link rel="canonical" href="http://localhost:4000//2018/11/Elasticsearch">
+    <link rel="alternate" type="application/rss+xml" title="Shihanmax" href="http://localhost:4000//feed.xml">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?">
+    
+
+    
+
+</head>
+
+    <body>
+        <main class="u-container">
+        <div class="c-page">
+		<article class="c-article">
+   	 	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<header class="c-page__header">
+        <h1><span class="half_background">Shihanmax's blog</span> 🚀</h1>
+	
+    <p>
+        <a href="//">&lt; Back</a>
+    </p>
+	
+</header>
+
+    	<div class="c-article__main">
+        <article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">Elasticsearch初探</h1>
+        <p class="c-article__time"><time datetime="2018-11-23T08:00:00+08:00" itemprop="datePublished">Nov 23, 2018</time></p>
+    </header>
+    <div class="c-article__main">
+        <h2 id="elasticsearch">Elasticsearch</h2>
+
+<p><strong>Elasticsearch</strong>是一个高伸缩的开源全文搜索和分析引擎，它可以快速地、近实时的存储，搜索和分析大规模的数据。一般被用作底层引擎/技术，为具有复杂搜索功能和要求的应用提供强有力的支撑。</p>
+
+<!--more-->
+
+<h2 id="使用场景">使用场景：</h2>
+
+<ul>
+  <li>电商网站，商品的检索</li>
+  <li>日志或交易数据的统计、汇报、总结</li>
+  <li>在百万或十亿条数据中查找特定的问题</li>
+</ul>
+
+<h2 id="基本概念">基本概念：</h2>
+
+<h3 id="近实时-nrt">近实时 NRT</h3>
+
+<p>ES平台接近实时，从文档索引到可搜索的时间非常短暂。</p>
+
+<h3 id="集群-cluster">集群 Cluster</h3>
+
+<p>集群是一个或多个<strong>节点（Server）</strong>的集合，它们联合起来保存所有的数据，并且可以在任何一个节点上进行索引和搜索操作。集群由唯一的名称标识，默认是elasticsearch。一个节点只能属于一个集群。你也可以有多个集群，每个集群都有一个唯一的名字。</p>
+
+<h3 id="节点-node">节点 Node</h3>
+
+<p>一台独立的服务器就是一个节点，是集群的一部分，参与集群的索引与检索。同样地，节点拥有一个唯一的名字，默认是一个随机的UUID，当然也可以定制。节点名称很重要，可以帮助区分集群服务器和节点的对应关系。</p>
+
+<p>节点通过配置集群名称之后，就可以加入指定的集群，默认情况下节点都会加入到默认集群elasticsearch。</p>
+
+<h3 id="索引-index">索引 Index</h3>
+
+<p>索引是具有相似特点的文档集合，如客户数据，产品目录等。</p>
+
+<p>索引由名称（只能使用小写字母）来标识，该名称用于对文档的索引、搜索、更新和删除等操作。单个集群中，可以定制任意数量的索引。</p>
+
+<h3 id="文档-document">文档 Document</h3>
+
+<p>文档是可以被索引的基本单位，如用一个文档保存客户的数据，或单个商品的数据。文档用JSON表示，在索引中可以存储大量文档。</p>
+
+<h3 id="分片和副本-shards--replicas">分片和副本 Shards &amp; Replicas</h3>
+
+<p>一个索引可能存储海量数据，有可能超过单个节点的硬盘容量，为了解决这个问题，ES提供了分片功能，即索引细分。即创建索引时，可以定义分片数，每个分片具备索引的全部功能，可以存放在集群中的任何一个节点上。</p>
+
+<p>分片很重要，原因如下：</p>
+
+<ul>
+  <li>允许水平分割/缩放内容量</li>
+  <li>允许并行地分发操作到多个节点的分片上，从而提高性能和吞吐量</li>
+</ul>
+
+<p>分片分发机制，以及在检索中如何汇总到搜索响应的过程完全由ES管理，并且是透明的。</p>
+
+<p>在网络/云环境中，故障可能会发生，此时，分片会非常有用，强烈建议使用故障转移机制，以防止节点脱机。ES允许将索引的分片复制多份，即副本。</p>
+
+<p>副本的重要性：</p>
+
+<ul>
+  <li>在分片/节点故障时，提高可用性（注意，副本与原始/主分片不能分配在同一个节点上）</li>
+  <li>允许扩展搜索量，可对所有副本执行搜索</li>
+</ul>
+
+<p>每个索引可以分为多个分片。每个索引也可以被复制零次（意味着没有副本）或多次。一旦复制，每个索引将具有主分片（原始分片）和副分片（主分片的副本）。可以在创建索引时根据索引定义分片和副本的数量。创建索引后，您可以随时动态更改副本数，但不能更改分片数。</p>
+
+<p>默认情况下，每个索引都会被分配5个主分片和1一个复制分片，这意味着如果你的集群中有两个节点，你的索引将会有5个主分片和5个复制分片，总共有10个分片。</p>
+
+<p>每个分片是一个Lucene index，一个Lucene index中可以有很多的文档，截至 LUCENE-5843，最多2147483519(= Integer.MAX_VALUE - 128) 个文档。可以使用 _cat/shards api监视分片大小。</p>
+
+<p><a href="http://www.cnblogs.com/xing901022/p/3933675.html">关于全文检索，Lucene和倒排索引</a></p>
+
+<h2 id="es初探">ES初探</h2>
+
+<h3 id="安装启动">安装、启动</h3>
+
+<p>安装过程参考ES官网，注意ES依赖Java8环境。</p>
+
+<p>启动方法：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd elasticsearch-5.4.1
+./bin/elasticsearch
+</code></pre></div></div>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>ES提供了非常强大的REST API与集群进行通讯。</p>
+
+<p>API能力：</p>
+
+<ul>
+  <li>检查集群、节点、索引的运行状态和统计信息</li>
+  <li>管理集群、节点、索引和元数据</li>
+  <li>执行CRUD，针对索引进行搜索</li>
+  <li>执行高级操作，如分页、排序、过滤、脚本、聚合等</li>
+</ul>
+
+<h4 id="查看集群节点索引">查看集群、节点、索引</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /_cat/health?v
+	# 查看节点健康
+
+GET /_cat/nodes?v
+	# 查看集群节点列表
+
+GET /_cat/indices?v
+	# 查看所有索引，如果集群中只有一个节点，则此索引的健康值为yellow（副本未分配）
+</code></pre></div></div>
+
+<h4 id="索引的创建和删除">索引的创建和删除</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /bank?pretty
+	# 创建名为testindex的索引
+
+DELETE /bank?pretty
+	# 删除testindex索引
+</code></pre></div></div>
+
+<h4 id="文档的创建修改和删除">文档的创建、修改和删除</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /bank/account/1?pretty
+{
+	"name": "John Doe"
+}
+	# 索引一篇文档，类型为sometype，ID为1（此ID也可不指定）索引
+
+PUT /bank/account/1?pretty
+{
+	"name": "Maxan"
+}
+	# 如果对已存在的文档修改内容后，再次执行索引，ES会使用一个新文档取代旧文档（重建索引）
+
+POST /bank/account?pretty
+{
+	"name": "Tom"
+}
+	# 没有指定ID，使用POST方法取代PUT
+
+POST /bank/account/1/_update?pretty
+{
+	"doc": { "name": "Maxan", "age": 24}
+}
+	# 对id为1的文档执行更新，ES会删除旧文档，索引新文档
+
+DELETE /bank/account/1?pretty
+	# 删除ID为1的文档
+</code></pre></div></div>
+
+<h4 id="批处理">批处理</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /bank/account/_bulk?pretty
+{"index": {"_id": "1"}}
+{"name": "Tom hanks"}
+{"index": {"_id": "2"}}
+{"name": "Jack"}
+{"update": {"_id": "1"}}
+{"doc": {"name": "Hello World my name is ES"}}
+{"delete": {"_id": "2"}}
+
+	# 上面的请求批量索引了两篇文档，注意：最后要有空行
+</code></pre></div></div>
+
+<h4 id="查询">查询</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /_search?q=*&amp;sort=account_number:asc&amp;pretty
+	# 在所有索引下查询文档（方式1：通过REST request URI 方式发送查询参数）
+GET /bank/_search?q=*&amp;sort=account_number:asc&amp;pretty
+	#在bank下查询文档
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "sort": [
+		{ "account_number":"asc" }
+  ]
+}
+	# 使用方式二查询（通过REST request body）
+</code></pre></div></div>
+
+<p>返回结果解释</p>
+
+<ul>
+  <li>took： 查询时间（ms）</li>
+  <li>time_out: 是否超时</li>
+  <li>_shards: 查询了多少分片</li>
+  <li>hits: 查询结果</li>
+  <li>hits.total: 符合我们查询条件的文档总数</li>
+  <li>hits.hits: 实际查询结果数组（默认为前10个文档）</li>
+  <li>hits.sort: 对结果进行排序的键（如果没提供，则默认使用_score进行排序）</li>
+  <li>hits._score:</li>
+  <li>max_score:</li>
+</ul>
+
+<h3 id="查询语言介绍query-dsl">查询语言介绍（Query DSL）</h3>
+
+<p>match_all</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": { "match_all": {} }
+}
+	# "query": 指定查询定义
+	# "match_all": 查询类型
+	# "size": 返回结果数
+	# "from": 起始位置
+	# "sort": {"age" : { "order": "desc"}}  # 按age降序排序
+	# "_source": {"name", "age"}
+</code></pre></div></div>
+
+<p>match</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": { "match": { "address": "mail Goodson" } }
+}
+	# "match": 指针对特定字段或一组字段进行搜索，上例返回address中包含"mail"或"Goodson"的文档
+</code></pre></div></div>
+
+<p>match_phase</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": { "match_phrase": { "address": "mail Goodson" } }
+}
+	# 返回包含"main Goodson"短语的文档
+</code></pre></div></div>
+
+<h4 id="bool-query">bool query</h4>
+
+<p>must</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+	# 查询address中既包含"mail"又包含"lane"的文档
+</code></pre></div></div>
+
+<p>should</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+	# should条件中只要有一条满足就可返回
+</code></pre></div></div>
+
+<p>must_not</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+	# must_not，所有条件都不应该满足
+</code></pre></div></div>
+
+<h4 id="filter">filter</h4>
+
+<p>查询结果中_score字段代表查询分数，是一个数值，表示匹配度，越高说明越匹配。</p>
+
+<p>布尔查询支持filter子句，它允许使用查询语句限制其它子句的匹配结果，同时不会计算文档的得分。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": { "match_all": {} },
+      "filter": {
+        "range": {
+          "balance": {
+            "gte": 20000,
+            "lte": 30000
+          }
+        }
+      }
+    }
+  }
+}
+	# 查询余额balance在20000到30000之间的结果
+</code></pre></div></div>
+
+<h4 id="执行聚合">执行聚合</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_age": {
+      "range": {
+        "field": "age",
+        "ranges": [
+          {
+            "from": 20,
+            "to": 30
+          },
+          {
+            "from": 30,
+            "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }
+        ]
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+	# 按年龄段分组，按性别分组，最终得到每个年龄段的男女平均账户余额
+</code></pre></div></div>
+
+<p>2018/11/23 16:40:32</p>
+
+<p>参考：[https://github.com/13428282016/elasticsearch-CN/wiki/es-gettting-started]</p>
+
+		
+
+    </div>
+    <footer class="c-article__footer">
+        <p>
+        
+            <span class="c-tag">Language</span>
+        
+            <span class="c-tag">Search</span>
+        
+        </p>
+    </footer>
+</article>
+
+		
+			
+
+		
+    	</div>
+    	<footer class="c-page__footer">
+	<p>
+    	
+		<script type='text/javascript'>
+			fortune = new Array(18);
+			fortune[0] = '这座城市的中央计算机告诉你的？R2D2，你不该相信一台陌生的计算机！';
+			fortune[1] = '不要信赖那些大到不能扔出窗外的计算机！';
+			fortune[2] = '我终于明白‘向上兼容性’是怎么回事了。这是指我们得保留所有原有错误。';
+			fortune[3] = '2038年1月19日，凌晨3点14分07秒';
+			fortune[4] = '计算机就跟比基尼一样，省去了人们许多的胡思乱想。';
+			fortune[5] = '我们是微软。反抗是徒劳的。你会被同化的。';
+			fortune[6] = '控制复杂性是计算机编程的本质。';
+			fortune[7] = '有个老套的故事说有人希望他的计算机能像他的电话机一样好用。他的愿望实现了，因为我已经不知道该如何使用自己的电话了。';
+			fortune[8] = '你们当中很多人都知道程序员的美德。当然啦，有三种：那就是懒惰、急躁以及傲慢。';
+            fortune[9] = '就算它工作不正常也别担心。如果一切正常，你早该失业了。'
+            fortune[10] = '先解决问题再写代码。'
+            fortune[11] = '我想微软之所以把它叫做.Net，是因为这样它就不会在Unix的目录里显示出来了。'
+            fortune[12] = '好代码本身就是最好的文档。'
+            fortune[13] = '前面90%的代码要占用开发时间的前90%。剩下的10%的代码要占用开发时间的另一90%。'
+            fortune[14] = '我认为全球市场约需5台计算机。'
+            fortune[15] = '长此以往，除了按键的手指外，人类的肢体将全部退化。'
+            fortune[16] = 'That’s what’s cool about working with computers.  They don’t argue, they remember everything, and they don’t drink all your beer.'
+            fortune[17] = 'The function of good software is to make the complex appear to be simple.'
+			index = Math.floor(Math.random() * fortune.length);
+			document.write(fortune[index]);
+		</script>
+	
+
+    </p>
+	
+	<hr><br/>
+	
+    <br/>
+	<p>&copy; Shihanmax 2021 | Super powered by Jekyll </p>
+	
+	<br/>
+	
+	<!--p>Follow me on: <a href="https://twitter.com/YourTwitterNo">Twitter</a> & <a href="https://github.com/YourGitHubNo">Github</a><span class="u-separate"></span> Subscribe: <a href="//feed.xml">RSS</a></p>
+        
+</footer>
+
+</article>
+
+        </main>
+    </body>
+</html>
