@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
+gem 'jekyll-paginate'
 
-gem 'github-pages'
-gem 'amp-jekyll'
-gem 'jekyll-sitemap'
-gem 'bcrypt'
+gem "jekyll", "~> 4.0"
+gem "rake"
