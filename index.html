@@ -9,10 +9,6 @@ description: "「Think about coding, reading and life.」"
         <h2 class="post-title">
             {{ post.title }}
         </h2>
-        <p class="post-meta">
-            <!-- Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }} -->
-            {{ post.date | date: "%B %-d, %Y" }}
-        </p>
         {% if post.subtitle %}
         <h3 class="post-subtitle">
             {{ post.subtitle }}
@@ -26,6 +22,10 @@ description: "「Think about coding, reading and life.」"
             {% endif %}
         </div>
     </a>
+    <p class="post-meta">
+        <!-- Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }} -->
+        {{ post.date | date: "%B %-d, %Y" }}
+    </p>
 
 </div>
 <hr>
