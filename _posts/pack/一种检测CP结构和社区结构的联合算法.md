@@ -5,7 +5,7 @@ date:   2018-12-20 00:00:00
 categories: 算法
 tags:  CP
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 Bing-Bing Xiang et.al
 

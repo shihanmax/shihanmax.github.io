@@ -5,7 +5,7 @@ date: 2020-09-24 23:34:18
 categories: NLP
 tags:  ["Deep Learning", "Embedding"]
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 
 This article will briefly introduce some papers on document representation.

@@ -5,7 +5,7 @@ date:   2018-12-13 00:00:00
 categories: Algorithm
 tags:  "CP"
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 
 

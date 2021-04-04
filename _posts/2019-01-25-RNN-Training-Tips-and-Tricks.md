@@ -5,7 +5,7 @@ date:   2019-01-25 00:00:00
 categories: NLP
 tags:  ["Deep Learning", "RNN"]
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 本文是一些在训练RNN模型的技巧和建议，来自[Andrej Karpathy](https://github.com/karpathy/char-rnn#tips-and-tricks).
 

@@ -5,7 +5,7 @@ date:   2018-12-22 00:00:00
 categories: Machine Learning
 tags:  ["PGM"]
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 
 ## 生成式模型和判别式模型

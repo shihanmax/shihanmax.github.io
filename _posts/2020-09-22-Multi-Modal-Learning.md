@@ -5,7 +5,7 @@ date: 2020-09-22 22:35:01
 categories: NLP
 tags:  ["Multi-modal Learning", "Deep Learning"]
 syntaxHighlighter: yes
-Mathjax: true
+mathjax: true
 ---
 
 多模态学习旨在搭建能够处理多种模态信息的模型，文章[Multimodal Machine Learning: A Survey and Taxonomy ](https://arxiv.org/pdf/1705.09406.pdf) 从表示（Representation）、翻译（Translate）、对齐（Alignment）、融合（Fusion）、协同学习（Co-learning）等几个方面对多模态学习进行综述。重点关注语言、图像和声音三种模态。
