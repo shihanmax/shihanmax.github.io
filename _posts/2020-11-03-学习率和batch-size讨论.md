@@ -8,7 +8,7 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-## 1. 学习率
+## 一、学习率
 
 在模型训练过程中，学习率是一个非常敏感且重要的参数，在神经网络的反向传播算法中，梯度下降是一种常用的参数求解方法，学习率影响着梯度下降过程中参数更新的步长。通常，神经网络的参数空间很大，梯度下降的求解目标是最小化定义在参数空间中的损失函数$L$，由于参数维度很大，目标函数一般包含着许多局部最小值点（现有的研究证明，局部极小值已经不是影响神经网络效果的最大障碍了，也即，即使我们找不到全局最小值，一个好的优化算法一般总能找到一个“足够好”的局部极小值）。学习率的影响体现在，如果学习率过小，则参数大小更新的速度会很慢，如果在训练开始前，参数没有被很好地初始化，小的学习率很有可能使目标函数陷入一个并不足够好的局部极小值点而无法跳出；相反，如果学习率设置很大，一方面参数更新的幅度很大，对应的目标函数很有可能在参数空间中反复跳动，即使在迭代过程中，模型寻找到了一个足够好的参数组合，较大的更新幅度也会导致有可能在下次迭代中跳出，导致训练过程的不稳定，训练中表现为训练集损失函数波动明显，收敛困难。
 
@@ -46,7 +46,7 @@ mathjax: true
 
 这篇文章[Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780) 证明了，在较大的神经网络中，全局最优解往往不是一个点，而是一个连通的流形（manifold），一个更一般化的说法：如果目标函数存在两个局部最优解，则一定可以通过一条平坦的路径（flat path），使得这两点连通。
 
-## 2. batch size
+## 二、Batch size
 
 在神经网络训练过程中，另一个比较重要的超参数是batch size，为了使每次迭代的计算量是可承受的，我们将所有的训练数据划分为许多个mini-batch，同时为了更充分地利用并行化的优势，应在设备允许的范围内尽量大地设置batch size，人们在实践中发现，增大batch size后，模型在测试集上的表现往往会变差，在[ON LARGE-BATCH TRAINING FOR DEEP LEARNING: GENERALIZATION GAP AND SHARP MINIMA ](https://arxiv.org/pdf/1609.04836.pdf)的实验中，由batch size变化带来的性能差距甚至能够达到5%。针对此现象，可能的解释如下：
 
@@ -75,7 +75,7 @@ mathjax: true
 
 
 
-Refs.
+## Refs.
 
 [Recent Advances for a Better Understanding of Deep Learning − Part I]( https://towardsdatascience.com/recent-advances-for-a-better-understanding-of-deep-learning-part-i-5ce34d1cc914)
 

@@ -17,8 +17,6 @@ Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson
 -   后层的神经元更专注于特定的任务
 -   优化自适应（co-adapted）神经元的困难
 
-<!--more-->
-
 我们在 ImageNet 上的实验表明，以上两个因素均有占主导的时候，取决于特征的转移过程发生在网络的前、中、后层；另外发现，两个任务的差异性越大，泛化能力就越差，但仍然超过随机特征的效果。最后的发现是，无论初始化时使用了多少层与训练权重，在 finetune 到特定数据集之后，仍然保持泛化能力。
 
 我们称第一层的特征为general特征，最后一层的特征为specific特征。那么在两层中间一定存在着从 genral到specific之间的转变，那么问题来了：
