@@ -2,7 +2,6 @@
 title: "Elasticsearch初探"
 layout: post
 date: 2018-11-23 00:00:00
-categories: "工具"
 tags: ["Language", "Search"]
 syntaxHighlighter: yes
 ---

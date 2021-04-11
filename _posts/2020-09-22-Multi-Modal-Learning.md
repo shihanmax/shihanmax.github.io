@@ -2,7 +2,6 @@
 title:  "多模态学习"
 layout: post
 date: 2020-09-22 22:35:01
-categories: NLP
 tags:  ["Multi-modal Learning", "Deep Learning"]
 syntaxHighlighter: yes
 mathjax: true

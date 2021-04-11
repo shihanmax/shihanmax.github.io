@@ -2,7 +2,6 @@
 title:  "On Sentence Embedding"
 layout: post
 date: 2020-09-24 23:34:18
-categories: NLP
 tags:  ["Deep Learning", "Embedding"]
 syntaxHighlighter: yes
 mathjax: true

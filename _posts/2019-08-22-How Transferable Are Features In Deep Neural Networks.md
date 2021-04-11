@@ -1,7 +1,6 @@
 ---
 title: How Transferable Are Features In Deep Neural Networks
 layout: post
-categories: 'NLP'
 tags: ["Deep Learning", "Transfer Learning"]
 mathjax: true
 syntaxHighlighter: 'yes'

@@ -2,7 +2,6 @@
 title:  "RNN Training Tips and Tricks"
 layout: post
 date:   2019-01-25 00:00:00
-categories: NLP
 tags:  ["Deep Learning", "RNN"]
 syntaxHighlighter: yes
 mathjax: true
