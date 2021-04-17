@@ -2,7 +2,7 @@
 
 本文尝试对GAN在文本领域的应用现状作一个粗略的调研。
 
-首先介绍GANs的原理和其在图像生成上的应用，接着讨论直接将GANs推广到文本生成时会遇到的一些问题。针对这些问题，介绍几种将GANs应用于文本的实现方案，如微调GANs结构、将PG（policy gradient）引入GANs，以及一些“类GANs模型”的尝试。最后，从当前领域中热门的研究中选取若干典型的工作，并进行简单地解读。
+首先介绍GANs的原理和其在图像生成上的应用，接着讨论直接将GANs推广到文本生成时会遇到的一些问题。针对这些问题，介绍几种将GANs应用于文本的实现方案，如微调GANs结构、将强化学习中的PG（policy gradient）引入GANs，以及一些“类GANs模型”的尝试。接着，从当前领域中热门的研究中选取若干典型的工作，并进行简单地解读，然后，针对条件生成，介绍几篇有关CGAN和类CGAN的研究，最后，对易混淆的强化学习（RL）、生成对抗网络（GANs）、变分自编码器（VAE），给出简单的概念澄清。
 
 ## 一、GANs：由图像到文本
 
@@ -12,7 +12,7 @@ Generative Adversarial Networks (GANs)
 
 <img src="http://qiniu.shihanmax.top/20210407151134_0kbTbR_1*EtVPM-nMOqlLqk9PuNvyIg.jpeg" alt="Gan architecture" style="zoom:80%;" />
 
-The objective of GANs:
+GANs本质上是一个minimax游戏，其目标函数为:
 
 $$\min _{G} \max _{D} V(D, G)=\mathbb{E}_{\boldsymbol{x} \sim p_{\mathrm{data}}(\boldsymbol{x})}[\log D(\boldsymbol{x})]+\mathbb{E}_{\boldsymbol{z} \sim p_{\boldsymbol{z}}(\boldsymbol{z})}[\log (1-D(G(\boldsymbol{z})))]$$
 
@@ -54,9 +54,15 @@ $$Idx_{token^\star}=onehot(Softmax(fc(h^t)))$$
 
 ## 二、GANs在文本生成上的应用场景和优势
 
-应用场景：machine translation, dialogue systems, image captioning, text style transfer, 
+目前，文本GAN已经能够生成流畅的文本，大部分无约束GAN相关论文采用的评测数据集包含以下几个：
 
-autoencoder-based methods may fail when generating realistic sentences from arbitrary latent representations.
+- [COCO Captions](https://paperswithcode.com/sota/text-generation-on-coco-captions)
+- [EMNLP2017 WMT](https://paperswithcode.com/sota/text-generation-on-emnlp2017-wmt)
+- [Chinese Poems](https://paperswithcode.com/sota/text-generation-on-chinese-poems)
+
+> autoencoder-based methods may fail when generating realistic sentences from arbitrary latent representations.
+
+目前无论是修改原生GAN结构或者采用PG思路的文本GAN，其应用基本限制在**无约束**文本生成上，在一些需要控制生成方向的任务，如机器翻译、对话生成、文本摘要等，则需要采用Conditional GAN，这里称前者为无约束的GAN，后者称为Conditional GAN，有关这两个方向的经典论文调研分别在本文的第四、五节进行。
 
 
 
@@ -137,7 +143,7 @@ $$D_f(p \Vert q) = \int_xq(x)f(\frac{p(x)}{q(x)})dx$$
 
 由于Wasserstein-divergence克服了JS散度的“两个分布必须包含重叠部分”的缺点，我们也就自然地可以计算生成器的softmax分布和真实onehot分布的距离了。
 
-值得注意的是，Wasserstein-divergence提出并不针对GAN在文本生成上面临的问题，事实上，其对于GAN理论本身的意义更重要。文章$^8$使用GAN在文本生成上做了实验，结果表明，加入Wasserstein-divergence的GAN至少处于可以训练的状态了（虽然生成效果距离MLE结果还有一段距离）。
+值得注意的是，Wasserstein-divergence提出并不针对GAN在文本生成上面临的问题，事实上，其对于GAN理论本身的意义更为重要。文章$^8$使用GAN在文本生成上做了实验，结果表明，加入Wasserstein-divergence的GAN至少处于可以训练的状态了（虽然生成效果距离MLE结果还有一段距离）。
 
 ![Wdtest](http://qiniu.shihanmax.top/20210407203303_iDjaAX_ba0nwqbdn6.jpeg)
 
@@ -256,7 +262,7 @@ $$R_{t}=\frac{1}{N} \sum_\limits{n=1}^{N} D_{\phi}\left(Y_{1: T}^{n}\right), Y_{
 
 1. 采样方差
 
-   由于中间策略梯度是由采样获得的，回合与回合之间的方差会很大，导致训练过程十分不稳定，收敛较慢，针对这个问题，SeqGAN$^{10}$在前期使用MLE对生成器和判别器进行了预训练；
+   由于中间策略梯度是由采样获得的，回合与回合之间的方差会很大，导致训练过程十分不稳定，收敛较慢，针对这个问题，大部分GAN模型$^{10,16,18,20,21,23}$都会选择在对抗训练之前，对生成器和/或判别器使用MLE进行预训练。
 
 2. 局部最优点
 
@@ -284,37 +290,38 @@ $$R_{t}=\frac{1}{N} \sum_\limits{n=1}^{N} D_{\phi}\left(Y_{1: T}^{n}\right), Y_{
 
 
 
-## 四、GAN for text经典研究调研
+## 四、无约束文本GAN调研
 
-### 4.1 近5年工作总览
+
+### 4.1 近年工作总览
 
 | 时间 | paper                                                        | Source | read | lb   |
 | ---- | ------------------------------------------------------------ | ------ | ---- | ---- |
 | 2016 | GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution | arXiv  | 1    |      |
 | 2016 | Generating Text via Adversarial Training                     | NIPS   | 1    |      |
 | 2017 | Adversarial Feature Matching for Text Generation             | ICML   |      |      |
-| 2017 | Adversarial Learning for Neural Dialogue Generation          | ACL    |      |      |
+| 2017 | Adversarial Learning for Neural Dialogue Generation          | ACL    | 3    |      |
 | 2017 | SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient | AAAI   | 1    | y    |
-| 2017 | RankGAN: Adversarial Ranking for Language Generation         | NIPS   |      | y    |
-| 2018 | MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_ | ICLR   |      |      |
-| 2018 | LeakGAN: Long Text Generation via Adversarial Training with Leaked Information | AAAI   |      | y    |
+| 2017 | RankGAN: Adversarial Ranking for Language Generation         | NIPS   | 1    | y    |
+| 2018 | MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_ | ICLR   | 3    |      |
+| 2018 | LeakGAN: Long Text Generation via Adversarial Training with Leaked Information | AAAI   | 1    | y    |
 | 2018 | STWGAN-GP: Generating Text through Adversarial Training using Skip-Thought Vectors | NAACL  |      | y    |
-| 2019 | RelGAN: Relational Generative Adversarial Networks for Text Generation | ICLR   |      | y    |
-| 2020 | PPOGAN: Training Language GANs from Scratch                  | NIPS   |      | y    |
+| 2019 | RelGAN: Relational Generative Adversarial Networks for Text Generation | ICLR   | 1    | y    |
+| 2019 | PPOGAN: Training Language GANs from Scratch                  | NIPS   | x    | y    |
 | 2020 | Improving GAN Training with Probability Ratio Clipping and Sample Reweighting | NIPS   |      |      |
-| 2021 | Refining Deep Generative Models via Discriminator Gradient Flow | ICLR   |      |      |
+| 2021 | Refining Deep Generative Models via Discriminator Gradient Flow | ICLR   | 3    |      |
 
 
 
-### 4.2 经典工作摘要
+### 4.2 文章内容摘要
 
-这部分会重点关注3.1表格中提到的文本生成榜单上的几篇经典的论文 ，榜单参考paperwithcode的text generation子项目$^{12}$。
+这部分会重点关注4.1表格中提到的文本生成榜单上的几篇经典的论文 ，榜单参考paperwithcode的text generation子项目$^{12}$。
 
 
 
-#### 4.2.1 GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution
+#### 4.2.1 GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution$^{14}$
 
-在3.1.2中已经介绍了Gumbel-softmax的作用，这篇文章使用其替换原有的onehot(softmax)，并将其应用在上下文无关文法的文本生成上，在训练完成后，通过生成器可以通过在随机噪声中采样，来生成一段文本。
+在3.1.2中已经介绍了Gumbel-softmax的作用，这篇文章使用其替换原有的onehot(argmax(softmax))，并将其应用在上下文无关文法的文本生成上，在训练完成后，通过生成器可以通过在随机噪声中采样，来生成一段文本。
 
 网络结构方面，generator使用LSTM预测下一个词汇的概率分布，使用其提出的Gumbel-softmax对概率进行近似归一化，descriminator使用LSTM，对生成器生成的序列进行鉴别（注意，在生成器生成完成一个token序列后，才会被输入判别器）。
 
@@ -322,7 +329,7 @@ $$R_{t}=\frac{1}{N} \sum_\limits{n=1}^{N} D_{\phi}\left(Y_{1: T}^{n}\right), Y_{
 
 
 
-#### 4.2.2 Generating Text via Adversarial Training
+#### 4.2.2 Generating Text via Adversarial Training$^{15}$
 
 模型结构上，判别器使用CNN；生成器使用LSTM，在解决argmax不可导这个问题上，使用了一个soft-argmax：
 
@@ -342,7 +349,7 @@ $$y_{t−1} = W_e softmax(Vh_{t−1} \odot L)$$
 
 这篇也相当于是在标准的GAN的基础上，对argmax做了优化，同时使用JS散度（对称化的KL散度）来进行真实文本/人工文本特征向量之间的距离计算。
 
-#### SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient
+#### 4.2.3 SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient$^{23}$
 
 传统GAN应用于文本生成时面临两个主要问题：
 
@@ -360,7 +367,7 @@ SeqGAN针对上述问题：
 
 ![Q function](http://qiniu.shihanmax.top/20210410165822_jmgLiU_%E6%88%AA%E5%B1%8F2021-04-10%2016.50.42.jpeg)
 
-在GAN训练之处，作者首先在数据集$\mathcal{S}$上使用MLE对生成器$G_\theta$进行预训练；接着，使用$G_\theta$生成一些负样本，结合数据集$\mathcal{S}$上采样得到的正样本，对判别器$G_\phi$进行预训练。全部预训练完成后，生成器和判别起交替训练，直至SeqGAN收敛。
+在GAN训练之初，作者首先在数据集$\mathcal{S}$上使用MLE对生成器$G_\theta$进行预训练；接着，使用$G_\theta$生成一些负样本，结合数据集$\mathcal{S}$上采样得到的正样本，对判别器$G_\phi$进行预训练。全部预训练完成后，生成器和判别起交替训练，直至SeqGAN收敛。
 
 贴一下伪代码，方便理解训练流程：
 
@@ -372,7 +379,7 @@ SeqGAN针对上述问题：
 - 演讲生成
 - 音乐生成
 
-#### RankGAN: Adversarial Ranking for Language Generation
+#### 4.2.4 RankGAN: Adversarial Ranking for Language Generation$^{16}$
 
 经典的GAN的判别器是一个二分类器，RankGAN作者指出，二分类的判别器对于多样的自然语言来说，似乎有些不足，因此作者将判别器由一个二分类器改为一个排序模型（learning-to-rank），在提升判别器能力的同时，对生成器的能力提升也起到了促进作用。
 
@@ -420,25 +427,150 @@ $$\alpha(s \mid u)=\operatorname{cosine}\left(y_{s}, y_{u}\right)=\frac{y_{s} \c
 
 $$P(s \mid u, \mathcal{C})=\frac{\exp (\gamma \alpha(s \mid u))}{\sum_{s^{\prime} \in \mathcal{C}^{\prime}} \exp \left(\gamma \alpha\left(s^{\prime} \mid u\right)\right)}$$
 
-The collective ranking score for an input sentence is an expectation of its scores given different references sampled across the reference space.
+则，对于输入的文本$s$，可以计算其期望的排序分数（对数化）为：
 
 $$\log R_{\phi}(s \mid U, \mathcal{C})=\underset{u \in U}{\mathbb{E}} \log [P(s \mid u, \mathcal{C})]$$
 
+该分数可以用于计算$G_\theta$和$R_\phi$的目标函数。
+
+训练过程中，为了解决**只能在句子生成完成后**才能将reward传递给生成器$G_\theta$的问题，本论文也使用了Monte Carlo rollout方法来模拟计算生成过程中的reward，具体的，在时间步$t$，生成器已经生成的序列为$s_{1:t-1}$，根据已生成序列，使用$G_\theta$对后续的序列进行连续采样，直至达到设定最大长度或生成结束符，我们可以把生成的序列$s_{t:}$看作生成器在当前时间步的“期望路径（path）”，执行上述过程$n$次，可以得到$n$个期望路径，每个路径都可以于原有已生成的序列$s_{1:t-1}$构成一个完整的句子（只要句子完整，我们就可以使用判别器来计算它的排序分数了（排序分数是对这个句子的质量的一个衡量）），至此可以得到$n$个分数，平均一下，就可以作为当前时间步$t$的期望reward了。
+
+讨论：本文提出的RankGAN，当生成器能够模拟真实的输入分布$P_h$，判别器无法对真实句子和生成句子作正确排序时，认为达到了纳什均衡（Nash Equilibrium），但正如文献$^{17}$中讨论的，对于一个non-Bernoulli GAN，目前仍无法确定如何才能达到这个均衡。
+
+评估方式：BLEU、人工评估
+
+数据集：
+
+- 中文诗词：使用13123首五言诗作为训练数据
+- COCO：COCO是一个image caption数据集，其中的caption是人编写的（本文仅仅使用了caption而没有使用图片），本文使用8w条用于训练，5k条用于验证
+- 莎士比亚戏剧
 
 
 
+#### 4.2.5 LeakGAN: Long Text Generation via Adversarial Training with Leaked Information$^{21}$
+
+正如标题所说，这篇文章关注长文本的生成：
+
+> We allow the discriminative net to leak its own high-level extracted features to the generative net to further help the guidance.
+
+关键词是leak，即在训练时，判别器向生成器传回的不仅仅是判别结果，还有更高层的一些feature（high-level extracted features），而生成器则通过一个Manager模块，负责将这些信息整合到当前的生成流程中。
+
+模型结构如下：
+
+![leakGAN](http://qiniu.shihanmax.top/20210413164421_6zZPZS_%E6%88%AA%E5%B1%8F2021-04-13%2016.44.09.jpeg)
+
+可以看到，较传统的GAN，判别器接受截至目前生成的句子，其改动是，保留判别器中的高层次的（接近输出层的）feature，作为“泄漏”的信息传递给生成器；
+
+对于生成器而言，也由传统的一个RNN扩展为两个RNN，分别称为Manager和Worker，Manager负责接收判别器传过来的泄漏的信息，进行一系列处理；Worker接收上一个词的embedding，输出action embedding，然后与Manager处理后的信息进行点积得到最终的分布，经过softmax即可生成下一个词。
+
+数据集：
+
+>  We use EMNLP2017 WMT News, COCO Image Caption and Chinese Poems as the long, mid-length and short text corpus, respectively.
+
+训练时的trick：
+
+**1. bootstrapped rescaled activation**
+
+在训练初期，判别器的能力强于生成器，导致其回传给生成器的reward非常低，训练会趋于vanishing状态，本文也借鉴RankGAN的思想，引入了一个基于排序的bootstrapped rescaled activation，其本质是为了对reward做一个退火（升温），在训练过程中，对reward的缩放因子进行动态调整。两个好处：
+
+1. 保持每个mini-batch的方差和均值，保持数值稳定性
+2. 缓解梯度消失问题
+
+**2. 交叉训练（Interleaved Training）**
+
+模式崩溃（mode collapse）是传统GAN训练中面临的一个比较严重的问题，这里引入交叉训练的思想，不同于上述其他方案，本文采取监督训练（MLE）和对抗训练交叉进行的形式（前述几篇文章的思路一般是，先对生成器、判别器做预训练，训练完成后，进行对抗训练），比如，每15轮对抗训练后，会进行一次预训练。
 
 
 
-## 五、GAN、RL和VAE的概念澄清
+#### 4.2.6 RelGAN: Relational Generative Adversarial Networks for Text Generation$^{18}$
 
-### 5.1 GAN和RL的联系
+目前提出的多数GAN模型，都使用LSTM作生成器，本文分析其可能具有以下问题：
+
+1. 对抗训练中，判别器loss很快降到最低值，意味着判别器比生成器具有更强的能力（生成器太弱）；
+2. 模式崩塌可能部分是由生成器容量低（incapicity）导致的；
+3. 由于LSTM只能将截至当前已生成的信息压缩到一个hidden state中，所以对于长文本生成场景，优势不明显；
+
+因此，这篇针对这个问题，本文引入了一个"强大的"模块：“relational memory”，即通过设置多个记忆槽（a set of memory slots），多个槽之间通过self attention来进行交互。另一篇文章$^{19}$的实验结论表明，在语言模型方面，relational memory优于LSTM。
+
+本文对判别器结构也进行了改进，传统的基于CNN的判别器，将序列的embedding矩阵通过$W$进行变换后输入CNN进行分类，本文仍然沿用这个方式，但是使用了多个$W_{e}$对embedding矩阵进行特征抽取，然后经过一个共享参数的CNN层，得到多个结果后取平均，作者认为使用这种方式，每个特征矩阵都能够关注某一个特定的模式，供CNN分类模块进行参考（类似Multi-head Attention中的Multi-head或卷积网络中的Multi-channel）。
+
+值得注意的是，这篇文章使用了和4.2.1中相同的Gumbel-softmax来对采样过程进行近似，使得该过程的梯度能够保持。
+
+> RelGAN is the first architecture that makes GANs with Gumbel-Softmax relaxation succeed in generating realistic text.
+
+训练技巧：
+
+1. 采用RSGAN中的loss
+2. 仅对生成器进行预训练（不同于TextGAN、LeakGAN、MaskGAN需要同时对生成器和判别器进行预训练。）
+
+作者在COCO数据集上进行了消融实验，实验结果表明，相比LSTM，relational memory带来的提升明显，同时，相对于使用强化学习的方式训练，使用Gumbel-softmax带来的BLEU-2的提升非常明显。
+
+<img src="http://qiniu.shihanmax.top/20210414150949_8AkimS_%E6%88%AA%E5%B1%8F2021-04-14%2015.09.43.jpeg" alt="COCo_ablations" style="zoom:75%;" />
+
+不过，有一点需要注意，在对比Gumbel-softmax时，作者强调是和“vanilla REINFORCE”作的对比，（猜测）这里原生的强化算法应该指的是，当序列生成完成后，判别器才会进行判别，然后将reward传给生成器（区别于使用蒙特卡洛搜索的，在每个时间步进行reward回传的模型）
+
+同时，作者针对判别器的“多channel”也进行了一些实验对比：
+
+<img src="http://qiniu.shihanmax.top/20210414151311_MLSJvG_%E6%88%AA%E5%B1%8F2021-04-14%2015.13.06.jpeg" alt="channels" style="zoom:75%;" />
+
+实验表明，判别器采用类似多通道的形式进行特征提取，的确能够对效果带来比较大的提升（10%的BLEU-3提升）。
+
+回顾3.1.2、4.2.1中讨论的，2017年最开始有研究者将Gumbel-softmax应用到文本GAN但生成表现比较一般，到本篇论文发表的近3年左右的时间，文本GAN的方向一度向强化学习靠近，但这篇文章从生成器表达能力太弱的角度出发，引入relational memory网络替代LSTM，同时对判别器进行多通道的特征提取，通过比较详尽的消融实验证明，文本GAN也可以基于传统GAN框架，RL不是必须的。个人认为，使用Gumbel-softmax近似采样这个思路的GAN结构相对基于RL的模型更加优美，这篇文章也从效果上证明：不仅美，而且强！
+
+
+
+#### 4.2.7 Adversarial Learning for Neural Dialogue Generation$^{20}$
+
+- 使用判别器来区分句子是真实的还是机器生成的，并将输出概率作为奖励传递给生成器，期望生成器生成更加符合真实数据的句子。
+
+- 生成器（Seq2Seq）在目标端使用 softmax 函数完成词语的生成——解决了Seq2Seq使用极大似然估计作为目标函数导致生成重复、无意义等问题。
+
+- 判别器（层次化编码器）作为一个二分类分类器输出二维概率，分别指示该句子属于真实的概率和属于机器生成的概率。使用强化学习中的策略梯度进行训练，最大化来自判别器的奖励期望。
+
+- 使用 REGS（reward for every generation step）来提供及时奖励。
+  1. 第一种方式使用蒙特卡洛搜索来估计当前状态的价值，该方法与 SeqGAN 类似，这种方法由于采样过程需要消耗一定的时间。
+  2. 第二种方式为，直接训练一个判别器，可以为全部或者部分生成的句子打分，可以节省时间，但是相比于第一种方法，准确率较低。
+
+- 使用 Teacher Forcing 的训练方式帮助训练——解决了生成器生成数据不稳定，导致判别器打分很低，就无法很好地更新生成器，导致训练无法收敛的问题。
+
+#### 4.2.8 MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_$^{21}$
+
+1. 让生成器（Seq2Seq）完成类似于完形填空的任务来提高文本生成的质量，输入是隐藏掉几个词语的一句话，输出一句补全的话，希望输出的词语尽可能的与真实词语相近。
+2. 判别器（Seq2Seq）在训练过程中模拟采样过程——缓解在生成过程中，一但出现错误，模型会基于错误的分布继续进行生成的问题。
+3. 判别器输入生成器的输入与输出，并在解码器部分的每一个位置输出标量概率， 而不是在词表中进行选择。将这些概率作为奖励传递给生成器。
+4. 通过由 Seq2Seq 实现的判别器在每一时刻提供奖励，使得生成器的输出更加满足真实分布。
+5. MaskGAN 使得模型能够在**词级别**的生成上做判断——解决了训练不稳定和模式下降，导致生成器学习到的句子多样性较差的问题。
+
+
+
+## 五、Conditional GAN ( for text ) 调研
+
+### 5.1 近年工作总览
+
+| 时间 | paper                                                        | Source | read | lb   |
+| ---- | ------------------------------------------------------------ | ------ | ---- | ---- |
+| 2020 | Token Manipulation Generative Adversarial Network for Text Generation | Arxiv  |      |      |
+| 2021 | Contrastive Learning with Adversarial Perturbations for Conditional Text Generation | ICLR   |      |      |
+
+
+
+### 5.2 经典工作介绍
+
+#### 5.2.1 Token Manipulation Generative Adversarial Network for Text Generation$^{25}$
+
+#### 5.2.2 Contrastive Learning with Adversarial Perturbations for Conditional Text Generation$^{27}$
+
+
+
+## 六、GAN、RL和VAE的概念澄清
+
+### 6.1 GAN和RL的联系
 
 说“GAN是RL的特例”有失偏颇。准确来说和GAN很相似的是Actor-Critic（AC）。更准确来说是以**Deterministic Policy Gradient**（DPG）为代表的对于**连续动作输出**建模的RL算法。
 
 
 
-### 5.2 GANs和VAE的联系
+### 6.2 GANs和VAE的联系
 
 
 
@@ -447,6 +579,10 @@ $$\log R_{\phi}(s \mid U, \mathcal{C})=\underset{u \in U}{\mathbb{E}} \log [P(s 
 文献$^{1,2,3}$系列十分适合作为GAN for text的入门材料，本文借鉴了大部分内容。
 
 SeqGAN$^{10}$的内容比较完整，文风流畅，思路也比较新颖。
+
+RelGAN$^{18}$的消融实验做的比较全面，值得学习。
+
+文献$^{27}$对受控文本生成（CTG）领域作了详细的调研。
 
 
 
@@ -468,5 +604,15 @@ SeqGAN$^{10}$的内容比较完整，文风流畅，思路也比较新颖。
 14. [GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution](https://arxiv.org/pdf/1611.04051.pdf)
 15. [Generating Text via Adversarial Training](https://zhegan27.github.io/Papers/textGAN_nips2016_workshop.pdf)
 16. [RankGAN: Adversarial Ranking for Language Generation](https://proceedings.neurips.cc/paper/2017/file/bf201d5407a6509fa536afc4b380577e-Paper.pdf)
-17. 
+17. [Generative Adversarial Nets](https://papers.nips.cc/paper/2014/file/5ca3e9b122f61f8f06494c97b1afccf3-Paper.pdf)
+18. [RelGAN: Relational Generative Adversarial Networks for Text Generation](https://openreview.net/pdf/28ff6712d62fef4d4846fca5be5df06a8ffd41d2.pdf)
+19. [Relational recurrent neural networks](https://papers.nips.cc/paper/2018/file/e2eabaf96372e20a9e3d4b5f83723a61-Paper.pdf)
+20. [Adversarial Learning for Neural Dialogue Generation](Adversarial Learning for Neural Dialogue Generation)
+21. [MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_](https://arxiv.org/pdf/1801.07736.pdf)
+22. [LeakGAN: Long Text Generation via Adversarial Training with Leaked Information](LeakGAN: Long Text Generation via Adversarial Training with Leaked Information)
+23. [SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient](https://arxiv.org/pdf/1609.05473.pdf)
+24. [Generating Text through Adversarial Training using Skip-Thought Vectors](https://arxiv.org/pdf/1808.08703v3.pdf)
+25. [Token Manipulation Generative Adversarial Network for Text Generation](https://arxiv.org/pdf/2005.02794.pdf)
+26. [Contrastive Learning with Adversarial Perturbations for Conditional Text Generation](https://arxiv.org/pdf/2012.07280.pdf)
+27. [Conditional Text Generation for Harmonious Human-Machine Interaction](https://arxiv.org/pdf/1909.03409.pdf)
 
