@@ -1,5 +1,5 @@
 ---
-title:  "机器学习算法之逻辑回归(Logistic Regression)"
+title:  "逻辑回归(Logistic Regression)"
 layout: post
 date:   2019-03-19 00:00:00
 tags:  ["Machine Learning"]
@@ -11,13 +11,11 @@ mathjax: true
 
 现有样本集合$\{X,y\}$，$X$为特征$\{x_1,x_2,...,x_n\}$，$y$为实数，线性回归中，$X$与$y$之间存在映射关系$y=h_\theta(x)$，其中，
 
-$$h_\theta(x)=\sum \theta_ ix_i$$
+$$h_{\theta}(x)=\sum \theta_i x_i$$
 
-在逻辑回归中，$y$属于集合$\{0,1\}$，$1$表示属于某类别，而$0$表示不属于该类别。
+在逻辑回归中，$y$属于集合$\left\{0,1 \right\}$，$1$表示属于某类别，而$0$表示不属于该类别。
 
-期望得到模型$M$，使得$M(x)\in[0,1]$，这样能够较为方便地衡量$x$属于该类别的概率。
-
-<!--more-->
+期望得到模型$M$，使得$M(x)\in  [0,1]$，这样能够较为方便地衡量$x$属于该类别的概率。
 
 $sigmoid$函数可以满足这个需求：
 
