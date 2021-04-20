@@ -295,21 +295,21 @@ $$R_{t}=\frac{1}{N} \sum_\limits{n=1}^{N} D_{\phi}\left(Y_{1: T}^{n}\right), Y_{
 
 ### 4.1 近年工作总览
 
-| 时间 | paper                                                        | Source | read | lb   |
-| ---- | ------------------------------------------------------------ | ------ | ---- | ---- |
-| 2016 | GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution | arXiv  | 1    |      |
-| 2016 | Generating Text via Adversarial Training                     | NIPS   | 1    |      |
-| 2017 | Adversarial Feature Matching for Text Generation             | ICML   |      |      |
-| 2017 | Adversarial Learning for Neural Dialogue Generation          | ACL    | 3    |      |
-| 2017 | SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient | AAAI   | 1    | y    |
-| 2017 | RankGAN: Adversarial Ranking for Language Generation         | NIPS   | 1    | y    |
-| 2018 | MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_ | ICLR   | 3    |      |
-| 2018 | LeakGAN: Long Text Generation via Adversarial Training with Leaked Information | AAAI   | 1    | y    |
-| 2018 | STWGAN-GP: Generating Text through Adversarial Training using Skip-Thought Vectors | NAACL  |      | y    |
-| 2019 | RelGAN: Relational Generative Adversarial Networks for Text Generation | ICLR   | 1    | y    |
-| 2019 | PPOGAN: Training Language GANs from Scratch                  | NIPS   | x    | y    |
-| 2020 | Improving GAN Training with Probability Ratio Clipping and Sample Reweighting | NIPS   |      |      |
-| 2021 | Refining Deep Generative Models via Discriminator Gradient Flow | ICLR   | 3    |      |
+| 时间 | paper                                                        | Source |
+| ---- | ------------------------------------------------------------ | ------ |
+| 2016 | GANs for Sequences of Discrete Elements with the Gumbel-softmax Distribution | arXiv  |
+| 2016 | Generating Text via Adversarial Training                     | NIPS   |
+| 2017 | Adversarial Feature Matching for Text Generation             | ICML   |
+| 2017 | Adversarial Learning for Neural Dialogue Generation          | ACL    |
+| 2017 | SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient | AAAI   |
+| 2017 | RankGAN: Adversarial Ranking for Language Generation         | NIPS   |
+| 2018 | MASKGAN: Better Text Generation via Filling in the \_\_\_\_\_ | ICLR   |
+| 2018 | LeakGAN: Long Text Generation via Adversarial Training with Leaked Information | AAAI   |
+| 2018 | STWGAN-GP: Generating Text through Adversarial Training using Skip-Thought Vectors | NAACL  |
+| 2019 | RelGAN: Relational Generative Adversarial Networks for Text Generation | ICLR   |
+| 2019 | PPOGAN: Training Language GANs from Scratch                  | NIPS   |
+| 2020 | Improving GAN Training with Probability Ratio Clipping and Sample Reweighting | NIPS   |
+| 2021 | Refining Deep Generative Models via Discriminator Gradient Flow | ICLR   |
 
 
 
@@ -541,36 +541,15 @@ $$\log R_{\phi}(s \mid U, \mathcal{C})=\underset{u \in U}{\mathbb{E}} \log [P(s 
 4. 通过由 Seq2Seq 实现的判别器在每一时刻提供奖励，使得生成器的输出更加满足真实分布。
 5. MaskGAN 使得模型能够在**词级别**的生成上做判断——解决了训练不稳定和模式下降，导致生成器学习到的句子多样性较差的问题。
 
+## 五、GAN、RL和VAE的概念澄清
 
-
-## 五、Conditional GAN ( for text ) 调研
-
-### 5.1 近年工作总览
-
-| 时间 | paper                                                        | Source | read | lb   |
-| ---- | ------------------------------------------------------------ | ------ | ---- | ---- |
-| 2020 | Token Manipulation Generative Adversarial Network for Text Generation | Arxiv  |      |      |
-| 2021 | Contrastive Learning with Adversarial Perturbations for Conditional Text Generation | ICLR   |      |      |
-
-
-
-### 5.2 经典工作介绍
-
-#### 5.2.1 Token Manipulation Generative Adversarial Network for Text Generation$^{25}$
-
-#### 5.2.2 Contrastive Learning with Adversarial Perturbations for Conditional Text Generation$^{27}$
-
-
-
-## 六、GAN、RL和VAE的概念澄清
-
-### 6.1 GAN和RL的联系
+### 5.1 GAN和RL的联系
 
 说“GAN是RL的特例”有失偏颇。准确来说和GAN很相似的是Actor-Critic（AC）。更准确来说是以**Deterministic Policy Gradient**（DPG）为代表的对于**连续动作输出**建模的RL算法。
 
 
 
-### 6.2 GANs和VAE的联系
+### 5.2 GANs和VAE的联系
 
 
 
