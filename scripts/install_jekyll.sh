@@ -1,3 +1,5 @@
+script_path = $(pwd)
+
 # ===== install anaconda
 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2019.03-Linux-x86_64.sh
 bash Anaconda3-2019.03-Linux-x86_64.sh -b -p $HOME/miniconda
@@ -44,9 +46,15 @@ echo "now install Node"
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
 yum -y install nodejs
 npm install -g github-webhook-handler     # install github-webhook-handler
+
+cd script_path
 cp deploy.sh  /usr/lib/node_modules/github-webhook-handler/
 cp deploy.js  /usr/lib/node_modules/github-webhook-handler/
 
 npm install forever -g  # install forever
 forever start -a -l  forever.log   deploy.js  # run forever
 
+# ===== install BBR
+wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh
+chmod +x bbr.sh
+bash bbr.sh  # need reboot
