@@ -29,7 +29,6 @@ make install
 tmux -V
 
 
-
 # ====== install vim, ruby, jekyll, nodejs, forever, bounder
 yum -y update
 yum -y install vim
