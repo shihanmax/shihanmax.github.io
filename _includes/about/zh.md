@@ -30,7 +30,7 @@
     min-width: 100px;
     word-wrap: break-word;
     word-break: break-all;
-    white-space: wrap;  /* just a placeholder*/
+    white-space: normal;  /* just a placeholder*/
 }
 
 
