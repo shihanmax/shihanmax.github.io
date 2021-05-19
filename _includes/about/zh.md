@@ -28,6 +28,8 @@
 .td {
     text-align: center;
     min-width: 100px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 
