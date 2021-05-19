@@ -11,6 +11,7 @@
   width: 400px;
   height: 240px;
 }
+
 .body {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
     line-height: 1.7;
@@ -28,7 +29,7 @@
 
 </style>
 
-<table border="0" frame=void class="body" cellspacing="100px">
+<table border="0" frame=void class="body" cellspacing="120px">
     <tr>
         <td class="project">
             <h3>测试项目一</h3>
