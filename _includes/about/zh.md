@@ -38,7 +38,8 @@
     <tr>
         <td class="td">
             <h3>作诗机器人</h3>
-            使用简单的单向RNN模型建模条件语言模型，在古体诗和现代诗两种数据集上分别训练了模型，可进行古体诗和现代诗的创作，去<a href="http://shihanmax.top:5000">在线演示</a>试试？
+            使用简单的单向RNN模型建模条件语言模型，在古体诗和现代诗两种数据集上分别训练了模型，可进行古体诗和现代诗的创作。
+            <br><a href="http://shihanmax.top:5000">在线演示</a> | <a href="https://github.com/shihanmax/modern_poetry">项目地址</a>
             <br>
             <img class="photo" src="http://qiniu.shihanmax.top/20210518093459_BV24Yr_%E6%88%AA%E5%B1%8F2021-05-18%2009.34.19.jpeg">
         </td>
