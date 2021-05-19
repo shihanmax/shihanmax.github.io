@@ -23,6 +23,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing:grayscale;
     table-layout: fixed;
+    white-space: normal;  /* just a placeholder*/
 }
 
 .td {
@@ -30,7 +31,6 @@
     min-width: 100px;
     word-wrap: break-word;
     word-break: break-all;
-    white-space: normal;  /* just a placeholder*/
 }
 
 
