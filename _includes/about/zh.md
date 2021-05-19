@@ -6,13 +6,14 @@
     </head>
     
 <style>
-    
+
+
 .photo {
-  width: 400px;
+  width: 330px;
   height: 240px;
 }
 
-.body {
+.table {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
     line-height: 1.7;
     font-size: 16px;
@@ -21,23 +22,27 @@
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing:grayscale;
+    table-layout: fixed;
 }
 
-.project {
+.td {
     text-align: center;
+    min-width: 100px;
 }
+
 
 </style>
 
-<table border="0" frame=void class="body" cellspacing="120px">
+
+<table border="0" frame=void class="table" cellspacing="120px">
     <tr>
-        <td class="project">
+        <td class="td">
             <h3>作诗机器人</h3>
             使用简单的单向RNN模型建模条件语言模型，在古体诗和现代诗两种数据集上分别训练了模型，可进行古体诗和现代诗的创作，去<a href="http://shihanmax.top:5000">在线演示</a>试试？
             <br>
             <img class="photo" src="http://qiniu.shihanmax.top/20210518093459_BV24Yr_%E6%88%AA%E5%B1%8F2021-05-18%2009.34.19.jpeg">
         </td>
-        <td class="project">
+        <td class="td">
             <h3>测试项目二</h3>
             这是有关这个项目的一些说明文字
             <br>
@@ -45,13 +50,13 @@
         </td>
     </tr>
     <tr>
-        <td class="project">
+        <td class="td">
             <h3>测试项目三</h3>
             这是有关这个项目的一些说明文字
             <br>
             <img class="photo" src="http://qiniu.shihanmax.top/20210404165407_FKEiQN_bryce-canyon-1867563_1920.jpeg">
         </td>
-        <td class="project">
+        <td class="td">
             <h3>测试项目三</h3>
             这是有关这个项目的一些说明文字
             <br>
