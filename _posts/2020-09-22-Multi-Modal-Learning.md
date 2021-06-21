@@ -2,9 +2,10 @@
 title:  "多模态学习"
 layout: post
 date: 2020-09-22 22:35:01
+categories: NLP
 tags:  ["Multi-modal Learning", "Deep Learning"]
 syntaxHighlighter: yes
-mathjax: true
+Mathjax: true
 ---
 
 多模态学习旨在搭建能够处理多种模态信息的模型，文章[Multimodal Machine Learning: A Survey and Taxonomy ](https://arxiv.org/pdf/1705.09406.pdf) 从表示（Representation）、翻译（Translate）、对齐（Alignment）、融合（Fusion）、协同学习（Co-learning）等几个方面对多模态学习进行综述。重点关注语言、图像和声音三种模态。
@@ -17,7 +18,7 @@ mathjax: true
 
 
 
-## 回顾多模态模型的应用历史
+# 一、多模态模型的应用历史
 
 1. AVSR：（Audio-visual speech recognition）：原本意在通过视觉信息提高语言识别准确率，实验发现视觉信息在语音信息包含噪声较多时变得重要，这一试验表明视觉信息和语音信息这两种模态之间有一定的信息交互；
 2. 多媒体信息检索：互联网上各种模态信息增长趋势迅猛，需要开发能够直接进行多模态信息检索的模型，来逐渐取代单纯的基于关键词的信息检索方式。一个优秀的数据集：MED（multimedia event detection）；
@@ -26,17 +27,17 @@ mathjax: true
 
 
 
-## representations
+# 二、多模态学习的表示问题（representations）
 
 多模态表达面临以下几个问题：如何融合多种模态的特征？如何处理不同层级的噪声？如何处理缺失的模态？Bengio认为，一个好的表示，应具有以下特点：平滑性（smoothness），时空一致性（temporal and spatial coherence），稀疏性（sparsity），聚集性（natural clustering amongst others）；至于多模态表达，Srivastava and Salakhutdinov提出，表示空间中的相似表达应能够反映不同模态所包含的概念的相似程度；多模态的表征应是易于获取的，即便某些模态数据缺失，并且，其余模态数据应能够“推理”出缺失模态的表达。
 
 至3
 
 
-## 论文笔记
+# 三、论文笔记
 多模态学习是深度学习领域中一个比较热门的方向，本文记录一下这个方向的相关论文，方便参考。
 
-### 1. one model to learn them all
+## 3.1 One model to learn them all
 
 本文提出了一个多模态模型，将8个任务融合在一个模型中，具体包含：
 
@@ -55,7 +56,7 @@ mathjax: true
    - 同一领域下，不同任务共享模态网络
 2. 各种任务对各个子计算模块的重要性依赖程度不同（如，attention机制在翻译任务中的重要程度高于其在image caption任务中的影响）
 
-#### 模型结构
+### 3.1.1 模型结构
 
 模型的整体结构分为三部分：
 
@@ -84,7 +85,7 @@ mathjax: true
 3. 类别模态网络（Categorical modality net）
 4. 语音模态网络
 
-#### 实验部分
+### 3.1.2 实验部分
 
 实验部分，本文回答了三个问题：
 
@@ -103,6 +104,22 @@ mathjax: true
 多模态网络设计的要点在于，任务间能够共享的参数尽量要在模态间共享，这有助于不同模态之间表示空间的统一，同时也能降低task-specific的参数量，控制模型的尺寸。
 
 
+## 3.2 UniT: Multimodal Multitask Learning with a Unified Transformer
+
+在Transformer提出后，其应用场景可以大概分为下面几类：
+
+- 在单领域或者特定场景下的多模态领域，如：
+  - VIT和DETR关注视觉任务
+  - BERT及变体关注语言任务
+  - VisualBERT、VILBERT关注特定领域内的语言、视觉多模态任务
+- 引入任务相关的微调机制（finetune），如BERT应用于语言任务时，需要针对每个下游任务重新微调
+- 在特定场景中的相近或相似任务中引入多任务学习（有时也加入一些特定的训练技巧）
+
+也就是说，目前还没有一个能够在通用领域下的基于Transformer的多模态模型，用作者的话说：
+> Is it possible to build a single model that simultaneously handles tasks in a variety of domains as a step towards general intelligence?
+
+
+
 
 Refs.
 
@@ -112,5 +129,5 @@ Refs.
 
 3. [One model to learn them all](https://arxiv.org/pdf/1706.05137.pdf)
 
-
+4. [UniT: Multimodal Multitask Learning with a Unified Transformer](http://xxx.itp.ac.cn/pdf/2102.10772.pdf)
 
