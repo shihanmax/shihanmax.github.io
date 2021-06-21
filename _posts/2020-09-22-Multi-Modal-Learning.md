@@ -37,7 +37,7 @@ Mathjax: true
 # 三、论文笔记
 多模态学习是目前深度学习领域中一个比较热门的方向，这里记录一下这个方向的相关论文。
 
-## 3.1 One model to learn them all ()
+## 3.1 One model to learn them all (2017)
 
 本文提出了一个多模态模型，将8个任务融合在一个模型中，具体包含：
 
@@ -115,11 +115,11 @@ Mathjax: true
 - 引入任务相关的微调机制（finetune），如BERT应用于语言任务时，需要针对每个下游任务重新微调
 - 在特定场景中的相近或相似任务中引入多任务学习（有时也加入一些特定的训练技巧）
 
-也就是说，目前还没有一个能够在通用领域下的基于Transformer的多模态模型，本文提出了这样的愿景：
+也就是说，目前还没有一个能够在通用领域下的基于Transformer的多模态模型，我们不禁要问：
 
 > Is it possible to build a single model that simultaneously handles tasks in a variety of domains as a step towards general intelligence?
 
-本文提出UniT（Unified transformer encoder decoder architecture），使用更少的参数量完成多领域（multiple domain）下多任务（multiple task）的学习。具体任务如下：
+本文提出了UniT（Unified transformer encoder decoder architecture），使用更少的参数量完成多领域（multiple domain）下多任务（multiple task）的学习。具体任务如下：
 
 - 目标检测（object detection）
 - 视觉问答（visual question answering）
@@ -130,10 +130,15 @@ Mathjax: true
   - QQP
   - SST-2
 
+在基于transformer的多任务学习领域，目前已经有不少研究，其中大部分关注特定领域/模态，由于transformer结构适应性比较强，可以用于文本分类、机器翻译、图像描述等任务，在以往的研究中，不同的任务往往会设计不同的decoder参与finetune，而本文提出的UniT的一大特点是，尝试通过相同的decoder模块/参数来进行所有任务的学习。
+
+具体地，UniT使用了两类encoder，分别负责文本和图像的编码，在获得两类输入的编码后，通过拼接的方式作为Multi-Head Cross Attention的Key和Query向量输入decoder；同时，decoder接收任务相关的query embedding作为输入；decoder的输出经过不同的head，进入各个子任务的学习。模型结构图如下：
 
 
+[UniT](http://qiniu.shihanmax.top/%E6%88%AA%E5%B1%8F2021-06-21%2023.57.55.png)
 
-Refs.
+
+Refs:
 
 1. [Depthwise separable conv](http://arxiv.org/abs/1610.02357)
 
