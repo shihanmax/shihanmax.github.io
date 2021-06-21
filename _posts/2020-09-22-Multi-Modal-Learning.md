@@ -35,9 +35,9 @@ Mathjax: true
 
 
 # 三、论文笔记
-多模态学习是深度学习领域中一个比较热门的方向，本文记录一下这个方向的相关论文，方便参考。
+多模态学习是目前深度学习领域中一个比较热门的方向，这里记录一下这个方向的相关论文。
 
-## 3.1 One model to learn them all
+## 3.1 One model to learn them all ()
 
 本文提出了一个多模态模型，将8个任务融合在一个模型中，具体包含：
 
@@ -104,7 +104,7 @@ Mathjax: true
 多模态网络设计的要点在于，任务间能够共享的参数尽量要在模态间共享，这有助于不同模态之间表示空间的统一，同时也能降低task-specific的参数量，控制模型的尺寸。
 
 
-## 3.2 UniT: Multimodal Multitask Learning with a Unified Transformer
+## 3.2 UniT: Multimodal Multitask Learning with a Unified Transformer (2021)
 
 在Transformer提出后，其应用场景可以大概分为下面几类：
 
@@ -115,8 +115,20 @@ Mathjax: true
 - 引入任务相关的微调机制（finetune），如BERT应用于语言任务时，需要针对每个下游任务重新微调
 - 在特定场景中的相近或相似任务中引入多任务学习（有时也加入一些特定的训练技巧）
 
-也就是说，目前还没有一个能够在通用领域下的基于Transformer的多模态模型，用作者的话说：
+也就是说，目前还没有一个能够在通用领域下的基于Transformer的多模态模型，本文提出了这样的愿景：
+
 > Is it possible to build a single model that simultaneously handles tasks in a variety of domains as a step towards general intelligence?
+
+本文提出UniT（Unified transformer encoder decoder architecture），使用更少的参数量完成多领域（multiple domain）下多任务（multiple task）的学习。具体任务如下：
+
+- 目标检测（object detection）
+- 视觉问答（visual question answering）
+- 视觉蕴含推理（visual entailment）
+- 自然语言理解（NLU）
+  - QNLI
+  - MNLI
+  - QQP
+  - SST-2
 
 
 
