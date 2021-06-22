@@ -137,25 +137,6 @@ Mathjax: true
 <img src="http://qiniu.shihanmax.top/%E6%88%AA%E5%B1%8F2021-06-21%2023.57.55.png" alt="UniT" style="zoom:67%;" />
 
 
-{% mermaid %}
-sequenceDiagram
-    ASR->>NLU: A
-    NLU-->>DST: B
-{% endmermaid %}
-
-
-{% mermaid %}
-gantt
-    title Plan
-    dateFormat  YYYY-MM-DD
-    section Work
-    A task           :a1, 2020-01-01, 30d
-    Another task     :after a1  , 20d
-    section Life
-    Task in sec      :2020-01-12  , 12d
-    another task      : 24d
-{% endmermaid %}
-
 
 Refs:
 
