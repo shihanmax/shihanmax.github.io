@@ -12,6 +12,14 @@
 
 ![climbing](http://qiniu.shihanmax.top/20211218120155_rhnIcR_55EA93D8-71E6-48E4-9B30-4FC7DC5A2077_1_201_a.jpeg)
 
-热爱生活，保持lizhi，相信未来。
+------
 
-![mrb](http://qiniu.shihanmax.top/20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg)
+
+
+
+
+<img src="http://qiniu.shihanmax.top/20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg" alt="mrb" style="zoom:41.56%;" />
+
+
+
+<center>热爱生活，保持LIZHI，相信未来。</center>
