@@ -19,8 +19,7 @@ mathjax: true
         * [cuda](aten/src/ATen/native/cuda) - CUDA算子实现；
         * [sparse](aten/src/ATen/native/sparse) - COO稀疏张量运算的CPU和CUDA实现
         * [mkl](aten/src/ATen/native/mkl) [mkldnn](aten/src/ATen/native/mkldnn)
-          [miopen](aten/src/ATen/native/miopen) [cudnn](aten/src/ATen/native/cudnn)
-          - 仅需简单绑定后端库（backend library）的一些算子的实现
+          [miopen](aten/src/ATen/native/miopen) [cudnn](aten/src/ATen/native/cudnn) - 仅需简单绑定后端库（backend library）的一些算子的实现
         * [quantized](aten/src/ATen/native/quantized/) - 量子张量实现 [README](aten/src/ATen/native/quantized/README.md)介绍了如何实现一个量子张量
 * [torch](torch) - PyTorch库，除了[csrc](torch/csrc)外，都是Python实现
   * [csrc](torch/csrc) - PyTorch库中的C++部分，包括一些Python胶水代码和一些C++实现，有关Python绑定代码的规范，可以参考`setup.py`
@@ -51,4 +50,3 @@ mathjax: true
 
 
 我先挑“软柿子”[torch](torch)开始看。
-

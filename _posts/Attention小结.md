@@ -15,7 +15,6 @@ encoder RNN在第$i$时刻的隐状态：$\mathrm{h}_i=[\overrightarrow{h_i}^T;\
 decoder RNN在第t个时间步的隐状态：$\rm{s}_t=f(\rm{s}_{t-1},y_{t-1},\rm{c}_t)$
 
 
-
 常见的attention
 
 - Content-base
