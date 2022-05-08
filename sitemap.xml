@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>http://shihanmax.top/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/about/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2022/05/09/embedding_of_text/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2022/05/02/review_of_PGM/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2022/04/10/reading_PyTorch/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2022/04/04/module_package_lib_in_Python/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/12/26/ONNX/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/12/19/20211218/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/10/03/introducing_brat/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/06/25/relation_extraction_by_pointer_network/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/05/17/knowledge_graph/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/04/09/GAN_for_text/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/page2/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Language</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Deep+Learning</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Machine+Learning</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=PGM</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Algorithm</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Embedding</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=GAN</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Knowledge+graph</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Optimization</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=RL</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=RNN</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Similarity</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Text+Generation</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=VAE</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/04/03/SVM/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/03/28/understanding_XGBoost/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/03/04/review_of_text_generation/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2021/02/27/bagging_and_boosting/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/11/25/on_optimization/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/11/06/on_LR_and_batch-size/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/09/25/On-Sentence-Embedding/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/nlp/2020/09/23/Multi-Modal-Learning/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/08/16/MAP&amp;MLE/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/08/10/derivation_of_EM/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/08/05/regularization/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/05/11/sequence_labeling_practice/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2020/02/26/dtw/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/08/23/how_transferable_are_features_in_deep_neural_networks/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/06/21/days_in_Qinghai/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/03/28/semantic_similarity/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/03/26/review_of_chatbot/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/03/19/logistic-regression/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/03/19/loading_multiple_models_in_tensorflow/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2019/01/25/RNN-Training-Tips-and-Tricks/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/12/22/CRF,HMM,MEMM/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/12/19/naive_bayes/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/11/23/elastic_search/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/10/25/random_select/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/10/15/Calling_Clib_with_JNI_in_Java/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/10/10/GC_in_Python/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/2018/10/02/metaClass_in_Python/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Representation+Learning</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=PyTorch</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=ONNX</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=inference</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=NER</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=EL</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=tool</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=PointerNet</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Relation+Extraction</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Review</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Auto+Encoder</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/page3/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=SVM</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Boosting</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Multi-modal+Learning</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Sequence+Labeling</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=DTW</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Transfer+Learning</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=%E6%97%85%E8%A1%8C</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=%E9%9D%92%E6%B5%B7%E6%B9%96</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Dialogue+System</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Tensorflow</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Search</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Probability</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=JNI</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Garbage+Collection</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/archive/?tag=Meta+Class</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://shihanmax.top/page4/</loc>
+  <lastmod>2022-05-08T18:31:11+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+
+
+</urlset>
