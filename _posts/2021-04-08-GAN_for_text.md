@@ -6,7 +6,7 @@ tags:  ["Deep Learning", "GAN", "Text Generation", "RL", "Auto Encoder", "VAE"]
 syntaxHighlighter: yes
 mathjax: true
 redirect_from:
-  - /2021/04/09/%E6%96%87%E6%9C%ACGAN
+  - /2021/04/09/%E6%96%87%E6%9C%ACGAN/
 ---
 
 本文尝试对GAN在文本领域的应用现状作一个粗略的调研。
