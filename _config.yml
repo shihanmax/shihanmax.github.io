@@ -7,7 +7,7 @@ description: "Machine Learning & Dev Engineer"
 keyword: "Test1,test2,测试"
 url: "http://shihanmax.top"            # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
-host: "http://shihanmax.top"
+host: "*"
 
 # Publish posts or collection documents with a future date.
 future: true
