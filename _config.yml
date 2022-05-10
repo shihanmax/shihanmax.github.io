@@ -5,7 +5,8 @@ header-img: http://qiniu.shihanmax.top/20210405144942_cO1WBY_1.jpeg
 email: shihanmax@foxmail.com
 description: "Machine Learning & Dev Engineer"
 keyword: "Test1,test2,测试"
-url: "0.0.0.0"              # your host, for absolute URL
+url: "http://shihanmax.top/"   
+host: "localhost"           # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
