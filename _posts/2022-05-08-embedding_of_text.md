@@ -1,7 +1,7 @@
 ---
 title:  "文本的表示"
 layout: post
-date: 2022-05-08 23:52:06
+date: 2022-05-08 21:52:06
 tags:  ["Deep Learning", "Representation Learning", "Embedding"]
 syntaxHighlighter: yes
 mathjax: true
