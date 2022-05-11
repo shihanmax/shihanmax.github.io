@@ -8,4 +8,4 @@ mathjax: true
 ---
 
 
-As in [vol1](2022-05-11-paper-reading-vol1.md) written.
+As in [vol1](http://shihanmax.top/2022/05/11/paper-reading-vol1/) written.
