@@ -37,7 +37,7 @@ anchorjs: true                          # if you want to customize anchor. check
 # from PR#40, to support local preview for Jekyll 3.0
 # make sure you have this gem installed
 # `$ gem install jekyll-paginate`
-plugins: [jekyll-paginate, jekyll-redirect-from]
+plugins: [jekyll-paginate, jekyll-redirect-from, jekyll-relative-links]
 
 
 
@@ -56,6 +56,9 @@ kramdown:
       start_line: 1
 
 
+relative_links:
+  enabled:     true
+  collections: false
 
 # Disqus settings
 # disqus_username: hux
