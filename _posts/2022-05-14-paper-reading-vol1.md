@@ -19,7 +19,7 @@ mathjax: true
 
 ### method
 
-REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元组。三元组是以一系列token的形式来生成的。模型也引入了几个特殊的token：$\lt triplet\gt, \ltsubj\gt, \ltobj\gt$，其中$\lt triplet\gt$表示三元组的开始；$\lt subj\gt$表示头实体的结束，同时表示尾实体的开始；$\lt obj\gt$表示尾实体的结束，同时表示关系的开始。（在遇到下一个$\lt triplet\gt$（如有）之前，所有的三元组共享同一个$\lt subj\gt$）。举一个简单的例子：
+REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元组。三元组是以一系列token的形式来生成的。模型也引入了几个特殊的token：$\lt  triplet \gt, \lt subj \gt, \lt obj \gt$，其中$\lt triplet \gt$表示三元组的开始；$\lt subj \gt$表示头实体的结束，同时表示尾实体的开始；$\lt obj\gt$表示尾实体的结束，同时表示关系的开始。（在遇到下一个$\lt triplet \gt$（如有）之前，所有的三元组共享同一个$\lt subj\gt$）。举一个简单的例子：
 
 > 刘德华作曲并演唱了这首《天意》。
 
