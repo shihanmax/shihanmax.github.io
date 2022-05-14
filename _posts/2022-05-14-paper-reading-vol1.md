@@ -8,16 +8,16 @@ mathjax: true
 ---
 ## [REBEL: Relation Extraction By End-to-end Language generation（Findings of EMNLP 21）](https://aclanthology.org/2021.findings-emnlp.204/)
 
-### motivation
+### Motivation
 
 关系抽取的Pipeline方式有误差传递现象，或者抽取的关系类型有限，或者无法解决“多关系”、“一头多尾”、“多头一尾”等重叠的问题；
 一些seq2seq模型虽然可以通过多次生成实体的方式解决上述重叠问题，但存在暴露偏差的问题。
 
-### contribution
+### Contribution
 
 使用自回归预训练模型（BART）以端到端生成的方式做三元组抽取。可以抽取多达200多种关系；然暴露偏差的问题仍然存在，但可以通过引入注意力机制来考虑已经解码的token，另外，作者引入了triplet linearization（用来保持三元组的顺序）。
 
-### method
+### Method
 
 REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元组。三元组是以一系列token的形式来生成的。模型也引入了几个特殊的token：$\lt  triplet \gt, \lt subj \gt, \lt obj \gt$，其中$\lt  triplet \gt$表示三元组的开始；$\lt subj \gt$表示头实体的结束，同时表示尾实体的开始；$\lt obj\gt$表示尾实体的结束，同时表示关系的开始。（在遇到下一个$\lt triplet \gt$（如有）之前，所有的三元组共享同一个$\lt subj\gt$）。举一个简单的例子：
 
@@ -44,15 +44,15 @@ REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元
 
 ## [Text Smoothing: Enhance Various Data Augmentation Methods on Text Classification Tasks (Findings of EMNLP 21)](https://arxiv.org/abs/2202.13840)
 
-### motivation
+### Motivation
 
 在NLP领域，数据扩增主要有两种方式：直接修改输入token，或者从token的embedding入手，通过MLM的模块输出的在词表上的分布作为词的分布式的表征，这些替换方式面临一个问题，即替换后的token往往是一些高频词，这些词汇在一些任务上，对应的标签甚至是相反的。一些方法使用有监督的方式来做扩增，但对于样本较少的场景，这些方法的使用是受限的。
 
-### contribution
+### Contribution
 
 作者借鉴数据扩方法mixup的思想（将两个不同的$x$/不同的$y$按照某种权重分配进行加权相加来得到新的样本），但是对同一个token，将通过MLM编码得到的分布与编码前的onehot分布进行加权融合。
 
-### method
+### Method
 
 通过MLM来获得一个token（被mask掉）的表征后，与其原始onehot表征进行加权融合，作为新的表征（而标签保持不变），即：
 
