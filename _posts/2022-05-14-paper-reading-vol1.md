@@ -56,7 +56,7 @@ REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元
 
 通过MLM来获得一个token（被mask掉）的表征后，与其原始onehot表征进行加权融合，作为新的表征（而标签保持不变），即：
 
-$$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot mathrm{MLM}(t_i)$$
+$$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 
 其中$t_i$表示某一个词的onehot表征。
 作者在多个数据集上，证明了这种简单的数据扩增方法的有效性。
