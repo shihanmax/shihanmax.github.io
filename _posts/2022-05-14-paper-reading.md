@@ -1,6 +1,7 @@
 ---
 title:  "Paper Reading汇总页"
 layout: post
+category: test
 date: 2022-05-14 10:11:23
 tags:  ["Paper Reading", "Index"]
 syntaxHighlighter: yes
