@@ -13,10 +13,10 @@ host: "*"
 future: true
 
 # SNS settings
-RSS: true
+RSS: false
 # weibo_username:     huxpro
 # zhihu_username:     huxpro
-github_username:    shihanmax 
+# github_username:    shihanmax 
 # twitter_username:   huxpro
 # facebook_username:  huxpro
 # linkedin_username:  firstname-lastname-idxxxx
