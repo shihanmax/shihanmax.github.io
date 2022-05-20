@@ -6,7 +6,7 @@ description: ""
 <!-- 「Think about coding, reading and life.」 -->
 {% for post in paginator.posts %}
 <div class="post-preview">
-    <a onclick="myTest();" href="{{ post.url | prepend: site.baseurl }}">
+    <a onclick="myTest(this);" href="{{ post.url | prepend: site.baseurl }}">
         <h2 class="post-title">
             {{ post.title }}
         </h2>
