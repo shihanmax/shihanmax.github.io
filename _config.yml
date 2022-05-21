@@ -61,7 +61,10 @@ relative_links:
   collections: false
 
 # Disqus settings
-disqus_username: shihanmax-top
+disqus_username: false
+
+# gittalk settings
+gittalk: test
 
 # Netease settings
 netease_comment: false
