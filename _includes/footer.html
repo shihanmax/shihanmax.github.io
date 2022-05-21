@@ -9,7 +9,6 @@
                 <p class="copyright text-muted">
                     Copyright &copy; Shihanmax {{ site.time | date: '%Y' }}
                     <br>
-                    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
                     Testing now...
                     <span id="busuanzi_container_site_uv">
                         Visitors <span id="busuanzi_value_site_uv"></span>
@@ -17,6 +16,14 @@
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                     <span id="busuanzi_container_site_pv">
                         Views <span id="busuanzi_value_site_pv"></span>
+                    </span>
+
+                    <span id="busuanzi\_container\_site\_pv">
+                        本站总访问量<span id="busuanzi\_value\_site\_pv"></span>次
+                    </span>
+
+                    <span id="busuanzi\_container\_site\_uv">
+                        本站访客数<span id="busuanzi\_value\_site\_uv"></span>人次
                     </span>
 					
                     <br>
@@ -26,6 +33,9 @@
         </div>
     </div>
 </footer>
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!-- jQuery -->
 <script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
