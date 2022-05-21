@@ -27,9 +27,9 @@ RSS: false
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 highlighter: rouge
 permalink: pretty
-paginate: 15
+paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+anchorjs: true  # if you want to customize anchor. check out line:181 of `post.html`
 # If you have timezone issue (e.g. #68) in China, uncomment to use this:
 #timezone: CN  
 
@@ -88,7 +88,7 @@ sidebar-avatar: http://qiniu.shihanmax.top/20210526180809_mWrg2E_%E6%88%AA%E5%B1
 
 # Featured Tags
 featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+featured-condition-size: 1              # 标签对应的文章的数量大于此值时，才会显示在首页/footer的featured-tags
 
 
 
