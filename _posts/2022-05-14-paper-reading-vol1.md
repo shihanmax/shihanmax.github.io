@@ -2,6 +2,7 @@
 title:  "Paper Reading Vol 1"
 layout: post
 date: 2022-05-14 12:17:16
+category: paper
 tags:  ["Paper Reading"]
 syntaxHighlighter: yes
 mathjax: true
