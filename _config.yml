@@ -63,8 +63,6 @@ relative_links:
 # Disqus settings
 disqus_username: false
 
-# gittalk settings
-gittalk: test
 
 # Netease settings
 netease_comment: false
