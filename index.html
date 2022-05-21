@@ -18,9 +18,9 @@ description: ""
         {% endif %}
         <div class="post-content-preview">
             {% if post.lang == 'en' %}
-                {{ post.content | strip_html | truncate:300 }}
-            {% else %}
                 {{ post.content | strip_html | truncate:200 }}
+            {% else %}
+                {{ post.content | strip_html | truncate:150 }}
             {% endif %}
         </div>
     </a>
