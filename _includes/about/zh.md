@@ -5,14 +5,11 @@
 
 ![beijing-wuxi](http://qiniu.shihanmax.top/20220522162912_wD5FnW_%E6%88%AA%E5%B1%8F2022-05-22%20%E4%B8%8B%E5%8D%884.29.07.jpeg)
 
-<br/>
-
 
 ##### 2019年和室友们从兰州出发，经西宁，共和、乌兰、刚察、祁连、张掖、武威，最后回到兰州，全程约1890KM
 
 <img src="http://qiniu.shihanmax.top/20211218113530_q0ONge_A4DA046F-F3DA-412D-898D-3987F2E2A1C1_1_105_c.jpeg" alt="青甘环线" style="zoom:80%;" />
 
-<br/>
 
 ##### 相当业余的业余攀岩爱好者
 
