@@ -2,7 +2,7 @@
 title:  "文本的表示"
 layout: post
 date: 2022-05-08 11:52:06
-tags:  ["Deep Learning", "Representation Learning"]
+tags:  ["Deep Learning", "Representation Learning", "Review"]
 syntaxHighlighter: yes
 mathjax: true
 ---
