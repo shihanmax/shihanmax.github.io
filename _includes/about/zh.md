@@ -1,20 +1,27 @@
-你好！我是马诗涵，一名算法工程师，日常工作内容主要是`wribugging`和`debugging`（shihanmax AT foxmail.com）。
+你好！我是马诗涵，一名算法工程师，目前在上海一家砖厂搬砖。我主要关注机器学习在自然语言处理（NLP）的应用，同时对多模态学习也比较感兴趣。本博客主要用作个人学习&整理&分享，如果有任何问题&讨论，欢迎与我联系（mailto:shihanmax AT foxmail.com)。
 
-在工作之余，我是一个不怎么去户外的户外运动爱好者，我喜欢祖国的山川河流，但为沉迷代码之故，去野外撒欢的机会少之又少。我爱好骑车，曾和朋友从北京出发，用11天时间到达江苏无锡。希望在自己还算年轻的时候，能有机会再去川藏线和独库公路看一看。
 
-![美丽河山](http://qiniu.shihanmax.top/20220325145002_eQKlyu_IMG_0210.jpeg)
+<center><img src="http://qiniu.shihanmax.top/20220325145002_eQKlyu_IMG_0210.jpeg" alt="美丽河山" style="zoom:60%;" />
 
-我喜欢旅行，在研究生毕业那年，我和室友们从兰州出发，经西宁，共和、乌兰、刚察、祁连、张掖、武威，最后回到兰州，全程约1890Km，经过黄河、青海湖、黑马河、茶卡盐湖、七彩丹霞。大好河山，壮美旖丽！
+2017年和朋友骑车从北京出发，用11天时间到江苏无锡。</center>
 
-![青甘环线](http://qiniu.shihanmax.top/20211218113530_q0ONge_A4DA046F-F3DA-412D-898D-3987F2E2A1C1_1_105_c.jpeg)
+<br/>
 
-此外，我还是一名相当业余的业余攀岩爱好者，偶尔去室内馆磕线，能力均值小，方差大，野攀经验0。
+<center><img src="http://qiniu.shihanmax.top/20211218113530_q0ONge_A4DA046F-F3DA-412D-898D-3987F2E2A1C1_1_105_c.jpeg" alt="青甘环线" style="zoom:80%;" />
 
-![climbing](http://qiniu.shihanmax.top/20211218120155_rhnIcR_55EA93D8-71E6-48E4-9B30-4FC7DC5A2077_1_201_a.jpeg)
+2019年和朋友们从兰州出发，经西宁，共和、乌兰、刚察、祁连、张掖、武威，最后回到兰州，全程约1890KM
+</center>
+
+<br/>
+
+<center><img src="http://qiniu.shihanmax.top/20211218120155_rhnIcR_55EA93D8-71E6-48E4-9B30-4FC7DC5A2077_1_201_a.jpeg" alt="青甘环线" style="zoom:80%;" />
+
+相当业余的业余攀岩爱好者
+</center>
 
 ------
 
+<center><img src="http://qiniu.shihanmax.top/20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg" alt="mrb" style="zoom:80%;" />
 
-<img src="http://qiniu.shihanmax.top/20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg" alt="mrb" style="zoom:41.56%;" />
-
-<center>热爱生活，保持LIZHI，相信未来。</center>
+热爱生活，保持LIZHI，相信未来。
+</center>
