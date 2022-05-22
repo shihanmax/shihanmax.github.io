@@ -2,7 +2,7 @@
 title:  "Java通过JNI调用C库"
 layout: post
 date:   2018-10-15 00:00:00
-tags:  ["JNI", "Language"]
+tags:  ["JNI", "编程语言"]
 syntaxHighlighter: yes
 ---
 

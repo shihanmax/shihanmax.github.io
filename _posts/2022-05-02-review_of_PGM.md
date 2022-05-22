@@ -2,7 +2,7 @@
 title:  "概率图模型"
 layout: post
 date: 2022-05-02 13:20:04
-tags: ["Machine Learning", "PGM"]
+tags: ["Machine Learning", "PGM", "Review"]
 syntaxHighlighter: yes
 mathjax: true
 ---

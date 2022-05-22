@@ -2,7 +2,7 @@
 title:  "Python垃圾回收机制（GC）"
 layout: post
 date:   2018-10-10 00:00:00
-tags:  ["Garbage Collection", "Language"]
+tags:  ["编程语言"]
 syntaxHighlighter: yes
 ---
 

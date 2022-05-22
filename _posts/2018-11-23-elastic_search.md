@@ -2,7 +2,7 @@
 title: "Elasticsearch初探"
 layout: post
 date: 2018-11-23 00:00:00
-tags: ["Language", "Search"]
+tags: ["编程语言", "搜索"]
 syntaxHighlighter: yes
 ---
 

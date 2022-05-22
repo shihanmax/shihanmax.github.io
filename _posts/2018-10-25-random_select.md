@@ -2,7 +2,7 @@
 title: "海量数据之随机选取"
 layout: post
 date: 2018-10-25 00:00:00
-tags: ["Probability", "Algorithm"]
+tags: ["算法"]
 syntaxHighlighter: yes
 ---
 

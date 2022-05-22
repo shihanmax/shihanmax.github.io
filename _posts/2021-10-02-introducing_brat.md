@@ -2,7 +2,7 @@
 title:  "实体、关系标注工具brat的使用"
 layout: post
 date: 2021-10-03 00:17:56
-tags:  ["NER", "EL", "tool"]
+tags:  ["NER"]
 syntaxHighlighter: yes
 mathjax: true
 ---

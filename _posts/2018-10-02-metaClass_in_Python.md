@@ -2,7 +2,7 @@
 title:  "Python元类（MetaClass）"
 layout: post
 date:   2018-10-02 00:00:00
-tags:  ["Meta Class", "Language"]
+tags:  ["编程语言"]
 syntaxHighlighter: yes
 ---
 

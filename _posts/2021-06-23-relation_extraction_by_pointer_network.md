@@ -2,7 +2,7 @@
 title:  "一种使用Copy机制进行关系抽取的思路"
 layout: post
 date: 2021-06-24 20:34:56
-tags:  ["Deep Learning", "Knowledge graph", "PointerNet", "Relation Extraction"]
+tags:  ["Deep Learning", "Knowledge Graph", "Pointer Net", "Relation Extraction"]
 syntaxHighlighter: yes
 mathjax: true
 ---

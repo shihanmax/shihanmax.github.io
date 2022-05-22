@@ -2,7 +2,7 @@
 title:  "PyTorch源码阅读"
 layout: post
 date: 2022-04-09 23:05:29
-tags:  ["Deep Learning", "PyTorch", "源码阅读", "Index"]
+tags:  ["Deep Learning", "PyTorch", "源码阅读", "Catalog"]
 syntaxHighlighter: yes
 mathjax: true
 ---

@@ -1,7 +1,7 @@
 ---
 title: 毕业旅行小记
 layout: post
-tags: ['旅行', '青海湖']
+tags: ['旅行']
 syntaxHighlighter: yes
 date: 2019-06-20 16:18:22
 ---

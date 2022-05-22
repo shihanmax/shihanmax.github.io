@@ -2,7 +2,7 @@
 title:  "On Sentence Embedding"
 layout: post
 date: 2020-09-24 23:34:18
-tags:  ["Deep Learning", "Embedding"]
+tags:  ["Deep Learning"]
 syntaxHighlighter: yes
 mathjax: true
 ---

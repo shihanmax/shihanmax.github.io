@@ -2,7 +2,7 @@
 title:  "知识图谱"
 layout: post
 date: 2021-05-16 20:36:38
-tags:  ["Deep Learning", "Review", "Knowledge graph"]
+tags:  ["Deep Learning", "Review", "Knowledge Graph"]
 syntaxHighlighter: yes
 mathjax: true
 ---

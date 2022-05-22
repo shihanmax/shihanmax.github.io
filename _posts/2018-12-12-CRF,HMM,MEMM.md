@@ -2,7 +2,7 @@
 title:  "CRF,HMM,MEMM的区别和联系"
 layout: post
 date:   2018-12-22 00:00:00
-tags:  ["PGM"]
+tags:  ["Machine Learning", "PGM"]
 syntaxHighlighter: yes
 mathjax: true
 ---
