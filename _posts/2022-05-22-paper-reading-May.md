@@ -150,9 +150,7 @@ $$\texttt{[CLS] [C] CEO of [C] Capital of [SEP] Jobs founded Apple Inc. in 1976.
 
 对各个$D(X,p_i)$取$\mathrm{argmin}$即可得到对应的关系类别；
 
-对于few-shot场景，需要在上述操作前增加一步online学习，即，使用support set来构造一系列符合模型定义的数据，调整模型的参数，使用一些早停的策略来防止过拟合。
-
-然后构造与zero-shot场景类似的任务即可。
+对于few-shot场景，需要在上述操作前增加一步online学习，即，使用support set来构造一批数据，微调一下模型（加入早停的策略来防止过拟合），然后构造与zero-shot场景类似的任务即可。
 
 
 #### 其他
