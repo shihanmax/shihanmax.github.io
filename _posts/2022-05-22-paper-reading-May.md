@@ -146,7 +146,7 @@ $$D(X,p_i)=\Vert \mathrm{h}_{rel_i} - \mathrm{X} \Vert_2$$
 
 对于zero-shot场景，使用关系名来构造prompt，如：
 
-$$\texttt{[CLS] [C] CEO of [C] Capital of [C] Author [SEP] Jobs founded Apple Inc. in 1976. [SEP]}$$
+$$\texttt{[CLS] [C] CEO of [C] Capital of [SEP] Jobs founded Apple Inc. in 1976.}$$
 
 对各个$D(X,p_i)$取$\mathrm{argmin}$即可得到对应的关系类别；
 
