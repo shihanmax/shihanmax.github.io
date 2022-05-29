@@ -7,9 +7,7 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-[汇总页](/2022/05/14/paper-reading/)
-
----
+[导航：汇总页](/2022/05/14/paper-reading/)
 
 ## W2
 ### [REBEL: Relation Extraction By End-to-end Language generation（Findings of EMNLP 21）](https://aclanthology.org/2021.findings-emnlp.204/)
