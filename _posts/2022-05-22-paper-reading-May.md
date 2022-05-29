@@ -118,3 +118,47 @@ $$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 然后提出结构模式指示器（SSI），即一个基于模式的prompt机制，用于控制属于中哪些信息需要抽取。
 
 ## W4
+
+### [Pre-training to Match for Unified Low-shot Relation Extraction](https://aclanthology.org/2022.acl-long.397.pdf)
+
+#### Motivation
+
+在低资源关系抽取中，小样本和零样本关系抽取看似两种类似的任务，但实际上，对模型的要求有很大差异，小样本任务要求对support instance的表征和聚合能力（instance semantic matching）；但零样本则要求模型具有标签语义匹配的能力（label semantic matching）。不同的抽取目的要求模型具有不同的结构。
+
+
+#### Contribution
+针对上述问题，作者提出“多选匹配网络”（Multi-Choice Matching Network，MCMN），来统一零样本和小样本关系抽取。作者认为，无论是零样本还是小样本关系抽取，都可以视作一个多项选择问题，区别在于，零样本多了一个other类来兼容NOTA类（none-of-the-above），如下图所示：
+
+![MCMN](http://qiniu.shihanmax.top/20220529184453_p3jRAz_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%886.44.48.jpeg)
+
+为了让模型能同时学习“标签匹配”和“样本匹配”能力，作者提出使用triplet-paraphrase元学习的框架来预训练MCMN。
+
+
+#### Method
+
+首先，作者利用开源关系抽取工具针对一批无标注数据做三元组抽取，针对任意一段文本$sentence$及其包含的某个三元组$(S,P,O)$，可以构造一条标注数据：$\texttt{[C] P1 [C] P2 ... [SEP] sentence [SEP]}$，其中，$sentence$中包含首尾实体及用于标注实体的marker，$sentence$前拼接的可以认为是一个prompt，其中包含若干个由$[C]$开头的关系描述。那么关系描述是怎么来的呢？针对一个三元组$(S_i,P_i,O_i)$，比如：$\texttt{(Jobs, CEO of, Apple)}$，作者首先加入了一些特殊的token，改写为$\texttt{[H] Jobs [R] CEO of [T] Apple}$，其中，$\texttt{[H],[R],[T]}$分别作为$(S,P,O)$的标记，然后将这个短句输入T5，生成$\texttt{Jobs is the CEO of Apple}$，将其作为三元组中包含的关系的表述（relation description）。作者用每个关系对应的$\texttt{[C]}$标签对应的hidden states与句子表征的差来作为$P$的表征：
+
+$$D(X,p_i)=\Vert \mathrm{h}_{rel_i} - \mathrm{X} \Vert_2$$
+
+其中，$\mathrm{X}$是句子表征，$\mathrm{h}_{rel_i}$是关系描述的hidden states。
+
+如何应用在zero-shot和few-shot上呢？
+
+对于zero-shot场景，使用关系名来构造prompt，如：
+
+$$\texttt{[CLS] [C] CEO of [C] Capital of [C] Author [SEP] Jobs founded Apple Inc. in 1976. [SEP]}$$
+
+对各个$D(X,p_i)$取$\mathrm{argmin}$即可得到对应的关系类别；
+
+对于few-shot场景，需要在上述操作前增加一步online学习，即，使用support set来构造一系列符合模型定义的数据，调整模型的参数，使用一些早停的策略来防止过拟合。
+
+然后构造与zero-shot场景类似的任务即可。
+
+
+#### 其他
+
+用vscode写这篇文章时，发现我的copilot插件竟然可以帮我写博客了～
+![copilot](http://qiniu.shihanmax.top/20220529202723_ixuWna_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%888.27.19.jpeg)
+
+
+update: 2022/05/29 20:34
