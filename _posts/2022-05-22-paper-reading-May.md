@@ -1,24 +1,25 @@
 ---
 title:  "Paper Reading Vol 1"
 layout: post
-date: 2022-05-14 12:17:16
+date: 2022-05-22 12:17:16
 category: paper
 tags:  ["Paper Reading"]
 syntaxHighlighter: yes
 mathjax: true
 ---
-## [REBEL: Relation Extraction By End-to-end Language generation（Findings of EMNLP 21）](https://aclanthology.org/2021.findings-emnlp.204/)
+## W2
+### [REBEL: Relation Extraction By End-to-end Language generation（Findings of EMNLP 21）](https://aclanthology.org/2021.findings-emnlp.204/)
 
-### Motivation
+#### Motivation
 
 关系抽取的Pipeline方式有误差传递现象，或者抽取的关系类型有限，或者无法解决“多关系”、“一头多尾”、“多头一尾”等重叠的问题；
 一些seq2seq模型虽然可以通过多次生成实体的方式解决上述重叠问题，但存在暴露偏差的问题。
 
-### Contribution
+#### Contribution
 
 使用自回归预训练模型（BART）以端到端生成的方式做三元组抽取。可以抽取多达200多种关系；然暴露偏差的问题仍然存在，但可以通过引入注意力机制来考虑已经解码的token，另外，作者引入了triplet linearization（用来保持三元组的顺序）。
 
-### Method
+#### Method
 
 REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元组。三元组是以一系列token的形式来生成的。模型也引入了几个特殊的token：$\lt  triplet \gt, \lt subj \gt, \lt obj \gt$，其中$\lt  triplet \gt$表示三元组的开始；$\lt subj \gt$表示头实体的结束，同时表示尾实体的开始；$\lt obj\gt$表示尾实体的结束，同时表示关系的开始。（在遇到下一个$\lt triplet \gt$（如有）之前，所有的三元组共享同一个$\lt subj\gt$）。举一个简单的例子：
 
@@ -34,7 +35,7 @@ REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元
 
 最后，作者在6个数据集上评估了他们的模型（CONLL04，NYT，DocRED，ADE，Re-TACRED，REBEL）。
 
-### Qs：
+#### Qs：
 
 - 解码时，如何保证结果的合理性？
 - 模型的推理效率与传统的抽取模型相比如何？
@@ -43,17 +44,17 @@ REBEL输入包含实体（及隐含的关系）的句子，输出一系列三元
 
 
 
-## [Text Smoothing: Enhance Various Data Augmentation Methods on Text Classification Tasks (Findings of EMNLP 21)](https://arxiv.org/abs/2202.13840)
+### [Text Smoothing: Enhance Various Data Augmentation Methods on Text Classification Tasks (Findings of EMNLP 21)](https://arxiv.org/abs/2202.13840)
 
-### Motivation
+#### Motivation
 
 在NLP领域，数据扩增主要有两种方式：直接修改输入token，或者从token的embedding入手，通过MLM的模块输出的在词表上的分布作为词的分布式的表征，这些替换方式面临一个问题，即替换后的token往往是一些高频词，这些词汇在一些任务上，对应的标签甚至是相反的。一些方法使用有监督的方式来做扩增，但对于样本较少的场景，这些方法的使用是受限的。
 
-### Contribution
+#### Contribution
 
 作者借鉴数据扩方法mixup的思想（将两个不同的$x$/不同的$y$按照某种权重分配进行加权相加来得到新的样本），但是对同一个token，将通过MLM编码得到的分布与编码前的onehot分布进行加权融合。
 
-### Method
+#### Method
 
 通过MLM来获得一个token（被mask掉）的表征后，与其原始onehot表征进行加权融合，作为新的表征（而标签保持不变），即：
 
@@ -62,7 +63,58 @@ $$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 其中$t_i$表示某一个词的onehot表征。
 作者在多个数据集上，证明了这种简单的数据扩增方法的有效性。
 
-### Qs：
+#### Qs：
 
 - 修改一个样本时，如何决定哪些token要替换为这种mixup表征？
 - 权重$\lambda$的影响是怎样的
+
+
+## W3
+### [Is Graph Structure Necessary for Multi-hop Question Answering?（EMNLP 20）](https://aclanthology.org/2020.emnlp-main.583.pdf)
+
+来自EMNLP 20的一篇短文，讨论了在多跳事实问答中使用图结构的必要性。结论是，在强大的预训练语言模型的加持下，图结构必要性不强。
+
+> Background: The key to solving the multi-hop question is to find the corresponding entity in the original text through the query.
+
+#### Motivation
+
+因为多跳事实问答中，需要考虑很多个对话轮次中的信息，因此有许多文章在这个场景中引入了图结构来对多个段落中的实体的关系进行建模。并且有文章认为，图结构对这种问题的解决是至关重要的。
+
+#### Contribution
+
+作者在本文中讨论了这个问题：“多跳问答中，图结构本身究竟贡献有多大？”
+
+#### Method
+
+作者为了回答上述问题，设计了一系列实验，对于传统模型来说，将paragraph中的实体关系以图的方式组织起来，然后将其输入GNN中，最终获得各个实体之间的表征，作者尝试将GNN模块完全去掉，即直接使用预训练语言模型对输入paragraph进行建模，对比两种方式的结果差异。从结果中发现，如果仅仅将PTM作为特征抽取器，那么GNN在整个模型中的作用是显著的，但是如果以finetune的方式引入PTM，则GNN的优势并不明显。
+
+
+### [Unified Structure Generation for Universal Information Extraction](https://aclanthology.org/2022.acl-long.395.pdf)
+
+#### Motivation
+
+目前的信息抽取任务包括实体识别、关系抽取、事件抽取、情绪识别等，下游任务之间的联系不强，需要分别进行数据构造和模型训练。
+
+#### Contribution
+
+本文提出了一种统一的text-to-structure生成网络，将以上信息抽取任务的形式使用schema-based prompt进行融合，构造了一种统一的生成式的信息抽取框架。在四种任务共13个数据集上验证了该方法的有效性。
+
+
+#### Method
+
+作者认为，信息抽取的任务包含两个原子操作：片段抽取和片段之间的“关系”抽取，前者称为spotting（如实体、触发词、论元等的抽取），后者称为Associating（如实体之间的关系、触发词和论元之间的关系等）。
+
+作者首先设计了一种结构化抽取语言（SEL），将不同的信息抽取任务统一为：
+
+```
+(
+    (Spot Name: Info Span
+        (Asso Name: Info Span)
+        (Asso Name: Info Span)
+    )
+)
+```
+
+然后提出结构模式指示器（SSI），即一个基于模式的prompt机制，用于控制属于中哪些信息需要抽取。
+
+## W4
