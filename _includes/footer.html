@@ -9,18 +9,17 @@
                 <p class="copyright text-muted">
                     Copyright &copy; Shihanmax {{ site.time | date: '%Y' }}
                     <br/>
-                    <span id="busuanzi_container_site_pv">
-                        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+                    <!-- busuanzi -->
+                    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
+                    <span id="busuanzi_container_site_pv">
+                        UV<span id="busuanzi_value_site_pv"></span>次
                     </span>
                     |
                     <span id="busuanzi_container_site_uv">
-                        本站访客数<span id="busuanzi_value_site_uv"></span>人次
+                        PV<span id="busuanzi_value_site_uv"></span>人次
                     </span>
-                    |
-                    <span id="busuanzi_value_site_uv">
-                      本站访客数<span id="busuanzi_value_site_uv"></span>人次
-                    </span>
+
                     <br/>
                     Super powered by <a href="https://jekyllrb.com">Jekyll</a> & <a href="https://github.com/Huxpro/huxpro.github.io">Hux</a>
                 </p>
@@ -29,8 +28,6 @@
     </div>
 </footer>
 
-<!-- busuanzi -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!-- jQuery -->
 <script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
