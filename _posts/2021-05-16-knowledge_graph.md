@@ -59,9 +59,8 @@ This paper mainly focus on Knowledge representation learning:
 - encoding models：表示、学习关系之间的交互信息
 - auxiliary information：其他加入编码过程的信息
 
-
-
 ### 2.1 Representation space
+
 Current mainly uses real-valued **point-wise space**, while other kinds of spaces such as **complex vector space**, **Gaussian space**, **mainfold** are utilized as well.
 
 - point-wise space (Euclidean space)
@@ -78,7 +77,7 @@ Current mainly uses real-valued **point-wise space**, while other kinds of space
 
 - Manifold and Group
 
-    > A manifold is a topological space, which could be defined as a set of points with neighborhoods by the set theory.	
+    > A manifold is a topological space, which could be defined as a set of points with neighborhoods by the set theory.
 
     Previous point-wise modeling is an ill-posed algebraic system where the number of scoring equations is far more than the number of entities and relations. Moreover, embeddings are restricted in an overstrict geometric form even in some methods with subspace projection.
 

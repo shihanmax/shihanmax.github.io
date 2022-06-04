@@ -213,7 +213,7 @@ abstracter的结构和PGN是一致的。
 论文点：
 
 - 使用概率控制从vocab中生成还是从原文中选择一个
-- large vocabulary ‘trick’：the decoder-vocabulary of each mini-batch is re- stricted to words in the source documents of that batch. In addition, the most frequent words in the target dictionary are added until the vocabulary reaches a fixed size. 限制解码词表大小,优化softmax
+- large vocabulary ‘trick’：the decoder-vocabulary of each mini-batch is restricted to words in the source documents of that batch. In addition, the most frequent words in the target dictionary are added until the vocabulary reaches a fixed size. 限制解码词表大小,优化softmax
 - Feature-rich Encoder：encoder输入：词embedding+POS+NER+TF+IDF
 - Hierarchical Attention to capture sentence structure
 
