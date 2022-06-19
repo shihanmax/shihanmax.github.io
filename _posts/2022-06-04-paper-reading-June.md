@@ -96,5 +96,5 @@ Transformer结构在NLP领域的应用十分广泛，在训练此类模型时，
 1. [Does learning require memorization? a short tale about a long tail](https://arxiv.org/abs/1906.05271)
 2. [Understanding black-box predictions via influence function`s](https://arxiv.org/abs/1703.04730)
 3. [Axiomatic attribution for deep networks](http://proceedings.mlr.press/v70/sundararajan17a/sundararajan17a.pdf)
-4. [Attention is all you need]()
-5. [Training tips for the transformer model]()
+4. [Attention is all you need](https://arxiv.org/pdf/1706.03762.pdf)
+5. [Training tips for the transformer model](https://arxiv.org/abs/1804.00247)
