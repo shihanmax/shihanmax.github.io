@@ -20,7 +20,7 @@ mathjax: true
 
 从PyTorch的github仓库可以看到，PyTorch源代码大概有53%是用CPP编写的，有35%左右是通过Python实现的，剩余还有一些CUDA、C、和OC的代码。对我个人，语言方面，Python还好说，但CPP/C平常用的很少，底子偏弱；代码量方面，目前整个仓库预估大概有40万行左右的代码，并且以每天约30个commits的速度缓慢增加，整体阅读显然是不太可能的，只能挑重要的，自己感兴趣的部分深入阅读，可以预想后面阅读过程一定不会太轻松。
 
-<img src="http：//shihanmax.top:8009/?path=20220409224505_fGtDIf_%E6%88%AA%E5%B1%8F2022-04-09%20%E4%B8%8B%E5%8D%8810.45.01.jpeg" alt="sc_of_torch" style="zoom:50%;" />
+<img src="http://shihanmax.top:8009/?path=20220409224505_fGtDIf_%E6%88%AA%E5%B1%8F2022-04-09%20%E4%B8%8B%E5%8D%8810.45.01.jpeg" alt="sc_of_torch" style="zoom:50%;" />
 
 <center>PyTorch源码语言分布</center>
 

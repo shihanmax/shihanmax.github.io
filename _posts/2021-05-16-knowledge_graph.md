@@ -32,7 +32,7 @@ mathjax: true
 
 ### Brief history of KG
 
-<img src='http：//shihanmax.top:8009/?path=2021-08-07-20:29:32.057116.png' alt='2021-08-07-20:29:32.057116.png' style='zoom:67%;' />
+<img src='http://shihanmax.top:8009/?path=2021-08-07-20:29:32.057116.png' alt='2021-08-07-20:29:32.057116.png' style='zoom:67%;' />
 
 <center>A brief history of KG</center>
 
@@ -48,7 +48,7 @@ We define a knowledge graph as $\mathcal{G=\{E,R,F\}}$, where $\mathcal{E, R}$ a
 
 ### Category of research on knowledge graph learning
 
-<img src='http：//shihanmax.top:8009/?path=2021-08-07-20:30:15.992257.png' alt='2021-08-07-20:30:15.992257.png' style='zoom:67%;' />
+<img src='http://shihanmax.top:8009/?path=2021-08-07-20:30:15.992257.png' alt='2021-08-07-20:30:15.992257.png' style='zoom:67%;' />
 
 <center>Categorization of KGs</center>
 
@@ -83,7 +83,7 @@ Current mainly uses real-valued **point-wise space**, while other kinds of space
 
     typical methods: ManifoldE, MuRP, TorusE, DihEdral
 
-<img src='http：//shihanmax.top:8009/?path=2021-08-07-20:30:57.539263.png' alt='2021-08-07-20:30:57.539263.png' style='zoom:50%;' />
+<img src='http://shihanmax.top:8009/?path=2021-08-07-20:30:57.539263.png' alt='2021-08-07-20:30:57.539263.png' style='zoom:50%;' />
 
 <center>An illustration of knowledge representation in different spaces</center>
 
@@ -99,7 +99,7 @@ Two typical scoring functions:
 - similarity-based (i.e., $h^T M_r \approx t^T$)
 
 
-<img src='http：//shihanmax.top:8009/?path=2021-08-07-20:31:47.568707.png' alt='2021-08-07-20:31:47.568707.png' style='zoom:67%;' />
+<img src='http://shihanmax.top:8009/?path=2021-08-07-20:31:47.568707.png' alt='2021-08-07-20:31:47.568707.png' style='zoom:67%;' />
 
 <center>Distance-based vs. similarity-based</center>
 
@@ -216,7 +216,7 @@ Typically three types of models:
 
 目前比较流行的实体抽取模型概览如下：
 
-<img src='http：//shihanmax.top:8009/?path=2021-08-07-20:32:22.352077.png' alt='2021-08-07-20:32:22.352077.png' style='zoom:67%;' />
+<img src='http://shihanmax.top:8009/?path=2021-08-07-20:32:22.352077.png' alt='2021-08-07-20:32:22.352077.png' style='zoom:67%;' />
 
 <center>Neural RE </center>
 
