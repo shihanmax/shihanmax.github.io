@@ -131,7 +131,7 @@ $$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 #### Contribution
 针对上述问题，作者提出“多选匹配网络”（Multi-Choice Matching Network，MCMN），来统一零样本和小样本关系抽取。作者认为，无论是零样本还是小样本关系抽取，都可以视作一个多项选择问题，区别在于，零样本多了一个other类来兼容NOTA类（none-of-the-above），如下图所示：
 
-![MCMN](http://qiniu.shihanmax.top/20220529184453_p3jRAz_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%886.44.48.jpeg)
+![MCMN](http：//shihanmax.top:8009/?path=20220529184453_p3jRAz_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%886.44.48.jpeg)
 
 为了让模型能同时学习“标签匹配”和“样本匹配”能力，作者提出使用triplet-paraphrase元学习的框架来预训练MCMN。
 
@@ -158,7 +158,7 @@ $$\texttt{[CLS] [C] CEO of [C] Capital of [SEP] Jobs founded Apple Inc. in 1976.
 #### 其他
 
 用vscode写这篇文章时，发现我的copilot插件竟然可以帮我写博客了～
-![copilot](http://qiniu.shihanmax.top/20220529202723_ixuWna_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%888.27.19.jpeg)
+![copilot](http：//shihanmax.top:8009/?path=20220529202723_ixuWna_%E6%88%AA%E5%B1%8F2022-05-29%20%E4%B8%8B%E5%8D%888.27.19.jpeg)
 
 
 update: 2022/05/29 20:34

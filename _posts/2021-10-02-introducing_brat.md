@@ -184,7 +184,7 @@ python standalone.py
 
 浏览器访问运行结果中的地址，双击选择对应的文件目录，即可进入编辑界面：
 
-![brat](http://qiniu.shihanmax.top/20211003002654_2QrKlk_%E6%88%AA%E5%B1%8F2021-10-03%20%E4%B8%8A%E5%8D%8812.26.44.jpeg)
+![brat](http：//shihanmax.top:8009/?path=20211003002654_2QrKlk_%E6%88%AA%E5%B1%8F2021-10-03%20%E4%B8%8A%E5%8D%8812.26.44.jpeg)
 
 划词进行实体标注，从一个实体向另一个实体拖动即可建立实体关系。
 
