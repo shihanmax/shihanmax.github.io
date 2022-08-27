@@ -1,8 +1,8 @@
 # Site settings
 title: Shihanmax's Blog
 SEOTitle: 马诗涵的博客 | Shihanmax's Blog
-header-img: http://qiniu.shihanmax.top/20220521230936_ixX2jc_olivier-miche-OZACaaUskhg-unsplash.jpeg
-# header-img: http://qiniu.shihanmax.top/20210405144942_cO1WBY_1.jpeg
+header-img: http://shihanmax.top:8009/?path=20220521230936_ixX2jc_olivier-miche-OZACaaUskhg-unsplash.jpeg
+# header-img: http://shihanmax.top:8009/?path=20210405144942_cO1WBY_1.jpeg
 email: shihanmax@foxmail.com
 description: "Machine Learning & Dev Engineer"
 keyword: "机器学习,自然语言处理"
@@ -83,7 +83,7 @@ netease_comment: false
 # Sidebar settings
 sidebar:  true  # whether or not using Sidebar.
 sidebar-about-description: "一个脱离了高级趣味的码农"  # 马诗涵，机器学习&自然语言处理算法工程师<br>I am an algorithm engineer focusing on machine learning and natural language processing.
-sidebar-avatar: http://qiniu.shihanmax.top/20210526180809_mWrg2E_%E6%88%AA%E5%B1%8F2021-05-26%2018.05.48.jpeg   # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: http://shihanmax.top:8009/?path=20210526180809_mWrg2E_%E6%88%AA%E5%B1%8F2021-05-26%2018.05.48.jpeg   # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 

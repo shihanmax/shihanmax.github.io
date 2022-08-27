@@ -44,13 +44,13 @@
             <h3>作诗机器人</h3>
             使用简单的单向RNN模型建模条件语言模型，在古体诗和现代诗两种数据集上分别训练了模型，可进行古体诗和现代诗的创作。
             <br><br><a href="http://shihanmax.top:5000">在线演示</a> | <a href="https://github.com/shihanmax/modern_poetry">项目地址</a>
-            <br><img class="photo" src="http://qiniu.shihanmax.top/20210518093459_BV24Yr_%E6%88%AA%E5%B1%8F2021-05-18%2009.34.19.jpeg">
+            <br><img class="photo" src="http://shihanmax.top:8009/?path=20210518093459_BV24Yr_%E6%88%AA%E5%B1%8F2021-05-18%2009.34.19.jpeg">
         </td>
         <td class="td">
             <h3>测试项目01</h3>
             这是有关这个项目的一些说明文字
             <br>
-            <img class="photo" src="http://qiniu.shihanmax.top/20210413164421_6zZPZS_%E6%88%AA%E5%B1%8F2021-04-13%2016.44.09.jpeg">
+            <img class="photo" src="http://shihanmax.top:8009/?path=20210413164421_6zZPZS_%E6%88%AA%E5%B1%8F2021-04-13%2016.44.09.jpeg">
         </td>
     </tr>
     <tr>
@@ -58,13 +58,13 @@
             <h3>测试项目10</h3>
             这是有关这个项目的一些说明文字
             <br>
-            <img class="photo" src="http://qiniu.shihanmax.top/20210404165407_FKEiQN_bryce-canyon-1867563_1920.jpeg">
+            <img class="photo" src="http://shihanmax.top:8009/?path=20210404165407_FKEiQN_bryce-canyon-1867563_1920.jpeg">
         </td>
         <td class="td">
             <h3>测试项目11</h3>
             这是有关这个项目的一些说明文字
             <br>
-            <img class="photo" src="http://qiniu.shihanmax.top/20201029204023_N5naCq_%E6%88%AA%E5%B1%8F2020-10-29%2020.40.15.jpeg">
+            <img class="photo" src="http://shihanmax.top:8009/?path=20201029204023_N5naCq_%E6%88%AA%E5%B1%8F2020-10-29%2020.40.15.jpeg">
         </td>
     </tr>
 </table>
