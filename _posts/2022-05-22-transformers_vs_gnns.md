@@ -73,7 +73,6 @@ $$\textrm{Attention}(Q,K,V)=\textrm{softmax}(\frac{Q^T K}{\sqrt{d_k}}) V$$
 
 这对我们有什么启示呢？正如博客$^4$提到的，如果两个模型的目的和设计思路是基本一致的，那二者内部的模块可以互相借鉴么？比如transformer的skip connection和scaled attention模块是否是否可以加入GAT呢？另外，对于非全连接图（即：对一段文本来说，我们引入某些token之间没有任何关系的假设），如果在transformer self-attention模块中以mask的形式引入这种先验信息，那么在这种情况下，GAT相对于transformer还会有什么优势呢？毕竟，我们可以依赖使用海量数据预训练过的transformer来引入更多的先验知识。
 
-
 Refs:
 
 1. [GAT: GRAPH ATTENTION NETWORKS](https://openreview.net/pdf?id=rJXMpikCZ)
