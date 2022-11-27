@@ -79,7 +79,6 @@ netease_comment: false
 # ga_domain: huangxuan.me
 
 
-
 # Sidebar settings
 sidebar:  true  # whether or not using Sidebar.
 sidebar-about-description: ""  # 马诗涵，机器学习&自然语言处理算法工程师<br>I am an algorithm engineer focusing on machine learning and natural language processing.
