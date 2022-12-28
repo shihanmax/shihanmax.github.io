@@ -10,7 +10,8 @@ def replace_host(path):
             try:
                 content = open(os.path.join(path, f), 'r').read()
                 new_content = content.replace(
-                    'http://qiniu.shihanmax.top/', 'http://shihanmax.top:8009/?path=',
+                    # 'http://qiniu.shihanmax.top/', 'http://shihanmax.top:8009/?path=',
+                    'http://shihanmax.top:8009/?path=', 'http://shihanmax.top:8009/?path=v1/',
                 )
                 rep_path = path.replace("_posts_bak", "_posts")
                 if not os.path.exists(rep_path):
@@ -26,4 +27,4 @@ def replace_host(path):
     print(rec)
     
 if __name__ == "__main__":
-    replace_host('../_posts_bak/')
+    replace_host('../_posts_bak_20221228/')

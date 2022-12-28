@@ -28,9 +28,9 @@ Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson
 
 #### Experiment results
 
-![The results from this paper’s main experiment.](http://shihanmax.top:8009/?path=截屏2019-08-22下午7.35.42.png)
+![The results from this paper’s main experiment.](http://shihanmax.top:8009/?path=v1/截屏2019-08-22下午7.35.42.png)
 
-![Performance degradation vs. layer.](http://shihanmax.top:8009/?path=截屏2019-08-22下午7.36.29.png)
+![Performance degradation vs. layer.](http://shihanmax.top:8009/?path=v1/截屏2019-08-22下午7.36.29.png)
 
 
 

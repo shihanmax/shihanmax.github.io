@@ -133,7 +133,7 @@ Mathjax: true
 
 具体地，UniT使用了两类encoder，分别负责文本和图像的编码，在获得两类输入的编码后，通过拼接的方式作为Multi-Head Cross Attention的Key和Query向量输入decoder；同时，decoder接收任务相关的query embedding作为输入；decoder的输出经过不同的head，进入各个子任务的学习。模型结构图如下：
 
-<img src="http://shihanmax.top:8009/?path=%E6%88%AA%E5%B1%8F2021-06-21%2023.57.55.png" alt="UniT" style="zoom:67%;" />
+<img src="http://shihanmax.top:8009/?path=v1/%E6%88%AA%E5%B1%8F2021-06-21%2023.57.55.png" alt="UniT" style="zoom:67%;" />
 
 
 
