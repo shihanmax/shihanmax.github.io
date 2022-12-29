@@ -18,6 +18,5 @@ def add():
     query = request.form["params"].strip()
     return {"status": "ok"}
 
-
 if __name__ == "__main__":
     app.run(debug=True, port=8082)
