@@ -16,9 +16,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def add():
     print(request.form) 
     query = request.form["params"].strip()
-    print("is ok now")
     return {"status": "ok"}
-
 
 
 if __name__ == "__main__":
