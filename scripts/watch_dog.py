@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import time
 import logging
 
 
@@ -13,6 +14,9 @@ app = Flask(__name__)
 
 @app.route("/hook", methods=['POST'])
 def hook():
+    os.system("git pull")
+    print(f"Update at {time.ctime()}")
+    
     return {"status": "ok"}
 
 if __name__ == "__main__":
