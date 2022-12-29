@@ -16,7 +16,6 @@ app = Flask(__name__)
 def hook():
     os.system("git pull")
     print(f"Update at {time.ctime()}")
-    
     return {"status": "ok"}
 
 if __name__ == "__main__":
