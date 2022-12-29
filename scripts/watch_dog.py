@@ -17,7 +17,6 @@ def add():
     print(request.form) 
     query = request.form["params"].strip()
     print("is ok now")
-    
     return {"status": "ok"}
     
 
