@@ -34,7 +34,7 @@ NPM模型包含一个encoder，对于包含$\mathrm{[MASK]}$的一段文本（to
 
 $$l_s(\hat{x}_t^i, g_t^i) + l_e(\hat{x}_{t+1}^i, g_t^i)$$
 
-上述公式分别计算$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$位置的loss，作者采用对比学习方式，以$\mathrm{[MASK_s]}$为例，首先在batch内采样若干正样本和负样本，最大化正样本embedding与$\mathrm{[MASK_s]}$的embedding的相似度，最小化负样本embedding与$\mathrm{[MASK_s]}$的embedding的相似度。
+上述公式分别计算$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$位置的loss，作者采用对比学习方式，以$\mathrm{[MASK_s]}$为例，首先在batch内采样若干正样本和负样本，最大化正样本embedding与$\mathrm{[MASK_s]}$的embedding的相似度，同时最小化负样本embedding与$\mathrm{[MASK_s]}$的embedding的相似度。
 
 在一个batch中假设包含两条query，如下图
 
