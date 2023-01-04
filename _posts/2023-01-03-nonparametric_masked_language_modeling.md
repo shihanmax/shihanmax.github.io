@@ -15,7 +15,7 @@ mathjax: true
 
 基于上述分析，论文[Nonparametric Masked Language Modeling](https://arxiv.org/pdf/2212.01349.pdf)提出了一种新的掩码语言模型——非参数掩码语言模型（NPM），首次将常规语言模型中的$\mathrm{softmax}$替换为在reference corpus中的每一个短语上的非参数概率分布，并通过batch内近似采样、构造对比学习的方式来进行预训练。实验表明这种方式相比传统的（甚至规模更大的）参数语言模型，在零样本学习任务上都有显著的提升，在低频词汇场景下的提升也更明显。
 
-NPM模型包含一个encoder和一个参考语料集（包含若干段文本）。对于包含$\mathrm{[MASK]}$的一段文本（token序列），encoder将序列中的每一个token转化为固定长度的编码向量，参考语料集转化为一个短语集合，每个短语也通过encoder获得了其对应的表征，NPM则可以根据一种相似度计算方式，从短语集合中检索出与当前$\mathrm{[MASK]}$最相近的短语，然后将其作为预测结果。
+NPM模型包含一个encoder，对于包含$\mathrm{[MASK]}$的一段文本（token序列），encoder将序列中的每一个token转化为固定长度的编码向量，query对应的参考语料集转化为一个短语集合，每个短语也通过encoder获得了其对应的表征，NPM则可以根据一种相似度计算方式，从短语集合中检索出与当前$\mathrm{[MASK]}$最相近的短语，然后将其作为预测结果。
 
 ## 预训练
 
