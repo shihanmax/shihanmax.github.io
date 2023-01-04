@@ -23,7 +23,7 @@ NPM模型包含一个encoder，对于包含$\mathrm{[MASK]}$的一段文本（to
 
 作者在span masking的基础上作了几点改进，span的长度采样自一个几何分布。首先，如果一个query中的span同时出现在了reference corpus中，它才会被选作mask候选，其次，常规的span masking将一个span替换为一个$\mathrm{[MASK]}$，而本文中，作者将span替换为连续的两个特殊token：$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$（实际操作中，使用的是两个相同的$\mathrm{[MASK]}$，通过不同的position embedding来区分二者）。
 
-由于实际应用中的参考语料库可能很大，语料库$\mathcal{C}$中的每一条query又包含非常多的短语（span），上文提到，语料库$\mathcal{C}$中包含的每一个span都要通过编码器获得对应的embedding，这在实际操作中对计算资源的要求比较高，为了解决这一问题，作者首先将语料库$\mathcal{C}$中的每个query通过encoder，获得其中每一个token的表征。
+由于实际应用中的参考语料库可能很大，语料库$\mathcal{C}$中的每一条query又包含非常多的短语（span），上文提到，语料库$\mathcal{C}$中包含的每一个span都要通过编码器获得对应的embedding，这在实际操作中对计算资源的要求比较高，为了解决这一问题，作者首先将语料库$\mathcal{C}$中的每个query通过encoder，获得其中每一个token的表征，而任意一个span的表征，则使用该span对应的起始和终止位置的token的表征拼接来表示。
 
 至此，目标明确为，对一个经过mask操作的query，对于该query中的任意一对$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$，我们期望通过某种相似度计算手段，分别检索出$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$在语料库$\mathcal{C}$所包含的所有span中，最相近的那个。
 
