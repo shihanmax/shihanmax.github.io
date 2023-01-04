@@ -25,7 +25,7 @@ NPM模型包含一个encoder，对于包含$\mathrm{[MASK]}$的一段文本（to
 
 由于实际应用中的参考语料库可能很大，语料库$\mathcal{C}$中的每一条query又包含非常多的短语（span），上文提到，语料库$\mathcal{C}$中包含的每一个span都要通过编码器获得对应的embedding，这在实际操作中对计算资源的要求比较高，为了解决这一问题，作者首先将语料库$\mathcal{C}$中的每个query通过encoder，获得其中每一个token的表征，而任意一个span的表征，则使用该span对应的起始和终止位置的token的表征拼接来表示。
 
-至此，目标明确为，对一个经过mask操作的query，对于该query中的任意一对$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$，我们期望通过某种相似度计算手段，分别检索出$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$在语料库$\mathcal{C}$所包含的所有span中，最相近的那个。
+至此，目标明确为，针对经过mask操作的query，对该query中的任意一对$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$，我们期望通过某种相似度计算手段，分别检索出$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$在语料库$\mathcal{C}$所包含的所有token中，最相近的那个，然后使用两个最相近的开始和结束token的位置，来圈定最终的检索答案。
 
 
 ### 目标函数
