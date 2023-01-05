@@ -43,7 +43,7 @@ mathjax: true
 
 目前最常用的文本生成框架是Seq2seq，除此之外，也有基于RL、VAE和GAN的文本生成相关的研究，但从研究热度、实用性和实际效果来看，Seq2seq模型仍然是目前可控文本生成的首选，本文也重点关注基于Seq2seq的模型。
 
-<img src="http://shihanmax.top:8009/?path=20210302194833_YQAZ0Z_%E6%88%AA%E5%B1%8F2021-03-02%2019.48.15.jpeg" alt="generate models" style="zoom:50%;" />
+<img src="http://static.shihanmax.top/?path=20210302194833_YQAZ0Z_%E6%88%AA%E5%B1%8F2021-03-02%2019.48.15.jpeg" alt="generate models" style="zoom:50%;" />
 
 - VAE based models
 
@@ -101,13 +101,13 @@ mathjax: true
 
 该模型的另一个设计是loss，可以参考如下。
 
-<img src="http://shihanmax.top:8009/?path=20210303151419_HMr5Eb_v2-27da99d4d46e629c9672c7eb695c71ce_720w.jpeg" alt="sheng" style="zoom: 67%;" />
+<img src="http://static.shihanmax.top/?path=20210303151419_HMr5Eb_v2-27da99d4d46e629c9672c7eb695c71ce_720w.jpeg" alt="sheng" style="zoom: 67%;" />
 
 
 
 #### 3.1.2 Neural Summarization by Extracting Sentences and Words$^4$
 
-<img src="http://shihanmax.top:8009/?path=20210303191433_miAmFi_%E6%88%AA%E5%B1%8F2021-03-03%2019.05.53.jpeg" alt="1" style="zoom:67%;" />
+<img src="http://static.shihanmax.top/?path=20210303191433_miAmFi_%E6%88%AA%E5%B1%8F2021-03-03%2019.05.53.jpeg" alt="1" style="zoom:67%;" />
 
 本文的文本摘要分为两个层级，首先从篇章中选择句子（Sentence extractor, SE），其次从句中选择词语（Word extractor, WE）。前者是一个序列标注任务，后者是一个文本生成的任务。
 
@@ -125,7 +125,7 @@ Attention-Based Summarization，2015年提出，比较早的模型了，借鉴NM
 
 #### 3.2.2 Deep Recurrent Generative Decoder for Abstractive Text Summarization$^5$
 
-<img src="http://shihanmax.top:8009/?path=20210303164328_ze9oYg_%E6%88%AA%E5%B1%8F2021-03-03%2016.42.20.jpeg" alt="1" style="zoom:67%;" />
+<img src="http://static.shihanmax.top/?path=20210303164328_ze9oYg_%E6%88%AA%E5%B1%8F2021-03-03%2016.42.20.jpeg" alt="1" style="zoom:67%;" />
 
 使用Seq2seq+attn结构，创新点在解码端：For latent structure modeling, we add historical dependencies on the latent variables of Variational Auto-Encoders (VAEs)。
 
@@ -150,7 +150,7 @@ embedding使用token embedding+可训练的位置embedding，encoder使用CNN（
 
 #### 3.3.1 Get To The Point: Summarization with Pointer-Generator Networks (PGN) $^{16}$
 
-<img src="http://shihanmax.top:8009/?path=20210303193545_u9XA0S_v2-0ec20003c6721cf61687024eab09e5a4_720w.jpeg" alt="PGN" style="zoom:80%;" />
+<img src="http://static.shihanmax.top/?path=20210303193545_u9XA0S_v2-0ec20003c6721cf61687024eab09e5a4_720w.jpeg" alt="PGN" style="zoom:80%;" />
 
 不同于传统的Seq2seq+attention模型，PGN在解码阶段生成一个概率$P_{gen}$，用于表示当前解码时间步需要从完整词表中生成一个词的概率，则1减去该概率表示从原文本中选择一个单词的概率，由于解码过程中，pointer部分可以得到原文本中每个词的选择概率，同时，解码器也能获得词表中每一个单词的生成概率，使用概率$P_{gen}$将这两个概率分布进行整合，得到最终的词汇分布概率。
 
@@ -158,11 +158,11 @@ embedding使用token embedding+可训练的位置embedding，encoder使用CNN（
 
 #### 3.3.2 Incorporating Copying Mechanism in Sequence-to-Sequence Learning$^{13}$
 
-<img src="http://shihanmax.top:8009/?path=20210303194546_T941SX_v2-e6e965ade7a4bc6d99fa38817f7f6d2e_r.jpeg" alt="CPN" style="zoom:67%;" />
+<img src="http://static.shihanmax.top/?path=20210303194546_T941SX_v2-e6e965ade7a4bc6d99fa38817f7f6d2e_r.jpeg" alt="CPN" style="zoom:67%;" />
 
 这篇文章的思路和上文的PGN比较类似，在上图右上的红框中，解码器得到的概率分布分为两部分，词表中的词汇概率分布和原文本中的词汇概率分布，PGN使用一个软概率将二者进行融合，而本文则直接地进行加和。
 
-![probe of word](http://shihanmax.top:8009/?path=20210303200612_9CgIGU_v2-5500109d88e148ed1e2ce8a0746f5c58_720w.jpeg)
+![probe of word](http://static.shihanmax.top/?path=20210303200612_9CgIGU_v2-5500109d88e148ed1e2ce8a0746f5c58_720w.jpeg)
 
 如上图，可以简单理解为：
 
@@ -172,13 +172,13 @@ embedding使用token embedding+可训练的位置embedding，encoder使用CNN（
 
 值得注意的是，生成概率和选择概率的计算方式不同：
 
-<img src="http://shihanmax.top:8009/?path=20210303201552_JqaF3F_%E6%88%AA%E5%B1%8F2021-03-03%2020.15.49.jpeg" alt="probe" style="zoom:80%;" />
+<img src="http://static.shihanmax.top/?path=20210303201552_JqaF3F_%E6%88%AA%E5%B1%8F2021-03-03%2020.15.49.jpeg" alt="probe" style="zoom:80%;" />
 
 
 
 #### 3.3.3 A Unified Model for Extractive and Abstractive Summarization using Inconsistency Loss$^7$
 
-![attn_fusion](http://shihanmax.top:8009/?path=20210303201923_SLHTYJ_%E6%88%AA%E5%B1%8F2021-03-03%2020.19.18.jpeg)
+![attn_fusion](http://static.shihanmax.top/?path=20210303201923_SLHTYJ_%E6%88%AA%E5%B1%8F2021-03-03%2020.19.18.jpeg)
 
 本文创新点如下：
 
@@ -190,25 +190,25 @@ embedding使用token embedding+可训练的位置embedding，encoder使用CNN（
 
   为了对两种attention分数作统一（consistent），这里引入inconsistentency loss：
 
-  ![incloss](http://shihanmax.top:8009/?path=20210303203944_moJrwm_%E6%88%AA%E5%B1%8F2021-03-03%2020.39.41.jpeg)
+  ![incloss](http://static.shihanmax.top/?path=20210303203944_moJrwm_%E6%88%AA%E5%B1%8F2021-03-03%2020.39.41.jpeg)
 
 
 
-![extractor](http://shihanmax.top:8009/?path=20210303203357_M5BLCe_%E6%88%AA%E5%B1%8F2021-03-03%2020.33.54.jpeg)
+![extractor](http://static.shihanmax.top/?path=20210303203357_M5BLCe_%E6%88%AA%E5%B1%8F2021-03-03%2020.33.54.jpeg)
 
-![1](http://shihanmax.top:8009/?path=20210303204513_7RJXZY_%E6%88%AA%E5%B1%8F2021-03-03%2020.45.09.jpeg)
+![1](http://static.shihanmax.top/?path=20210303204513_7RJXZY_%E6%88%AA%E5%B1%8F2021-03-03%2020.45.09.jpeg)
 
 abstracter的结构和PGN是一致的。
 
 本文同时也使用了PGN中的coverage思想：使用coverage vector来维护截至当前在每个词汇上的注意力如何，coverage vector会参与word level attention的计算，并通过coverage loss 的方式参与训练。
 
-![cv](http://shihanmax.top:8009/?path=20210303204904_Rt2l7O_%E6%88%AA%E5%B1%8F2021-03-03%2020.49.00.jpeg)
+![cv](http://static.shihanmax.top/?path=20210303204904_Rt2l7O_%E6%88%AA%E5%B1%8F2021-03-03%2020.49.00.jpeg)
 
 
 
 #### 3.3.4 Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond$^{8}$
 
-![1](http://shihanmax.top:8009/?path=20210303164251_0FpWXm_%E6%88%AA%E5%B1%8F2021-03-03%2016.03.17.jpeg)
+![1](http://static.shihanmax.top/?path=20210303164251_0FpWXm_%E6%88%AA%E5%B1%8F2021-03-03%2016.03.17.jpeg)
 
 论文点：
 
