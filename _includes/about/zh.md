@@ -4,20 +4,20 @@
 
 **2017年和朋友从北京出发骑车11天到江苏无锡（右图：潍坊市坊子区666.66公里留念）**
 
-![beijing-wuxi](http://shihanmax.top:8009/?path=20220522162912_wD5FnW_%E6%88%AA%E5%B1%8F2022-05-22%20%E4%B8%8B%E5%8D%884.29.07.jpeg)
+![beijing-wuxi](http://static.shihanmax.top/?path=20220522162912_wD5FnW_%E6%88%AA%E5%B1%8F2022-05-22%20%E4%B8%8B%E5%8D%884.29.07.jpeg)
 
 
 **2019年和室友们从兰州出发，经西宁，共和、乌兰、刚察、祁连、张掖、武威，最后回到兰州，全程约1890KM**
 
-<img src="http://shihanmax.top:8009/?path=20211218113530_q0ONge_A4DA046F-F3DA-412D-898D-3987F2E2A1C1_1_105_c.jpeg" alt="青甘环线" style="zoom:80%;" />
+<img src="http://static.shihanmax.top/?path=20211218113530_q0ONge_A4DA046F-F3DA-412D-898D-3987F2E2A1C1_1_105_c.jpeg" alt="青甘环线" style="zoom:80%;" />
 
 
 **相当业余的业余攀岩爱好者**
 
-<img src="http://shihanmax.top:8009/?path=20211218120155_rhnIcR_55EA93D8-71E6-48E4-9B30-4FC7DC5A2077_1_201_a.jpeg" alt="青甘环线" />
+<img src="http://static.shihanmax.top/?path=20211218120155_rhnIcR_55EA93D8-71E6-48E4-9B30-4FC7DC5A2077_1_201_a.jpeg" alt="青甘环线" />
 
 ------
 
-<img src="http://shihanmax.top:8009/?path=20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg" alt="mrb" style="zoom:30%;" />
+<img src="http://static.shihanmax.top/?path=20211218115015_FkGCKl_5F08DACD-3FAF-4C16-BB65-6AC921AF2626.jpeg" alt="mrb" style="zoom:30%;" />
 
 <center>热爱生活，保持LIZHI，相信未来。</center>
