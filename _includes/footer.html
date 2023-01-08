@@ -92,10 +92,9 @@
 			'The function of good software is to make the complex appear to be simple.',
 		]
 		index = Math.floor(Math.random() * fortune.length);
-		// fortune[index];
-		document.getElementById('fortune').innerHTML = fortune[index];
-		// document.write(fortune[index]);
+		return fortune[index];
 	}
+	document.getElementById('fortune').innerHTML = fortune_it();
 
 </script>
 
