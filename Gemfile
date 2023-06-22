@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
-gem 'jekyll-paginate'
-
-gem "jekyll", "~> 4.0"
-gem "rake"
-gem "jekyll-redirect-from"
-gem "jekyll-relative-links"
+gem 'webrick'
+gem 'github-pages'
+gem 'amp-jekyll'
+gem 'jekyll-sitemap'
+gem 'pygments.rb'

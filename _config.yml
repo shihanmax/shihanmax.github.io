@@ -1,53 +1,24 @@
 # Site settings
-title: Shihanmax's Blog
-SEOTitle: 马诗涵的博客 | Shihanmax's Blog
-header-img: http://static.shihanmax.top/?path=20210404165824_8zZA5S_rocky-mountain-1149298_1920.jpeg
-# header-img: http://shihanmax.top:8009/?path=20210405144942_cO1WBY_1.jpeg
+title: Shihanmax's blog
+description: >
+    Shihanmax's blog
+author: Shihanmax
 email: shihanmax@foxmail.com
-description: "Machine Learning & Dev Engineer"
-keyword: "机器学习,自然语言处理"
-url: "http://shihanmax.top"            # your host, for absolute URL
-baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
-host: "*"
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://shihanmax.github.io" # the base hostname & protocol for your site
+# twitter_username: YourTwitterNo
+github_username:  shihanmax
 
-# Publish posts or collection documents with a future date.
-future: true
-
-# SNS settings
-RSS: false
-# weibo_username:     huxpro
-# zhihu_username:     huxpro
-# github_username:    shihanmax 
-# twitter_username:   huxpro
-# facebook_username:  huxpro
-# linkedin_username:  firstname-lastname-idxxxx
-
-
+# disqus_shortname: Test1
 
 # Build settings
-# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+include: [_pages]
 highlighter: rouge
-permalink: pretty
-paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
-anchorjs: true  # if you want to customize anchor. check out line:181 of `post.html`
-# If you have timezone issue (e.g. #68) in China, uncomment to use this:
-timezone: CN
+# syntax_highlighter: rouge
 
-# Gems
-# from PR#40, to support local preview for Jekyll 3.0
-# make sure you have this gem installed
-# `$ gem install jekyll-paginate`
-plugins: [jekyll-paginate, jekyll-redirect-from, jekyll-relative-links]
-
-
-
-# Markdown settings
-# replace redcarpet to kramdown,
-# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
 markdown: kramdown
 kramdown:
+  syntax_highlighter: rouge
   input: GFM                            # use Github Flavored Markdown !important
   syntax_highlighter_opts:
     span:
@@ -56,46 +27,13 @@ kramdown:
       line_numbers: true
       start_line: 1
 
+future: true
+permalink: /:year/:month/:title
+sass:
+    style: compressed
 
-relative_links:
-  enabled:     true
-  collections: false
-
-# Disqus settings
-disqus_username: false
-
-
-# Netease settings
-netease_comment: false
-
-# Sidebar settings
-sidebar:  true  # whether or not using Sidebar.
-sidebar-about-description: ""  # 马诗涵，机器学习&自然语言处理算法工程师<br>I am an algorithm engineer focusing on machine learning and natural language processing.
-sidebar-avatar: http://static.shihanmax.top/?path=my.png   # use absolute URL, seeing it's used in both `/` and `/about/`
-
-
-
-# Featured Tags
-featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # 标签对应的文章的数量大于此值时，才会显示在首页/footer的featured-tags
-
-
-
-# Progressive Web Apps
-chrome-tab-theme-color: "#000000"
-service-worker: true
-
-
-
-# MathJax rendering for layout:page (e.g. post preview)
-page-mathjax: true 
-
-
-
-# Friends
-# friends: [
-#     {
-#     #     title: "Shihanmax",
-#     #     href: "http://shihanmax.top"
-#     # }
-# ]
+paginate: 15
+paginate_path: "blog/page:num/"
+plugins: [jekyll-paginate, jemoji, jekyll-sitemap]
+collections:
+  protected:

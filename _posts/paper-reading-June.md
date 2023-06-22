@@ -81,7 +81,7 @@ Transformer结构在NLP领域的应用十分广泛，在训练此类模型时，
 - 研究了两种transformer的变体（post-LN transformer和pre-LN transformer）在初始训练阶段的梯度情况，以展示在post-LN transformer中warmup策略如此重要的原因
 - 作者证明，warmup的重要性源于LN层的位置，pre-LN transformer可以在不使用warmup策略的情况下，达到比肩post-Transformer的效果，同时能够缩短模型收敛所用的时间。
 
-<img src="http://static.shihanmax.top/?path=20220620002127_5q3f4Z_%E6%88%AA%E5%B1%8F2022-06-20%20%E4%B8%8A%E5%8D%8812.21.16.jpeg" alt="xx-LN trm" style="zoom:40%;" />
+<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/20220620002127_5q3f4Z_%E6%88%AA%E5%B1%8F2022-06-20%20%E4%B8%8A%E5%8D%8812.21.16.jpeg" alt="xx-LN trm" style="zoom:40%;" />
 
 #### method
 
