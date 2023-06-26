@@ -1,100 +1,90 @@
----
-title:  "Paper Reading: 6月"
-layout: post
-date: 2022-06-04
-tags:  ["Paper Reading"]
-syntaxHighlighter: yes
-mathjax: true
----
 
-[导航：汇总页](/2022/05/14/paper-reading/)
+你是一个语文课代表，擅长将老师在课堂上的讲话，总结成简介，有层次，但又不缺失重要信息的摘要（markdown格式），举几个例子：
 
-## W1 (2022-06-05)
+例1:
 
-### [An Empirical Study of Memorization in NLP](https://arxiv.org/pdf/2203.12171.pdf)
+老师讲话：
+下面我们来到了第二章介绍贝尔曼公式
+这章有两个非常关键的点 第一个是一个概念
+第二个是一个工具 你搞明白了这个概念和这个工具
+以及它们之间的关系 这一章会非常的清晰
+这个概念是什么呢？state value 状态值
+什么是状态值呢？就是我从一个状态出发
+我沿着一个策略我所得到奖励回报的一个平均值
+那么状态值越高那就说明了对应的策略越好
+状态值越低那就说明了我从这个状态出发
+沿着这个策略得到的奖励是比较少的 那就说明那个策略不好
+所以我们为什么要关注状态值呢？
+就是因为状态值能够去评价一个策略它好还是不好
+既然状态值这么重要 那我怎么去分析这个状态值呢？
+这就是一个工具 什么工具呢？就是贝尔曼公式
+贝尔曼公式用一句话来描述
+它就是描述了所有状态 状态值之间的关系
+这个关系是个什么呢？实际上是一个等式 是一个方程
+具体的符号我这里不再介绍
+然后我通过求解这样一个公式的方程
+我就能够求解出来一个给定策略它的状态值
+因此我就能够去评价这个策略到底好还是不好
+所以求解贝尔曼公式进而得到一个策略所对应的状态值
+这样一个过程就被称为策略评价
+或者叫policy evaluation 那么policy evaluation
+在强化学习当中是非常基础的一个概念
+我评价了一个策略我得到它的值
+然后我基于它的值再改进策略然后这样循环下去
+最后我就能够得到一个最优的策略
+所以这个思想是非常非常重要的
 
-#### Motivation
+你的总结：
+### 第二章 介绍贝尔曼公式
+两个非常关键的点：
+- 一个概念
+  state_value 状态值：从一个状态出发，沿着一个策略我所得到奖励回报的一个平均值，状态值越高那就说明了对应的策略越好；状态值越低那就说明了我从这个状态出发，沿着这个策略得到的奖励少，如何分析状态值？需要一个工具
+- 一个工具
+  贝尔曼公式：（一个等式、一个方程）它描述了所有状态、状态值之间的关系，通过求解这样一个方程，能够求解出来一个给定策略，它的状态值，这样一个过程就被称为策略评价（policy evaluation），基于它的值再改进策略然后这样循环下去，最后我就能够得到一个最优的策略。它是强化学习中非常基础的一个概念。
 
-Feldman$^1$提出了长尾理论（long-tail theory）来解释深度学习模型中的“记忆行为”（memorization behavior），NLP领域缺少对其的实验验证。长尾理论认为，在模型训练过程中，训练集中存在的非典型的长尾样本，如果这些样本在测试集中出现过，那么记忆住这些样本对于提升模型的泛化能力就会有帮助。
+请总结以下老师的讲话：
 
-#### Contribution
+我相信大家还是有很多没有理解清楚的 没有关系
+只要你能够大概明白它的脉络
+并且接下来能够根据自己的实际情况来制定相应的学习计划
+我觉得这个视频就达到了它的目的
+在结束之前我还想再啰嗦几句 关于什么呢？
+就是如果大家确实想学习强化学习 那么这门课程是否适合你
+接下来我会介绍一下这门课程的特点
+大家可以根据自己的实际情况来进行选择
+首先这个课程是关于原理部分而不是关于编程实践部分
+如果想学习现有的编程的框架等等那还有很多非常好的资料
+大家其实可以配合着来学习
+另外就是这门课程它偏向于从数学的角度去讲故事
+而不是从大量的语言的描述的角度去介绍一个问题
+为什么这么做呢？因为我觉得这个是最高效的学习的方法
+为什么呢？
+你可以一劳永逸地了解这个问题最本质的数学原理
+之后你可以360度无死角地去理解这个问题 另外就是这门课
+它更偏向于那些希望对强化学习原理有比较深入了解的同学
+比如说你将来要去写论文 要去搞研究 要去做创新
+那么你对原理部分的理解应该比较深刻才可以
+或者说将来你要以此为生 强化学习就是你的饭碗
+那这碗饭你必须要端得非常牢才可以
+另外一个方面就如果大家只是想去有比较大概的直观的理解
+那你在学习这个课程的时候
+很有可能你会很快地发现它的深度超出了你的预期
+那有的同学可能会说又要讲数学 这个深度又比较深
+是不是这本课程会比较的晦涩 非常的难学呢？
+其实恰恰不是这个样子 从数学的角度
+我认为这是效率最高的学习的方法 然后在介绍数学的时候
+我还会循序渐进 一步一步带着大家往前走
+同时我也会配上大量的例子来帮助大家建立起来直观的概念
+另外大家在学习的时候可能也会感受到
+我会经常把一个比较复杂的问题
+用尽可能简洁的方式给呈现出来
+让大家透过这些纷繁复杂的细节看清楚
+一个算法一个问题最本质的原理是什么
+那最后如果大家已经学完了这门课程 接下来该学什么呢？
+就是实践 理论和实践相结合 再之后大家就可以去读论文了
+我相信你在读论文的时候不会有太大的障碍的
+你可以选择自己感兴趣的 未来有非常多有意思的方向
+大家可以深入地进行了解 找到属于你自己的那一片天地
+这个就是今天视频的全部内容
+希望这个视频能够对大家有所帮助 再见
 
-本文在三种NLP任务上，通过实验验证了长尾理论的存在性，实验表明，最易被模型记忆的那些样本（top-ranked instances）并非典型的，去掉他们会导致模型在测试集上的效果下降明显。另外，作者提出了一种归因方式，来解释样本为什么会被模型记忆。实验结果证明，那些top-memorized 样本包含的特征往往和类别标签是负相关的。
-
-作者在本文尝试回答3个问题：
-
-1. 在NLP任务中，被模型记忆的样本是否是非典型的样本（atypical instances）
-2. 如果模型记住了这些样本，会导致其在测试集上的泛化能力提升吗？
-3. 我们是否可以解释，为什么样本会被模型记忆（比如是否可以量化地计算出每个token被记忆的程度）
-
-#### method
-
-作者在情感分类、NLI和文本分类三个任务上进行实验。
-
-首先，对于训练集的某个样本$z=(x,y)$，对其的记忆可以理解为，去掉这个样本后，模型对其的预测结果的变化情况。在$^2$中，作者对一个样本的记忆定义为，去掉这个样本（或减小其在训练集中的权重），对测试集loss的影响。作者参考$^2$的实现，定义了对样本的记忆分数。
-
-在记忆归因方面（即如何更好地认识记忆现象，比如为什么被模型记忆了，哪些部分容易被模型记忆之类的），作者不是仅仅在样本级别分析模型为什么被记住了，在NLP场景下，作者希望从每一个token的角度来分析。作者参考$^3$，定义了基于提督的归隐方法。
-
-## W2 (2022-06-12)
-
-### [Are Prompt-based Models Clueless?](https://aclanthology.org/2022.acl-long.166.pdf)
-
-#### Motivation
-
-基于prompt的模型通过将任务转化为预训练任务类似形式的方式，提高了模型的泛化能力，那么其是否会利用superficial cues呢？本文通过实验，在NLI和阅读理解两类任务上讨论了这一问题。
-
-> Superficial cues can be described as linguistic or non-linguistic characteristics of instances that have nothing to do with the task itself but are tied to a specific task label. These characteristics include lexical overlap, distinct words frequently appearing in the correct choices, and distinctive style of the correct choices.
-
-#### Contribution
-
-作者定义不同任务中的context：对NLI任务，其前提假设（premise）为context，对于阅读理解，其问题（question）作为context。并将任务相关的superficial cues分为两类：
-
-- context superficial cues
-- contextless superficial cues
-
-前者表示与context重叠的词汇，后者表示仅在hypothesis（对NLI任务）或multiple-choice（对阅读理解任务）中出现的词汇。
-
-作者通过对MNLI、SNLI、COPA的分析发现，其中包含了更多的表面信息（superficial cues）；并且通过实验验证了基于prompt的模型也依赖superficial cues。
-
-#### method
-
-如何构建包含/不包含superficial cues的测试集呢？作者的做法如下：对于NLI任务，由于HANS数据集可以利用三类信息：lexical overlap、subsequence、constituent，因此不必再进行数据集划分。对于阅读理解任务，作者将多项选择的答案中的token重新随机排列，以此来降低其中包含的语义信息，而迫使模型能够通过superficial cues来完成任务，针对重排列后的数据集，作者使用roberta模型来训练/预测模型，发现其在测试集上的准确率可以达到78%，对于模型分类正确的样本，作者认为其包含了superficial cues，将它们划分到一个集合中；将其与样本划分到另一个集合中。
-
-本文得出以下结论：
-
-1. 在MNLI、SNLI和COPA数据集上，prompt-based模型会利用superficial cues；
-2. 在COPA数据集上，当训练样本小于32个样本时，prompt-based模型不会利用superficial cues，但当增加样本数量时，模型在包含/不包含contextless superficial cues的数据集上的性能差距会增加；
-
-
-## W3 (2022-06-19)
-
-### [ON LAYER NORMALIZATION IN THE TRANSFORMER ARCHITECTURE](https://openreview.net/attachment?id=B1x8anVFPr&name=original_pdf)
-
-#### Motivation
-
-Transformer结构在NLP领域的应用十分广泛，在训练此类模型时，我们一般需要对学习率进行warmup操作，即在开始练时，先设置一个极小的学习率，再以一个预设的增长曲线缓慢增加学习率。在实践中，这一过程的设置对模型最终效果是至关重要的，文章$^{4,5}$的研究佐证了这一观点，在训练中，由于初始学习率较小，也会导致训练时间延长。
-
-#### Contribution
-
-本文探究“为什么学习率warmup策略对训练过程如此重要”，发现LayerNorm层的位置可能是其中的一个重要影响因素。原生Transformer 的实现中，LayerNorm层位于残差网络的后方（也称为post-LN transformer），当把LN层置于残差网络后方时，接近输出层的参数的梯度的期望较大，如果不使用warmup策略，以一个较大的学习率开始训练过程的话，可能会导致优化过程不稳定，进而影响模型性能，加入warmup策略可以减弱这一倾向。基于以上结论，作者考虑LN的位置可能是比较重要的，因此，作者研究了另一种transformer的变体，它将LN置于残差网络内部，并在此网络上尝试不使用warmup策略。简言之，本文主要贡献有以下：
-
-- 研究了两种transformer的变体（post-LN transformer和pre-LN transformer）在初始训练阶段的梯度情况，以展示在post-LN transformer中warmup策略如此重要的原因
-- 作者证明，warmup的重要性源于LN层的位置，pre-LN transformer可以在不使用warmup策略的情况下，达到比肩post-Transformer的效果，同时能够缩短模型收敛所用的时间。
-
-<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/20220620002127_5q3f4Z_%E6%88%AA%E5%B1%8F2022-06-20%20%E4%B8%8A%E5%8D%8812.21.16.jpeg" alt="xx-LN trm" style="zoom:40%;" />
-
-#### method
-
-1. 作者首先使用post-LN transformer在De-EN翻译任务上，对比了设置不同学习率、不同warmup设置的情况下，loss和BLEU分数的情况，表明对post-LN transformer而言，学习率和其warmup策略的设置十分重要；
-2. 通过理论和实验分析，对比了post-LN transformer、pre-LN transformer和使用warmup策略的post-LN transformer的隐藏层的参数的梯度的模，实验表明，post-LN transformer的值最大，表明其参数波动最大，优化难度也最大，pre-LN transformer能够显著减弱波动程度，（越接近输出层，二者的对比越明显）。而在post-LN transformer实验中加入warmup策略后，参数的波动程度大大减弱；
-3. 通过实验证明，warmup策略对于pre-LN transformer不再重要；
-4. pre-LN transformer的收敛速度优于post-LN transformer；
-5. 作者通过实验证明，尽管RAdam优化器可以在post-LN transformer上在不使用warmup策略时也可以高效完成训练，但在pre-LN transformer上，其和Adam优化器的区别并不明显。
-
-### refs
-
-1. [Does learning require memorization? a short tale about a long tail](https://arxiv.org/abs/1906.05271)
-2. [Understanding black-box predictions via influence function`s](https://arxiv.org/abs/1703.04730)
-3. [Axiomatic attribution for deep networks](http://proceedings.mlr.press/v70/sundararajan17a/sundararajan17a.pdf)
-4. [Attention is all you need](https://arxiv.org/pdf/1706.03762.pdf)
-5. [Training tips for the transformer model](https://arxiv.org/abs/1804.00247)
