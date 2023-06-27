@@ -15,7 +15,7 @@ mathjax: true
 
 ## 1. 为什么开这门课程
 
-两本经典的书：
+目前，关于强化学习有很多资料可供选择，如以下两本经典书籍：
 
 - Sutton的“RL: An introduction”被誉为RL领域的圣经，包含高阶RL的内容，不是十分适合初学者。
 - “Algorithms for RL”
@@ -63,9 +63,8 @@ Q-Learning：广泛使用的算法，1989年一篇博士论文中被提出。被
 
 DP：1957年提出动态规划，用于最优控制、强化学习等。
 
-范畴
-
-AI
+范畴：
+- AI
   - ML
     - Supervised Learning
     - Unsupervised Learning 
