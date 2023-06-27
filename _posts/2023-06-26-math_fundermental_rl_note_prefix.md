@@ -1,5 +1,5 @@
 ---
-title:  "强化学习的数学基础-概览"
+title:  "强化学习的数学基础一：概览"
 layout: post
 date: 2023-06-26 23:23:01
 tags:  ["Deep Learning", "RL", "强化学习的数学基础"]
