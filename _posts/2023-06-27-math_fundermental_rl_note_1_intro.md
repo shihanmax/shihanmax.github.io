@@ -27,10 +27,10 @@ RL的特点：
 - 数学性强（强数学基础）
 - 系统性强（环环相扣）
 
-$$math \rightarrow Intuition$$
-$$math \nleftarrow Intuition$$
+$$\mathrm{math} \Rightarrow \mathrm{Intuition}$$
+$$\mathrm{math} \nLeftarrow \mathrm{Intuition}$$
 
-本课已经在西湖大学讲授3次，书稿也在Github上开源。本课程特点：
+本课已经在西湖大学讲授三次，书稿也在Github上开源。本课程特点：
 
 1. 从数学地角度来理解RL的话题；
 2. 数学知识的深度会控制在一个level上，在可读性与专业性之间保持平衡；
