@@ -28,6 +28,7 @@ RL的特点：
 - 系统性强（环环相扣）
 
 $$\mathrm{math} \Rightarrow \mathrm{Intuition}$$
+
 $$\mathrm{math} \nLeftarrow \mathrm{Intuition}$$
 
 本课已经在西湖大学讲授三次，书稿也在Github上开源。本课程特点：
