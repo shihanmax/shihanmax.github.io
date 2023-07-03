@@ -7,7 +7,7 @@ permalink: /tags/
 <div>
 {% for tag in site.tags%}
 <!-- <h3 class="listing-seperator" id="{{ tag[0] }}">{{ tag[0] }}</h3> -->
-<a href="#{{ tag[0] }}">{{ tag[0] }} ({{tag[1] | size}})</a> | 
+<a href="#{{ tag[0] }}"><b>{{ tag[0] }}</b> ({{tag[1] | size}})</a> | 
 {% endfor %}
 </div>
 
