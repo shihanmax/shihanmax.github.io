@@ -72,7 +72,8 @@ $$p(s_k|s_i,a_j) = p$$
 
 比如：
 
-$$ p(s_2 | s_1, a_1)=1 \\ p(s_i|s_1,a_2) = 0 \quad \forall i \neq 2 $$
+$$ p(s_2 | s_1, a_1)=1 \\
+ p(s_i|s_1,a_2) = 0 \quad \forall i \neq 2 $$
 
 
 ## Policy
