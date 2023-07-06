@@ -70,15 +70,15 @@ State transition可以用表格形式展示出来：
 
 即：在状态$s_i$采取动作$a_j$的情况下，下一个状态为$s_k$的概率为：
 
-$$p(s_k|s_i,a_j) = p$$
+$$p(s_k \mid s_i,a_j) = p$$
 
 其中$p$为概率值。
 
 比如：
 
-$$ p(s_2 | s_1, a_1)=1 $$
+$$ p(s_2 \mid s_1, a_1)=1 $$
 
-$$ p(s_i|s_1,a_2) = 0 \quad \forall i \neq 2 $$
+$$ p(s_i \mid s_1,a_2) = 0 \quad \forall i \neq 2 $$
 
 
 ### 1.4 Policy
@@ -91,36 +91,36 @@ $$ p(s_i|s_1,a_2) = 0 \quad \forall i \neq 2 $$
 
 针对状态$s_1$，采取动作$a_1 ... a_5$的概率为：
 
-$$ \pi(a_1|s_1) = 0 $$
+$$ \pi(a_1 \mid s_1) = 0 $$
 
-$$ \pi(a_2|s_1) = 1 $$
+$$ \pi(a_2 \mid s_1) = 1 $$
 
-$$ \pi(a_3|s_1) = 0 $$
+$$ \pi(a_3 \mid s_1) = 0 $$
 
-$$ \pi(a_4|s_1) = 0 $$
+$$ \pi(a_4 \mid s_1) = 0 $$
 
-$$ \pi(a_5|s_1) = 0 $$
+$$ \pi(a_5 \mid s_1) = 0 $$
 
 这种称为确定性策略。当然，也可以是随机策略，比如：
 
 <img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/%E6%88%AA%E5%B1%8F2023-07-05%2022.52.01.png" style='zoom:50%;'/>
 
 
-$$ \pi(a_1|s_1) = 0  $$ 
+$$ \pi(a_1 \mid s_1) = 0  $$ 
 
-$$ \pi(a_2|s_1) = 0.5 $$
+$$ \pi(a_2 \mid s_1) = 0.5 $$
 
-$$ \pi(a_3|s_1) = 0.5 $$ 
+$$ \pi(a_3 \mid s_1) = 0.5 $$ 
 
-$$ \pi(a_4|s_1) = 0 $$ 
+$$ \pi(a_4 \mid s_1) = 0 $$ 
 
-$$ \pi(a_5|s_1) = 0 $$
+$$ \pi(a_5 \mid s_1) = 0 $$
 
 每一个action都有其概率，我们可以将概率为0的省略：
 
-$$ \pi(a_2|s_1) = 0.5 $$
+$$ \pi(a_2 \mid s_1) = 0.5 $$
 
-$$ \pi(a_3|s_1) = 0.5 $$
+$$ \pi(a_3 \mid s_1) = 0.5 $$
 
 
 
@@ -173,9 +173,9 @@ reward可以理解成人机接口（human-machine interface），我们可以通
 
 #### 1.5.2 数学表达：
 
-$$ p(r=1 | s_1,a_1)=1 $$
+$$ p(r=1  \mid  s_1,a_1)=1 $$
 
-$$ p(r \neq -1 | s_1,a_1) = 0 $$
+$$ p(r \neq -1  \mid  s_1,a_1) = 0 $$
 
 reward也可能是具有随机性的。reward依赖于当前的状态和action，而不是下一个状态，例子：$(s_1,a_1)$和$(s_1,a_5)$得到的reward不应该相同。
 
