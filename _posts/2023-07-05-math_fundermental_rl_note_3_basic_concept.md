@@ -245,12 +245,12 @@ Key elements of MDP:
   - Action: the set of actions $\mathcal{A(s)}$ associated with state $s \in \mathcal{S}$
   - Reward: the set of rewards $\mathcal{R(s,a)}$
 - probability distribution
-  - State transition probability: 由状态$s$经过action$a$跳到状态$s'$的概率$p(s'|s,a)$
-  - Reward probability: 在状态$s$采取action $a$得到reward $r$的概率$p(r|s,a)$
-- policy: 在状态$s$采取action $a$的概率$\pi(a|s)$
+  - State transition probability: 由状态$s$经过action$a$跳到状态$s'$的概率$p(s'\mid s,a)$
+  - Reward probability: 在状态$s$采取action $a$得到reward $r$的概率$p(r\mid s,a)$
+- policy: 在状态$s$采取action $a$的概率$\pi(a\mid s)$
 - Markov property: memoryless property
-  - $p(s_{t+1}|a_{t+1},s_t,...,a_1,s_0)=p(s_{t+1}|a_{t+1},s_t)$
-  - $p(r_{t+1}|a_{t+1},s_t,...,a_1,s_0)=p(r_{t+1}|a_{t+1},s_t)$
+  - $p(s_{t+1}\mid a_{t+1},s_t,...,a_1,s_0)=p(s_{t+1}\mid a_{t+1},s_t)$
+  - $p(r_{t+1}\mid a_{t+1},s_t,...,a_1,s_0)=p(r_{t+1}\mid a_{t+1},s_t)$
   
 什么是MDP：
 
