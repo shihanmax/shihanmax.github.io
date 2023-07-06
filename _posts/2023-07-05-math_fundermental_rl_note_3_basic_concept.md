@@ -258,6 +258,6 @@ Key elements of MDP:
   - D: policy
   - P: sets & probability distribution
 
-回到grid-world例子，可以抽象为一个更一般的模型：markov process。（当policy确定时，MDP就变成了markov process）。
+回到grid-world例子，可以抽象为一个更一般的模型：markov process（当policy确定时，MDP就变成了markov process）。
 
 本节课结束，下节课会介绍贝尔曼公式。
