@@ -1,5 +1,5 @@
 ---
-title:  "强化学习的数学基础 二：课程介绍"
+title:  "强化学习的数学基础 Lecture 0: Introduction"
 layout: post
 date: 2023-06-27 23:22:23
 tags:  ["Deep Learning", "RL", "强化学习的数学基础"]
@@ -7,9 +7,9 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：P2-P3. 课程介绍。
+西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：课程介绍（P2-P3）。
 
-
+![rl_map](https://imgbed4s.oss-cn-beijing.aliyuncs.com/%E6%88%AA%E5%B1%8F2023-06-25%2022.48.40.png)
 
 这节课不涉及技术，主要讨论：
 

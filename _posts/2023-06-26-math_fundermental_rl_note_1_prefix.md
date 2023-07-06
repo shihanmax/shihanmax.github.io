@@ -1,5 +1,5 @@
 ---
-title:  "强化学习的数学基础 一：概览"
+title:  "强化学习的数学基础 Lecture -1: Prefix"
 layout: post
 date: 2023-06-26 23:23:01
 tags:  ["Deep Learning", "RL", "强化学习的数学基础"]
@@ -7,7 +7,7 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：P1. 了解强化学习名词脉络。
+西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：了解强化学习名词脉络（p1）。
 
 一张图概览强化学习基础原理当中的名词、概念、算法：
 

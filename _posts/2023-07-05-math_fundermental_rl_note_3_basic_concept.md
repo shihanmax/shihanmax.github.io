@@ -1,11 +1,15 @@
 ---
-title:  "强化学习的数学基础 三：基本概念"
+title:  "强化学习的数学基础 Lecture 1: Basic Concepts in RL"
 layout: post
 date: 2023-07-05 23:46:21
 tags:  ["Deep Learning", "RL", "强化学习的数学基础"]
 syntaxHighlighter: yes
 mathjax: true
 ---
+
+西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：基本概念（P4-P5）。
+
+![rl_map](https://imgbed4s.oss-cn-beijing.aliyuncs.com/%E6%88%AA%E5%B1%8F2023-06-25%2022.48.40.png)
 
 ## 1. Fundamental concepts in RL
 
