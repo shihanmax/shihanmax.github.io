@@ -206,7 +206,7 @@ $$s_1 \overset{a_2}{\rightarrow} s_2 \overset{a_3}{\rightarrow} s_5 \overset{a_3
 
 可以通过引入discount rate $\gamma$来解决，$\gamma \in [0,1]$：
 
-$$ \mathrm{discount return} = 0 + \gamma 0 + \gamma^2 0 + \gamma^3 1 + \gamma^4 1 + \gamma^5 1 + ... = \gamma^3 \frac{1}{1-\gamma}$$
+$$ \mathrm{discount\quad return} = 0 + \gamma 0 + \gamma^2 0 + \gamma^3 1 + \gamma^4 1 + \gamma^5 1 + ... = \gamma^3 \frac{1}{1-\gamma}$$
 
 此时：
 - return收敛
