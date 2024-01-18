@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-I am an NLP algorithm engineer currently working in [Ant Group](https://www.antgroup.com) focusing on document information extraction, text generation and DL engineering.
+I am an NLP algorithm engineer currently working at [Ant Group](https://www.antgroup.com), My main interests include document information extraction, generation, and algorithm engineering.
 
 ------
 
