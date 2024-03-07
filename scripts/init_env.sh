@@ -1,3 +1,9 @@
+# basic
+yun -y install tmux
+yum -y install vim
+yum -y install git
+
+
 # install jekyll
 sudo yum -y install dnf
 sudo dnf install ruby ruby-devel -y
