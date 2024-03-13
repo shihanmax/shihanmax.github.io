@@ -18,7 +18,10 @@ rvm requirements run
 rvm install 2.7.2
 rvm use 2.7.2 --default
 
-gem install jekyll bundler --no-document
+gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+
+gem install jekyll -v 4.2.0
+gem install bundler -v 2.4.22
 
 # nginx
 sudo yum -y install epel-release
