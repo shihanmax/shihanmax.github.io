@@ -1,0 +1,118 @@
+// 定义颜色变量
+$dark-theme-background: #1a1a1a;
+$dark-theme-text: #d8d8d8;
+$dark-theme-link: #58a6ff;
+$dark-theme-link-hover: #81a2ff;
+$dark-theme-button-bg: #4a4a4a;
+$dark-theme-button-border: #333;
+$dark-theme-code-bg: #282c34;
+$dark-theme-header-footer-bg: #111;
+$transition-time: 0.5;
+$transition-effect: linear;
+
+// 混合用于生成按钮样式
+@mixin button-style($background, $color, $border) {
+  background-color: $background;
+  color: $color;
+  border: 1px solid $border;
+  // transition: background-color 0.3s linear, color 0.3s linear;
+
+  &:hover {
+    cursor: pointer;
+    background-color: darken($background, 10%);
+  }
+}
+
+@mixin dark-theme {
+  //  background-color: red !important;
+    background-color: $dark-theme-background;
+    color: $dark-theme-text;
+
+    a {
+      color: $dark-theme-link;
+  
+      &:hover {
+        color: $dark-theme-link-hover;
+      }
+    }
+    
+    // h1,h2,h3,h4,h5,h6 {
+    
+    //   color: white
+    // }
+    .button {
+      @include button-style($dark-theme-button-bg, #ffffff, $dark-theme-button-border);
+    }
+  
+    .code {
+      background-color: $dark-theme-code-bg;
+      color: #e0e0e0;
+    }
+  
+    .header, .footer {
+      background-color: $dark-theme-header-footer-bg;
+    }
+
+    // 添加其他需要覆盖的样式
+  }
+
+body.dark-theme {
+    // color: #333333;
+  
+    h1,h2,h3,h4,h5,h6 {
+      color: #D4D4D4;
+    }
+  
+    ul li {
+      border-top: 1px solid #515862; /* 设置上边框颜色为黑色 */
+      // border-bottom: none; /* 设置下边框颜色为黑色 */
+      // padding: 8px 16px; /* 设置内边距 */
+    }
+    /* 其他浅色主题的样式 */
+  }
+
+//   /* 浅色主题样式 */
+body.light-theme {
+  background-color: #ffffff;
+  color: #333333;
+
+  /* 其他浅色主题的样式 */
+}
+
+
+body.light-theme, body.dark-theme {
+  transition: background-color 0.3s linear, color 0.3s linear !important;
+}
+
+
+/* 切换按钮的基础样式 */
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  // background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+.theme-switch .icon {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.5s;
+}
+
+
+/* 太阳和月亮图标样式 */
+.icon {
+  font-size: 24px; /* 根据需要调整图标大小 */
+}
+
+.container1 {
+  display: flex; /* 启用Flexbox布局 */
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 两端对齐，元素之间的间隔都相等 */
+}

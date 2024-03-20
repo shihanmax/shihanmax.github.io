@@ -1,5 +1,19 @@
 <header class="c-page__header">
+
+    <div class="container1">
         <h1>{{ site.description }}</h1>
+        <!-- 切换明暗模式的按钮 -->
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" style="display:none">
+            <span class="switch">
+                <span class="icon" id="theme-icon-moon">&#127762;</span> 
+                <span class="icon" id="theme-icon-sun">&#127773;</span>
+            </span>
+        </label>
+        
+       
+    </div>
+
 	{% if page.title == 'Home' %}
     <p>
         <a href="{{ "/" | prepend: site.baseurl }}">Home</a><span class="u-separate"></span>
