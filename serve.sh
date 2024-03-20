@@ -1,3 +1,3 @@
 # !/bin/bash
 bundle exec jekyll build
-bundle exec jekyll serve --port 8081 --livereload
+bundle exec jekyll serve --watch --port 8081

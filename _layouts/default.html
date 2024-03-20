@@ -7,35 +7,16 @@
         </main>
     </body>
     <script>
-        // 获取主题切换按钮和body的引用
+        // // 获取主题切换按钮和body的引用
         const toggle = document.getElementById('theme-toggle');
         const body = document.body;
         
-        // 获取主题切换复选框和图标元素
+        // // 获取主题切换复选框和图标元素
         const moonIcon = document.getElementById('theme-icon-moon');
-        const sumIcon = document.getElementById('theme-icon-sun');
+        const sunIcon = document.getElementById('theme-icon-sun');
 
         // 检测系统主题偏好
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        function setMoon() {
-          // 设置图标为月亮图标
-          moonIcon.style.display = 'block';
-          sumIcon.style.display = 'none';
-        }
-
-        function setSun() {
-          // 设置图标为太阳图标
-          moonIcon.style.display = 'none';
-          sumIcon.style.display = 'block';
-        }
-
-        // 根据系统主题偏好设置初始图标
-        if (prefersDarkScheme) {
-          setMoon();
-        } else {
-            setSum();
-        }
 
         // 设置用户偏好的函数（可以存储在localStorage或Cookie中）
         function setUserPreference(preference) {
@@ -43,73 +24,60 @@
           localStorage.setItem('themePreference', preference);
         }
 
-        // 获取当前主题
-        function getCurrentTheme() {
-            // 检查body元素是否有'dark-theme'类
-            if (document.body.classList.contains('dark-theme')) {
-                return 'dark';
-            }
-            // 检查body元素是否有'light-theme'类
-            else if (document.body.classList.contains('light-theme')) {
-                return 'light';
-            }
-            // 如果没有任何主题类，根据系统偏好返回默认主题
-            else {
-                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                return prefersDarkScheme ? 'dark' : 'light';
-            }
-        }
-
         // 页面加载时设置初始主题
         function setInitialTheme() {
           const savedPreference = localStorage.getItem('themePreference');
+
           if (savedPreference) {
             // 如果保存了主题，则使用
             if (savedPreference === 'dark') {
-                body.classList.add('dark-theme');
-                body.classList.remove('light-theme');
-                setSun();
+                setToDark();
             } else {
-                body.classList.remove('dark-theme');
-                body.classList.add('light-theme');
-                setMoon();
+                setToLight();
             }
           } else {
             // 如果从未保存过主题，则使用系统默认主题
             if (prefersDarkScheme) {
-                body.classList.add('dark-theme');
-                body.classList.remove('light-theme');
-                setSun();
+                setToDark();
             } else {
-                body.classList.add('light-theme');
-                body.classList.remove('dark-theme');
-                setMoon();
+                setToLight();
             }
           }
         }
 
         // 监听主题切换
         toggle.addEventListener('change', () => {
-          if (toggle.checked) {
-            body.classList.add('dark-theme');
-            body.classList.remove('light-theme');
-            setSun();
-          } else {
-            body.classList.remove('dark-theme');
-            body.classList.add('light-theme');
-            setMoon();
-          }
-          // 保存用户主题偏好
-          setUserPreference(toggle.checked ? 'dark' : 'light');
+            if (sunIcon.style.display === 'block') {
+                setToLight();
+            } else {
+                setToDark();
+            }
         });
       
-        // 调用函数设置初始主题
-        setInitialTheme();
-      
-        const curr_theme = getCurrentTheme()
+        function setToDark() {
+            moonIcon.style.display = 'none';
+            sunIcon.style.display = 'block';
+            body.style.backgroundColor = '#1a1a1a'; // 直接设置背景颜色
+            // body.style.color = '#d8d8d8'; // 直接设置文字颜色
+            body.classList.add('dark-theme')
+            body.classList.remove('light-theme')
+            setUserPreference('dark')
+        }
 
-        // 根据系统主题偏好设置按钮的初始状态
-        toggle.checked = curr_theme === 'dark';
+        function setToLight() {
+            moonIcon.style.display = 'block';
+            sunIcon.style.display = 'none';
+            body.style.backgroundColor = '#ffffff'; // 直接设置背景颜色
+            // body.style.color = '#333333'; // 直接设置文字颜色
+            body.classList.add('light-theme')
+            body.classList.remove('dark-theme')
+
+            // 其他样式的直接应用...
+            setUserPreference('light')
+        }
+        
+        setInitialTheme()
+
       </script>
 
 </html>
