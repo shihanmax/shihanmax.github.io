@@ -1,3 +1,4 @@
 # !/bin/bash
 bundle exec jekyll build
-bundle exec jekyll serve --watch --port 8081
+
+bundle exec jekyll serve --port 8081 --watch
