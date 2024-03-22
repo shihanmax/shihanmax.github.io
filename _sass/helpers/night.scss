@@ -28,6 +28,10 @@ body.dark-theme {
     .c-archives__list .c-archives__item {
       border-top: 1px solid #515862; /* 设置上边框颜色为黑色 */
     }
+
+    img {
+      filter: brightness(0.8) saturate(1.25);
+    }
   }
 
 //   /* 浅色主题样式 */
