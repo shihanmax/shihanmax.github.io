@@ -105,6 +105,7 @@ $$T = \frac{8 \times N_{tokens} \times N_{parameters}}{GPU数 \times GPU峰值fl
 
 ## 参考
 
-1. [Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165.pdf)
+1. [浅谈后向传递的计算量大约是前向传递的两倍](https://zhuanlan.zhihu.com/p/675517271)
 2. [分析transformer模型的参数量、计算量、中间激活、KV cache](https://zhuanlan.zhihu.com/p/624740065)
-3. [Attention is all you need](https://arxiv.org/pdf/1706.03762.pdf)
+3. [Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165.pdf)
+4. [Attention is all you need](https://arxiv.org/pdf/1706.03762.pdf)
