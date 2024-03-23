@@ -61,7 +61,7 @@ Qwen-1.8B：$l=24, h=2048, \mid V\mid = 151851$，按上述公式计算得，参
 - 参数梯度：fp16
 - 优化器状态：fp32的一阶、二阶动量、fp32的模型参数、fp32的参数梯度
 
-一个fp16的数据占用2个byte、fp32占用4个byte，因此，对于参数量为$\Phi$的模型来说，共需要$(2+2+4\*4) \Phi = 20 \Phi$的空间，例，一个7B的模型，大约需要$20*7*10^9/1024^3 \approx 130 GB$显存空间。
+一个fp16的数据占用2个byte、fp32占用4个byte，因此，对于参数量为$\Phi$的模型来说，共需要$(2+2+4 \* 4) \Phi = 20 \Phi$的空间，例，一个7B的模型，大约需要$20 \* 7 \* 10^9 / 1024^3 \approx 130 GB$显存空间。
 
 
 ## 训练计算量估计
@@ -73,7 +73,7 @@ self attention计算量：
 
 - 计算$Q, K, V$： 三次$x^{b\times L \times h} \cdot W_Q^{h \times h}$：运算量为$3 * 2bLh^2=6bLh^2$
 - 计算$QK^{T}$：$Q^{b\times n_{head} \times L \times h_{head}} \cdot K^{b\times n_{head} \times  h_{head} \times L}$：运算量为$2bn_{head} h_{head} L^2=2bL^2h$ ($n_{head} h_{head}=h$)
-- 计算$score * V$：$S^{b\times n_{head} \times L \times L} \cdot V^{b \times n_{head} \times h_{head} \times L}$：运算量为$2bn_{head}h_{head}L^2=2bL^2h$
+- 计算$score \* V$：$S^{b\times n_{head} \times L \times L} \cdot V^{b \times n_{head} \times h_{head} \times L}$：运算量为$2bn_{head}h_{head}L^2=2bL^2h$
 - 结果线性映射：$O^{b \times L \times h} \cdot W_O^{h \times h}$：运算量为$2bLh^2$
 
 MLP层计算量：
