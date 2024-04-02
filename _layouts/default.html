@@ -14,7 +14,8 @@
         // // 获取主题切换复选框和图标元素
         const moonIcon = document.getElementById('theme-icon-moon');
         const sunIcon = document.getElementById('theme-icon-sun');
-
+        const codeBLock = document.getElementById('highlight');
+        
         // 检测系统主题偏好
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
@@ -57,6 +58,8 @@
         function setToDark() {
             moonIcon.style.display = 'none';
             sunIcon.style.display = 'block';
+            codeBLock.style.backgroundColor = '#282a36'; // 设置代码块的背景颜色
+            
             body.style.backgroundColor = '#1a1a1a'; // 直接设置背景颜色
             // body.style.color = '#d8d8d8'; // 直接设置文字颜色
             body.classList.add('dark-theme')
