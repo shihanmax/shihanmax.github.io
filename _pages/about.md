@@ -13,4 +13,4 @@ I am an NLP algorithm engineer currently working at [Ant Group](https://www.antg
 
 <center>热爱生活，保持理智，相信未来。</center>
 
-<center>"Run when you can, walk if you have to, crawl if you must; just never give up." -- Dean Karnazes</center>
+<!--center>"Run when you can, walk if you have to, crawl if you must; just never give up." -- Dean Karnazes</center>
