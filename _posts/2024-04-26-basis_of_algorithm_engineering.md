@@ -47,7 +47,7 @@ class MySquare(Function):
 
 下面是一个简单模型的前向和反向计算示例，展示了前向和反向传播的计算过程，以及计算过程中需要保存的一些中间变量。假设模型为$\hat{z}=x * W + b$，损失函数为$L=\frac{1}{2} (z-\hat{z})^2$，绘制出前向传播和反向传播图如下：
 
-<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/autograd.png" alt="autograd" width="70%" >
+<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/autograd.png" alt="autograd" width="100%" >
 
 根据链式求导法则，可以得到$W$和$b$的更新公式：（假设学习率为$lr$）
 
