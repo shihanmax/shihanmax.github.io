@@ -51,7 +51,9 @@ class MySquare(Function):
 
 根据链式求导法则，可以得到$W$和$b$的更新公式：（假设学习率为$lr$）
 
-$$W_{next} = W_{old} - lr * \frac{dL}{dW}\\ b_{next} = b_{old} - lr * \frac{dL}{db}$$
+$$W_{next} = W_{old} - lr * \frac{dL}{dW}$$
+
+$$ b_{next} = b_{old} - lr * \frac{dL}{db}$$
 
 ## GPU与算力
 
