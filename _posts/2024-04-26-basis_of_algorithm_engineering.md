@@ -68,7 +68,7 @@ $$ b_{next} = b_{old} - lr * \frac{dL}{db}$$
 
 计算密度（Compute Intensity）是指在执行计算任务时，单位内存交换量（访存量）所进行的计算量。它通常用来描述计算任务的计算与内存访问需求之间的关系。计算密度可以通过下面的公式来计算:
 
-$$ \text{Compute Intensity} = \frac{\text{Total Number of Operations(FLOPS)}}{\text{Number of Input \& Output Points(Bytes)}} $$
+$$ \text{Compute Intensity} = \frac{\text{Total Number of Operations(FLOPS)}}{\text{Number of Input/Output Points(Bytes)}} $$
 
 
 算力密度较低时，程序访存多但计算少，整体性能受内存带宽限制，称为访存密集型程序，在此阶段，程序的性能有一个上界：计算密度\*带宽；如果算力密度较大，性能逼近设备峰值性能，称为计算密集型任务。
