@@ -7,7 +7,8 @@
 @import
     'helpers/mixins',
     'helpers/variables',
-    'helpers/night';  // dark theme
+    'helpers/night',  // dark theme
+    'helpers/tables';  // table 样式
 
 // Base
 @import
@@ -28,19 +29,3 @@
 // Vendor
 @import
     'vendor/highlight';
-
-
-// // 激活深色主题样式
-// @media (prefers-color-scheme: dark) {
-//     body {
-//       @include dark-theme;
-//     }
-//   }
-
-// @media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
-//     body.light-theme {
-//         background-color: #ffffff; /* 浅色背景 */
-//         color: #333333; /* 深色文本 */
-//         /* 其他覆盖深色模式样式的规则 */
-//     }
-// }

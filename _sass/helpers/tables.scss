@@ -1,0 +1,37 @@
+
+
+.c-article__main table:not(.rouge-table) {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; /* 确保各列的宽度是固定的 */
+  }
+  
+  .c-article__main table:not(.rouge-table) th,
+  .c-article__main table:not(.rouge-table) td {
+    border: 1px solid #ddd; /* 边框颜色 */
+    text-align: left;
+    padding: 8px;
+    // border: 1px solid #000;
+    // padding: 8px;
+  }
+  
+  
+  /* 为奇数行设置背景颜色 */
+  .c-article__main table:not(.rouge-table) tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  /* 为偶数行设置背景颜色 */
+  .c-article__main table:not(.rouge-table) tr:nth-child(even) {
+    background-color: #fff;
+  }
+  
+  .c-article__main table:not(.rouge-table) th {
+    background-color: #0067FB;
+    color: white;
+  }
+  
+  /* 确保表头的边框颜色与背景相匹配 */
+  .c-article__main table:not(.rouge-table) th:nth-child(-n+2) th {
+    border-color: #0067FB;
+  }
