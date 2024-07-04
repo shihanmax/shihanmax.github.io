@@ -7,7 +7,9 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译）。Chapter 1: Why CUDA? Why Now?
+本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译），第一章 为什么现在需要CUDA。
+
+# Chapter 1: Why CUDA? Why Now?
 
 ## 并行计算时代
 
