@@ -2,11 +2,11 @@
 title:  "GPU高性能编程CUDA实战（CUDA By Example）阅读笔记：1"
 layout: post
 date: 2024-07-04 23:56:18
-tags:  ["CUDA", "HPC", "CBE"]
+tags:  ["CUDA", "HPC", "CUDA By Example Notes"]
 syntaxHighlighter: yes
 mathjax: true
 ---
-更新中，全集：[《CUDA By Example》阅读笔记](tags/#CUDA%20By%20Example%20Notes)
+更新中，全集：[《CUDA By Example》阅读笔记](http://shihanmax.top/tags/#CUDA%20By%20Example%20Notes)
 
 本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译），第一章 为什么现在需要CUDA。
 
