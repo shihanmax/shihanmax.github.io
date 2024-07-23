@@ -7,7 +7,7 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
-这周的paper reading小结。
+近期的paper reading小结。
 
 ### [REBEL: Relation Extraction By End-to-end Language generation（Findings of EMNLP 21）](https://aclanthology.org/2021.findings-emnlp.204/)
 
@@ -70,7 +70,6 @@ $$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 - 权重$\lambda$的影响是怎样的
 
 
-## W3
 ### [Is Graph Structure Necessary for Multi-hop Question Answering?（EMNLP 20）](https://aclanthology.org/2020.emnlp-main.583.pdf)
 
 来自EMNLP 20的一篇短文，讨论了在多跳事实问答中使用图结构的必要性。结论是，在强大的预训练语言模型的加持下，图结构必要性不强。
@@ -117,8 +116,6 @@ $$t_i= \lambda \cdot t_i + (1-\lambda ) \cdot \mathrm{MLM}(t_i)$$
 ```
 
 然后提出结构模式指示器（SSI），即一个基于模式的prompt机制，用于控制属于中哪些信息需要抽取。
-
-## W4
 
 ### [Pre-training to Match for Unified Low-shot Relation Extraction](https://aclanthology.org/2022.acl-long.397.pdf)
 
