@@ -6,6 +6,7 @@ tags:  ["CUDA", "HPC", "CUDA By Example Notes"]
 syntaxHighlighter: yes
 mathjax: true
 ---
+
 更新中，全集：[《CUDA By Example》阅读笔记](http://shihanmax.top/tags/#CUDA%20By%20Example%20Notes)
 
 本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译），第一章 为什么现在需要CUDA。
