@@ -1,6 +1,24 @@
 ---
 layout: page
 ---
+{% if site.toc %}
+  <div class="container">  
+    <div class="contents">
+      <article class="markdown-body">
+        {{ page.content }}
+      </article>
+    </div>   
+    <div class="table-of-contents">
+      <h2>Contents</h2>
+      {% include toc.html html=content %}
+    </div>
+  </div>
+{% else %}
+  <article class="markdown-body">
+    {{ page.content }}
+  </article>
+{% endif %}
+
 <article class="c-article">
     <header class="c-article__header">
         <h1 class="c-article__title">{{ page.title }}</h1>
