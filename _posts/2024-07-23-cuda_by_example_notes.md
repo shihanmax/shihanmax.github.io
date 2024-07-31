@@ -15,6 +15,8 @@ mathjax: true
 > - 2024-07-18: 更新第二章：Getting Started
 > - 2024-07-04: 更新第一章：Why CUDA? Why Now?
 
+分割线
+-------
 
 本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译）。
 
