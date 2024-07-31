@@ -10,10 +10,10 @@ mathjax: true
 ⌛️更新中（last update: 2024-07-31）
 
 > Changelog:
-> - 2024-07-04: 更新第一章：Why CUDA? Why Now?
-> - 2024-07-18: 更新第二章：Getting Started
-> - 2024-07-23: 更新第三章：Introduction to CUDA C
 > - 2024-07-31: 更新第四章：Parallel Programming in CUDA C
+> - 2024-07-23: 更新第三章：Introduction to CUDA C
+> - 2024-07-18: 更新第二章：Getting Started
+> - 2024-07-04: 更新第一章：Why CUDA? Why Now?
 
 
 本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译）。
