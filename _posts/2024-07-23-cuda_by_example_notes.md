@@ -181,8 +181,6 @@ int main(void) {
 如何查询设备的详细信息？可以使用`cudaGetDeviceCount()`，这个方法将返回一个`cudaDeviceProp`的结构，保存着设备描述、内存量、寄存器数量、线程束（Warp）中包含的线程数量等。在实际编程过程中，我们可能需要特定的功能，这些特定的功能可能对显卡的有一定的要求，我们可以将这些设备要求构造为一个`cudaDeviceProp`的结构体，并通过`cudaChooseDevice()`来选择满足要求的设备。
 
 
-下面是格式化后的博客内容：
-
 ## 第四章 CUDA C并行编程 (Parallel Programming in CUDA C)
 
 ### 本章目标：
