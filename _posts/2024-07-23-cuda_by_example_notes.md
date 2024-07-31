@@ -7,6 +7,8 @@ syntaxHighlighter: yes
 mathjax: true
 ---
 
+* 导航
+{:toc #markdown-toc}
 
 ⌛️更新中（last update: 2024-07-31）
 
@@ -356,7 +358,7 @@ __global__ void kernel(unsigned char *ptr) {
     int y = blockIdx.y;
     int offset = x + y * gridDim.x; // 线性偏移
     int juliaValue = julia(x, y); // 判断(x, y)对应的点是否属于 Julia 集
-    
+
     ptr[offset * 4 + 0] = 255 * juliaValue;
     ptr[offset * 4 + 1] = 0;
     ptr[offset * 4 + 2] = 0;

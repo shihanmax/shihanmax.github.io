@@ -8,7 +8,6 @@ layout: page
         <p class="c-article__time"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></p>
     </header>
     <div class="c-article__main">
-        {% include toc.html html=content %}
         {{ content }}
 		{% include comment.html %}
     </div>
