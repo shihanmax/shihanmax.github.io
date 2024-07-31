@@ -185,8 +185,8 @@ int main(void) {
 
 ### 本章目标：
 
-- CUDA实现并行的重要方式。
-- 使用CUDA C编写一段并行代码。
+- CUDA实现并行的重要方式
+- 使用CUDA C编写一段并行代码
 
 考虑一段在CPU上运行的计算矢量和的代码：
 
@@ -253,13 +253,14 @@ __global__ void add(int *a, int **b, int *c) {
 }
 ```
 
-上述代码中，`add<<<N, 1>>>`中的`N`表示执行该核函数时使用的并行线程块的数量，实际执行中，GPU会运算该核函数的`N`个副本。由于CUDA支持二维线程块数组，`add()`函数中的代码`int tid = blockIdx.x;`通过`blockIdx.x`来获取线程的位置。还有一点，我们增加了判断`if (tid < N)`是为了避免`tid`越界（通常情况下是的）。
+上述代码中，`add<<<N, 1>>>`中的`N`表示执行该核函数时使用的并行线程块的数量，实际执行中，GPU会运算该核函数的`N`个副本。由于CUDA支持二维线程块数组，`add()`函数中的代码`int tid = blockIdx.x;`通过`blockIdx.x`来获取线程的位置。还有一点，我们增加了判断`if (tid < N)`是为了避免`tid`越界（通常情况下条件是满足的）。
 
 上述例子展示了使用CUDA计算两个N维矢量和是如此的简单，如果我们想扩大`N`，比如计算两个20000维的矢量的和，我们只需要将`N`设置为20000即可，这样代码运行时就可以一次性启动20000个线程，并行地完成计算。目前，CUDA限制`N`最大为65535。
 
-下面我们看一个有趣一些的例子：绘制Julia集的曲线🐶。
+上面计算矢量和的例子可能有些无聊，接下来我们看一个有趣一些的例子：绘制 Julia 集的曲线🐶。
 
 ### Julia集定义
+
 满足某个复数计算函数的所有的点构成的边界。算法如下：通过一个等式对复平面中的点求值，如果迭代过程中值发散了，这个点不属于Julia集。迭代等式为：$Z_{n+1} = Z_n^2 + C$
 
 首先看一下基于CPU的实现：
@@ -336,20 +337,26 @@ struct cuComplex {
 int main(void) {
     CPUBitmap bitmap(DIM, DIM);
     unsigned char *dev_bitmap; // 申请设备指针
+
     HANDLE_ERROR(cudaMalloc((void **) &dev_bitmap, bitmap.image_size())); // 分配设备内存
-    dim3 grid(DIM, DIM); // 初始化grid和block
+    
+    dim3 grid(DIM, DIM); // 初始化grid和block，dim3类型来自 CUDA 头文件，表示一个三位数组，当我们使用两个参数来初始化时，CUDA runtime 会自动把第三位设置为1
     kernel<<<grid, 1>>>(dev_bitmap);
+
     HANDLE_ERROR(cudaMemcpy(bitmap.get_ptr(), dev_bitmap, bitmap.image_size(), cudaMemcpyDeviceToHost)); // 设备内存复制到主机
+
     bitmap.display_and_exit();
+
     cudaFree(dev_bitmap);
 }
 
-// kernel实现
+// CUDA 版本的 kernel 实现：
 __global__ void kernel(unsigned char *ptr) {
     int x = blockIdx.x;
     int y = blockIdx.y;
     int offset = x + y * gridDim.x; // 线性偏移
     int juliaValue = julia(x, y); // 判断(x, y)对应的点是否属于 Julia 集
+    
     ptr[offset * 4 + 0] = 255 * juliaValue;
     ptr[offset * 4 + 1] = 0;
     ptr[offset * 4 + 2] = 0;
