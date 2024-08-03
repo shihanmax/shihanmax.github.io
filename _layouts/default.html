@@ -1,93 +1,147 @@
 <!DOCTYPE html>
 <html>
-    {% include head.html %}
-    <body>
-        <main class="u-container">
+{% include head.html %}
+
+<body>
+    <main class="u-container">
         {{ content }}
-        </main>
-    </body>
-    <script>
-        // baidu analysis
-        var _hmt = _hmt || [];
-        (function() {
+    </main>
+</body>
+<script>
+    // baidu analysis
+    var _hmt = _hmt || [];
+    (function () {
         var hm = document.createElement("script");
         hm.src = "https://hm.baidu.com/hm.js?6a7309420b13551443ee226a20c9f7b2";
-        var s = document.getElementsByTagName("script")[0]; 
+        var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(hm, s);
-        })();
+    })();
 
-        // // 获取主题切换按钮和body的引用
-        const toggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        
-        // // 获取主题切换复选框和图标元素
-        const moonIcon = document.getElementById('theme-icon-moon');
-        const sunIcon = document.getElementById('theme-icon-sun');
-        
-        // 检测系统主题偏好
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // // 获取主题切换按钮和body的引用
+    const toggle = document.getElementById('theme-toggle');
+    const body = document.body;
 
-        // 设置用户偏好的函数（可以存储在localStorage或Cookie中）
-        function setUserPreference(preference) {
-          // 示例：存储在localStorage中
-          localStorage.setItem('themePreference', preference);
-        }
+    // // 获取主题切换复选框和图标元素
+    const moonIcon = document.getElementById('theme-icon-moon');
+    const sunIcon = document.getElementById('theme-icon-sun');
 
-        // 页面加载时设置初始主题
-        function setInitialTheme() {
-          const savedPreference = localStorage.getItem('themePreference');
+    // 检测系统主题偏好
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-          if (savedPreference) {
+    // 设置用户偏好的函数（可以存储在localStorage或Cookie中）
+    function setUserPreference(preference) {
+        // 示例：存储在localStorage中
+        localStorage.setItem('themePreference', preference);
+    }
+
+    // 页面加载时设置初始主题
+    function setInitialTheme() {
+        const savedPreference = localStorage.getItem('themePreference');
+
+        if (savedPreference) {
             // 如果保存了主题，则使用
             if (savedPreference === 'dark') {
                 setToDark();
             } else {
                 setToLight();
             }
-          } else {
+        } else {
             // 如果从未保存过主题，则使用系统默认主题
             if (prefersDarkScheme) {
                 setToDark();
             } else {
                 setToLight();
             }
-          }
         }
+    }
 
-        // 监听主题切换
-        toggle.addEventListener('change', () => {
-            if (sunIcon.style.display === 'block') {
-                setToLight();
-            } else {
-                setToDark();
-            }
-        });
-      
-        function setToDark() {
-            moonIcon.style.display = 'none';
-            sunIcon.style.display = 'block';
-
-            body.style.backgroundColor = '#1a1a1a'; // 直接设置背景颜色
-            // body.style.color = '#d8d8d8'; // 直接设置文字颜色
-            body.classList.add('dark-theme')
-            body.classList.remove('light-theme')
-            setUserPreference('dark')
+    // 监听主题切换
+    toggle.addEventListener('change', () => {
+        if (sunIcon.style.display === 'block') {
+            setToLight();
+        } else {
+            setToDark();
         }
+    });
 
-        function setToLight() {
-            moonIcon.style.display = 'block';
-            sunIcon.style.display = 'none';
-            body.style.backgroundColor = '#ffffff'; // 直接设置背景颜色
-            // body.style.color = '#333333'; // 直接设置文字颜色
-            body.classList.add('light-theme')
-            body.classList.remove('dark-theme')
+    function setToDark() {
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+        body.style.backgroundColor = '#181818'; // 直接设置背景颜色
+        body.classList.add('dark-theme')
+        body.classList.remove('light-theme')
+        setUserPreference('dark')
+    }
 
-            // 其他样式的直接应用...
-            setUserPreference('light')
-        }
+    function setToLight() {
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+        // body.style.backgroundColor = '#ffffff'; // 直接设置背景颜色
+        body.style.backgroundColor = '#f5f5f5'; // 直接设置背景颜色
+        // body.style.color = '#333333'; // 直接设置文字颜色
+        body.classList.add('light-theme')
+        body.classList.remove('dark-theme')
+
+        // 其他样式的直接应用...
+        setUserPreference('light')
+    }
+
+    setInitialTheme()
+
+</script>
+<!--script>
+    // ads
+    document.addEventListener('DOMContentLoaded', function () {
+        var image = document.getElementById('image');
+        var bubble = document.getElementById('bubble');
+        var ads = document.getElementById('ads');  // ad link
+        var message = document.getElementById('message');  // 右上角的消息框
+
+        const show_ads = localStorage.getItem('show_ads');
         
-        setInitialTheme()
+        if (show_ads) {
+            let parts = show_ads.split(",");
+            let lastClick = parts[1];
+            let show = parts[0];
+            let freshness = 1 * 24 * 60 * 60; // 1天
 
-      </script>
+            if (show === 'false' && (Date.now() - lastClick < freshness)) {
+                ads.style.display = 'none'; 
+                console.log("user set ads -> false")
+            } else {
+                localStorage.setItem('show_ads', `false,${Date.now()}`);
+                ads.style.display = 'block';
+                console.log("cache not fresh, show ads")
+            }
+        } else {
+            ads.style.display = 'block';
+            console.log("no ads setting")
+        }
+
+
+        image.addEventListener('mouseover', function () {
+            bubble.style.display = 'block';
+        });
+
+        image.addEventListener('mouseout', function () {
+            bubble.style.display = 'none';
+        });
+
+        image.addEventListener('click', function () {
+            localStorage.setItem('show_ads', `false,${Date.now()}`);
+
+            ads.style.display = 'none';
+            
+            // 点击图片时显示提示文字
+            message.style.display = 'block';
+
+            // 设置2秒后隐藏提示文字
+            setTimeout(function () {
+                message.style.display = 'none';
+            }, 1500);  // 1500ms
+        });
+    });
+
+</script-->
 
 </html>

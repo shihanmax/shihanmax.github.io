@@ -20,11 +20,13 @@
         <a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a><span class="u-separate"></span>
         <a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a><span class="u-separate"></span>
         <a href="{{ "/about/" | prepend: site.baseurl }}">About</a>
-
+        {% include ad.html %}
     </p>
 	{% else %}
     <p>
         <a href="{{ "/" | prepend: site.baseurl }}">&lt; Back</a>
+        {% include ad.html %}
     </p>
 	{% endif %}
+
 </header>

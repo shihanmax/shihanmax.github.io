@@ -18,10 +18,16 @@ body {
 }
 
 body.dark-theme {
-    // color: #333333;
-  
+
+    .c-article__main {
+      color: #999999;
+      opacity: 0.9;
+    }
+
     h1,h2,h3,h4,h5,h6 {
-      color: #D4D4D4;
+      color: #fff;
+      opacity: 0.9;
+
     }
     
     .c-archives__list .c-archives__item {
