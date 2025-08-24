@@ -28,7 +28,8 @@ source venv/bin/activate
 
 # 安装依赖
 echo "安装依赖..."
-pip3 install -r requirements.txt
+pip install --upgrade pip
+pip install -r requirements.txt
 
 # 创建日志目录
 mkdir -p logs
