@@ -2,7 +2,7 @@
 
 # 生产环境博客部署脚本
 # 启动博客应用和webhook服务
-# 优化版本：增强错误处理和日志显示
+# 优化版本：增强错误处理和日志显示，只使用venv虚拟环境
 
 set -e  # 遇到错误立即退出
 
@@ -91,14 +91,9 @@ else
     log_info "虚拟环境已存在"
 fi
 
-# 激活虚拟环境或conda环境
-if command -v conda &> /dev/null && conda env list | grep -q "blog"; then
-    log_info "激活conda环境: blog"
-    # 对于conda环境，我们在后续的命令中直接使用
-    PYTHON_CMD="conda run -n blog python"
-    PIP_CMD="conda run -n blog pip"
-elif [ -d "venv" ]; then
-    log_info "使用虚拟环境..."
+# 配置虚拟环境
+if [ -d "venv" ]; then
+    log_info "使用现有虚拟环境..."
     # 由于虚拟环境可能有路径问题，直接使用绝对路径
     VENV_PYTHON="$PROJECT_ROOT/venv/bin/python"
     VENV_PIP="$PROJECT_ROOT/venv/bin/pip"
@@ -110,6 +105,7 @@ elif [ -d "venv" ]; then
             log_warning "虚拟环境路径不匹配，重新创建..."
             rm -rf venv
             python3 -m venv venv
+            log_success "虚拟环境重新创建完成"
         fi
         PYTHON_CMD="$VENV_PYTHON"
         PIP_CMD="$VENV_PIP"
@@ -117,13 +113,16 @@ elif [ -d "venv" ]; then
         log_warning "虚拟环境损坏，重新创建..."
         rm -rf venv
         python3 -m venv venv
-        PYTHON_CMD="$VENV_PYTHON"
-        PIP_CMD="$VENV_PIP"
+        log_success "虚拟环境重新创建完成"
+        PYTHON_CMD="$PROJECT_ROOT/venv/bin/python"
+        PIP_CMD="$PROJECT_ROOT/venv/bin/pip"
     fi
 else
-    log_info "使用系统 Python..."
-    PYTHON_CMD="python3"
-    PIP_CMD="pip3"
+    log_info "创建新的虚拟环境..."
+    python3 -m venv venv
+    log_success "虚拟环境创建完成"
+    PYTHON_CMD="$PROJECT_ROOT/venv/bin/python"
+    PIP_CMD="$PROJECT_ROOT/venv/bin/pip"
 fi
 
 log_success "Python 环境配置完成: $PYTHON_CMD"
@@ -159,16 +158,16 @@ check_port() {
 
 # 启动函数
 start_blog_app() {
-    log_info "启动博客应用 (端口8081)..."
-    check_port 8081
+    log_info "启动博客应用 (端口8080)..."
+    check_port 8080
     
     cd "$PROJECT_ROOT"
     
     # 清空之前的日志
     > logs/blog_app.log
     
-    # 设置端口环境变量 (修正为8081，与webhook服务保持一致)
-    export PORT=8081
+    # 设置端口环境变量 (使用8080端口)
+    export PORT=8080
     
     # 启动应用
     nohup $PYTHON_CMD app.py > logs/blog_app.log 2>&1 &
@@ -185,12 +184,12 @@ start_blog_app() {
         show_live_logs "博客应用" "logs/blog_app.log" 5
         
         # 检查端口是否监听
-        if lsof -i:8081 &>/dev/null; then
-            log_success "博客应用启动成功 (PID: $pid, Port: 8081)"
-            log_info "访问地址: http://localhost:8081"
+        if lsof -i:8080 &>/dev/null; then
+            log_success "博客应用启动成功 (PID: $pid, Port: 8080)"
+            log_info "访问地址: http://localhost:8080"
             return 0
         else
-            log_error "博客应用启动失败 - 端口8081未监听"
+            log_error "博客应用启动失败 - 端口8080未监听"
             show_recent_logs "blog_app"
             return 1
         fi
@@ -282,7 +281,7 @@ stop_services() {
     fi
     
     # 强制清理端口
-    check_port 8081
+    check_port 8080
     check_port 8082
     
     if [ $stopped_count -gt 0 ]; then
@@ -302,11 +301,11 @@ check_status() {
     # 检查博客应用
     if [ -f logs/blog_app.pid ] && kill -0 $(cat logs/blog_app.pid) 2>/dev/null; then
         local pid=$(cat logs/blog_app.pid)
-        if lsof -i:8081 &>/dev/null; then
-            log_success "博客应用运行中 (PID: $pid, Port: 8081)"
-            echo "   访问地址: http://localhost:8081"
+        if lsof -i:8080 &>/dev/null; then
+            log_success "博客应用运行中 (PID: $pid, Port: 8080)"
+            echo "   访问地址: http://localhost:8080"
         else
-            log_warning "博客应用进程存在但端口8081未监听 (PID: $pid)"
+            log_warning "博客应用进程存在但端口8080未监听 (PID: $pid)"
             all_running=false
         fi
     else
@@ -333,7 +332,7 @@ check_status() {
     # 检查端口占用情况
     echo ""
     log_info "端口占用情况:"
-    echo "Port 8081: $(lsof -i:8081 2>/dev/null | wc -l | tr -d ' ') connections"
+    echo "Port 8080: $(lsof -i:8080 2>/dev/null | wc -l | tr -d ' ') connections"
     echo "Port 8082: $(lsof -i:8082 2>/dev/null | wc -l | tr -d ' ') connections"
     
     if $all_running; then
