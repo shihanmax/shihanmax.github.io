@@ -23,8 +23,9 @@ if [ ! -d "venv" ]; then
 fi
 
 # 激活虚拟环境
-echo "激活虚拟环境..."
-source venv/bin/activate
+# echo "激活虚拟环境..."
+# source venv/bin/activate
+conda activate blog
 
 # 安装依赖
 echo "安装依赖..."
@@ -46,12 +47,12 @@ check_port() {
 
 # 启动函数
 start_blog_app() {
-    echo "启动博客应用 (端口8080)..."
-    check_port 8080
+    echo "启动博客应用 (端口8081)..."
+    check_port 8081
     
     cd "$PROJECT_ROOT"
     # 设置端口环境变量
-    export PORT=8080
+    export PORT=8081
     nohup python3 app.py > logs/blog_app.log 2>&1 &
     echo $! > logs/blog_app.pid
     
@@ -85,7 +86,7 @@ stop_services() {
     fi
     
     # 强制清理端口
-    check_port 8080
+    check_port 8081
     check_port 8082
     
     echo "所有服务已停止"
@@ -98,7 +99,7 @@ check_status() {
     cd "$PROJECT_ROOT"
     if [ -f logs/blog_app.pid ] && kill -0 $(cat logs/blog_app.pid) 2>/dev/null; then
         echo "✅ 博客应用运行中 (PID: $(cat logs/blog_app.pid))"
-        echo "   访问地址: http://localhost:8080"
+        echo "   访问地址: http://localhost:8081"
     else
         echo "❌ 博客应用未运行"
     fi
