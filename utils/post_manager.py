@@ -1,0 +1,272 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+文章管理器 - 处理markdown文件读取、解析、分类等功能
+"""
+
+from logging import Logger
+
+
+import os
+import re
+import logging
+import frontmatter
+from datetime import datetime
+from collections import defaultdict, OrderedDict
+from typing import List, Dict, Optional, Tuple
+
+
+logger: Logger = logging.getLogger(__name__)
+        
+
+class PostManager:
+    
+    """文章管理器"""
+    
+    def _is_valid_filename(self, filename: str) -> bool:
+        return re.match(r'^\d{4}-\d{1,2}-\d{1,2}-', filename)
+    
+    def __init__(self, posts_dir: str, pages_dir: Optional[str] = None):
+        self.posts_dir = posts_dir
+        self.pages_dir = pages_dir or os.path.join(os.path.dirname(posts_dir), '_pages')
+        self._posts_cache = None
+        self._last_cache_time = None
+        self._rendered_cache = {}  # 缓存渲染后的HTML内容
+        self._page_cache = {}      # 缓存页面内容
+    
+    def _should_refresh_cache(self) -> bool:
+        """检查是否需要刷新缓存"""
+        if self._posts_cache is None or self._last_cache_time is None:
+            return True
+        
+        # 检查文件夹的最后修改时间
+        try:
+            posts_mtime = os.path.getmtime(self.posts_dir)
+            if posts_mtime > self._last_cache_time:
+                # 文件发生变化，清空渲染缓存
+                self._rendered_cache.clear()
+                self._page_cache.clear()
+                return True
+            return False
+        except OSError:
+            return True
+    
+    def _parse_filename(self, filename: str) -> Optional[Tuple[int, int, int, str]]:
+        """解析文件名，提取日期和slug"""
+        # 匹配格式：YYYY-MM-DD-title.md
+        pattern = r'^(\d{4})-(\d{1,2})-(\d{1,2})-(.+)\.md$'
+        match = re.match(pattern, filename)
+        
+        if match:
+            year, month, day, slug = match.groups()
+            try:
+                return int(year), int(month), int(day), slug
+            except ValueError:
+                print(f"Warning: Invalid date in filename {filename}")
+                return None
+        
+        # 对于不符合日期格式的文件，尝试生成默认日期
+        if filename.endswith('.md'):
+            # 获取文件的修改时间作为默认日期
+            try:
+                filepath = os.path.join(self.posts_dir, filename)
+                if os.path.exists(filepath):
+                    mtime = os.path.getmtime(filepath)
+                    dt = datetime.fromtimestamp(mtime)
+                    slug = filename[:-3]  # 移除.md扩展名
+                    print(f"Using file modification time for {filename}: {dt.year}-{dt.month:02d}-{dt.day:02d}")
+                    return dt.year, dt.month, dt.day, slug
+            except Exception as e:
+                print(f"Warning: Could not get file time for {filename}: {e}")
+        
+        print(f"Warning: Could not parse filename {filename}")
+        return None
+    
+    def _load_posts(self) -> List[Dict]:
+        """加载所有文章"""
+        posts = []
+        
+        if not os.path.exists(self.posts_dir):
+            print(f"Posts directory does not exist: {self.posts_dir}")
+            return posts
+        
+        files = [f for f in os.listdir(self.posts_dir) if f.endswith('.md')]
+        print(f"Found {len(files)} markdown files in {self.posts_dir}")
+        
+        for filename in files:
+            if not filename.endswith('.md'):
+                continue
+            
+            # 如果文件名不符合格式也跳过（不以yyyy-mm-dd-xxx.md开头）
+            if not self._is_valid_filename(filename):
+                logger.warning(f"Skipping file {filename} because it does not follow the format yyyy-mm-dd-xxx.md")
+                continue
+            
+            # 解析文件名
+            parsed = self._parse_filename(filename)
+            if not parsed:
+                print(f"Skipping file with unparseable name: {filename}")
+                continue
+            
+            year, month, day, slug = parsed
+            filepath = os.path.join(self.posts_dir, filename)
+            
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    post = frontmatter.load(f)
+                
+                # 构建文章数据
+                post_data = {
+                    'title': post.metadata.get('title', slug.replace('-', ' ').title()),
+                    'date': datetime(year, month, day),
+                    'slug': slug,
+                    'year': year,
+                    'month': month,
+                    'day': day,
+                    'content': post.content,
+                    'tags': post.metadata.get('tags', []),
+                    'categories': post.metadata.get('categories', []),
+                    'description': post.metadata.get('description', ''),
+                    'layout': post.metadata.get('layout', 'post'),
+                    'filename': filename,
+                    'filepath': filepath
+                }
+                
+                # 生成URL
+                post_data['url'] = f"/{year}/{month:02d}/{slug}"
+                
+                posts.append(post_data)
+                
+            except Exception as e:
+                print(f"Error loading post {filename}: {e}")
+                continue
+        
+        print(f"Successfully loaded {len(posts)} posts")
+        
+        # 按日期排序（最新的在前）
+        posts.sort(key=lambda x: x['date'], reverse=True)
+        return posts
+    
+    def get_all_posts(self) -> List[Dict]:
+        """获取所有文章"""
+        if self._should_refresh_cache():
+            self._posts_cache = self._load_posts()
+            self._last_cache_time = datetime.now().timestamp()
+        
+        return self._posts_cache or []
+    
+    def get_post_by_slug(self, year: int, month: int, slug: str) -> Optional[Dict]:
+        """根据年月和slug获取文章"""
+        posts = self.get_all_posts()
+        
+        for post in posts:
+            if (post['year'] == year and 
+                post['month'] == month and 
+                post['slug'] == slug):
+                return post
+        
+        return None
+    
+    def group_posts_by_year(self, posts: List[Dict]) -> OrderedDict:
+        """按年份分组文章"""
+        grouped = defaultdict(list)
+        
+        for post in posts:
+            grouped[post['year']].append(post)
+        
+        # 转换为有序字典，按年份降序
+        return OrderedDict(sorted(grouped.items(), reverse=True))
+    
+    def get_all_tags(self) -> Dict[str, List[Dict]]:
+        """获取所有标签及对应的文章"""
+        posts = self.get_all_posts()
+        tags = defaultdict(list)
+        
+        for post in posts:
+            for tag in post.get('tags', []):
+                tags[tag].append(post)
+        
+        # 按标签名排序
+        return dict(sorted(tags.items()))
+    
+    def get_posts_by_tag(self, tag: str) -> List[Dict]:
+        """获取指定标签的文章"""
+        posts = self.get_all_posts()
+        return [post for post in posts if tag in post.get('tags', [])]
+    
+    def get_recent_posts(self, limit: int = 10) -> List[Dict]:
+        """获取最近的文章"""
+        posts = self.get_all_posts()
+        return posts[:limit]
+    
+    def get_page_content(self, filename: str) -> Optional[Dict]:
+        """获取页面内容（about.md等）"""
+        # 检查缓存
+        if filename in self._page_cache:
+            return self._page_cache[filename]
+            
+        filepath = os.path.join(self.pages_dir, filename)
+        
+        if not os.path.exists(filepath):
+            return None
+        
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                page = frontmatter.load(f)
+            
+            page_data = {
+                'title': page.metadata.get('title', filename.replace('.md', '').title()),
+                'content': page.content,
+                'layout': page.metadata.get('layout', 'page'),
+                'metadata': page.metadata
+            }
+            
+            # 缓存结果
+            self._page_cache[filename] = page_data
+            return page_data
+            
+        except Exception as e:
+            print(f"Error loading page {filename}: {e}")
+            return None
+    
+    def get_rendered_post_content(self, year: int, month: int, slug: str, markdown_parser) -> Optional[str]:
+        """获取渲染后的文章HTML内容（带缓存）"""
+        cache_key = f"{year}-{month:02d}-{slug}"
+        
+        # 检查缓存
+        if cache_key in self._rendered_cache:
+            return self._rendered_cache[cache_key]
+        
+        # 获取文章数据
+        post = self.get_post_by_slug(year, month, slug)
+        if not post:
+            return None
+        
+        # 渲染markdown
+        rendered_content = markdown_parser.render(post['content'])
+        
+        # 缓存结果
+        self._rendered_cache[cache_key] = rendered_content
+        
+        return rendered_content
+    
+    def get_rendered_page_content(self, filename: str, markdown_parser) -> Optional[str]:
+        """获取渲染后的页面HTML内容（带缓存）"""
+        cache_key = f"page_{filename}"
+        
+        # 检查缓存
+        if cache_key in self._rendered_cache:
+            return self._rendered_cache[cache_key]
+        
+        # 获取页面数据
+        page = self.get_page_content(filename)
+        if not page:
+            return None
+        
+        # 渲染markdown
+        rendered_content = markdown_parser.render(page['content'])
+        
+        # 缓存结果
+        self._rendered_cache[cache_key] = rendered_content
+        
+        return rendered_content

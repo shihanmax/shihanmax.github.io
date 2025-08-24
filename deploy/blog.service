@@ -1,0 +1,28 @@
+# 博客系统systemd服务配置
+# 将此文件复制到 /etc/systemd/system/blog.service
+
+[Unit]
+Description=Blog System (Flask App + Webhook)
+After=network.target
+
+[Service]
+Type=forking
+User=your-username
+Group=your-group
+WorkingDirectory=/Users/shihanmax/Documents/code/blog/src
+ExecStart=/Users/shihanmax/Documents/code/blog/src/deploy_production.sh start
+ExecStop=/Users/shihanmax/Documents/code/blog/src/deploy_production.sh stop
+ExecReload=/Users/shihanmax/Documents/code/blog/src/deploy_production.sh restart
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# 使用方法:
+# 1. 修改User和Group为实际用户
+# 2. 修改路径为实际部署路径
+# 3. 复制到 /etc/systemd/system/blog.service
+# 4. sudo systemctl daemon-reload
+# 5. sudo systemctl enable blog.service
+# 6. sudo systemctl start blog.service

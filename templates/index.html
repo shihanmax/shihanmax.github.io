@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="c-archives">
+    {% for year, posts in posts_by_year.items() %}
+        <h2 class="c-archives__year" id="{{ year }}-ref">{{ year }}</h2>
+        <ul class="c-archives__list">
+            {% for post in posts %}
+            <li class="c-archives__item">
+                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                <p>{{ post.date.strftime('%b %-d, %Y') }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</section>
+{% endblock %}

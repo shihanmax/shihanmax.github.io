@@ -1,6 +1,0 @@
-source 'https://rubygems.org'
-gem 'webrick'
-gem 'github-pages'
-gem 'amp-jekyll'
-gem 'jekyll-sitemap'
-gem 'pygments.rb'
