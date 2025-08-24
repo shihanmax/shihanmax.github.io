@@ -34,7 +34,7 @@ mathjax: true
 
 下图是对文本表示方法的总体概括。
 
-<img src="http://static.shihanmax.top/?path=20210419134941_l43PzB_%E6%88%AA%E5%B1%8F2021-04-19%2013.49.38.jpeg" alt="word representation" style="zoom:50%;" />
+<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/20210419134941_l43PzB_%E6%88%AA%E5%B1%8F2021-04-19%2013.49.38.jpeg" alt="word representation" style="zoom:50%;" />
 
 ## 三、文本表示方法的演进
 
@@ -118,7 +118,7 @@ Word2vec是一种创建词嵌入（embedding）的方法$^{3}$，它假设“拥
 
 Word2vec的目标是计算一个词的表示（向量），通过这个向量，我们可以计算出词与词之间的相似情况等。它的训练方式主要有两种，对应上面的两个问题，由中心词预测上下文词，由上下文预测中心词。分别称为CBOW（continuous bag of words, C-BOW）和Skip-gram，二者的模型图如下：
 
-<img src="http://static.shihanmax.top/?path=20220508153731_UUadfc_%E6%88%AA%E5%B1%8F2022-05-08%20%E4%B8%8B%E5%8D%883.37.27.jpeg" alt="cbow and skipgram" style="zoom:35%;" />
+<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/20220508153731_UUadfc_%E6%88%AA%E5%B1%8F2022-05-08%20%E4%B8%8B%E5%8D%883.37.27.jpeg" alt="cbow and skipgram" style="zoom:35%;" />
 
 **CBOW** 
 CBOW模型使用上下文预测中心词，由上图，CBOW模型包含两个参数矩阵$W_{\vert V \vert \times N}$和$W'_{N \times \vert V \vert }$，其中$N$为词向量的维度，Word2vec的论文中设置为300。假设窗口大小为2，则输入为中心词的前两个词和后两个词，将所有单词从$0$到$\vert V \vert-1$进行编号后得到对应的onehot embedding，使用$W$分别将所有的窗口词投影到词向量空间，然后将所有的窗口词的表征相加，经过$W'$再投影回词表空间，得到一个$1\times \vert V \vert$的向量，使用$\mathbf{softmax}$可以得到预测出的中心词在词表空间中概率分布，调整交叉熵来调整两个权重矩阵，一般情况下使用$W$作为最后的词向量。
@@ -156,7 +156,7 @@ $$X_{ \vert V\vert \times \vert V \vert}$$
 
 NNLM（Neural Network Language Model）$^{6}$是2003年的一篇文章中提出的基于语言模型的文本表示方法，在这篇文章中首次提出了连续的低维词向量的概念。
 
-<img src="http://static.shihanmax.top/?path=20220509003722_slEYsw_%E6%88%AA%E5%B1%8F2022-05-09%20%E4%B8%8A%E5%8D%8812.37.18.jpeg" alt="NNLM" style="zoom:40%;" />
+<img src="https://imgbed4s.oss-cn-beijing.aliyuncs.com/20220509003722_slEYsw_%E6%88%AA%E5%B1%8F2022-05-09%20%E4%B8%8A%E5%8D%8812.37.18.jpeg" alt="NNLM" style="zoom:40%;" />
 
 在NNLM中，同样引入了N元的语言模型假设，即一个词出现的概率仅与其前$N-1$个词有关。针对词$w_i$，其上文的$N-1$个词汇为$\{ w_{i-n+1},...,w_{i-1} \}$，使用embedding lookup table：$ C_{ \vert V \vert \times m }$来获得这些词的隐藏向量，其中，$m$为词向量的维度，$\vert V \vert$表示词库的大小，接着，将上述$N-1$个$1\times m$的表征拼接起来，得到$1 \times m \times (N-1)$的向量$c$，通过公式：
 

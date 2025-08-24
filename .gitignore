@@ -108,7 +108,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+/_site
 
 # mypy
 .mypy_cache/
@@ -121,3 +121,5 @@ dmypy.json
 !/resource/
 output/
 /online_resources
+
+.sass-cache/

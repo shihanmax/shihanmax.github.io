@@ -38,16 +38,16 @@ $$l_s(\hat{x}_t^i, g_t^i) + l_e(\hat{x}_{t+1}^i, g_t^i)$$
 
 在一个batch中假设包含两条query，如下图
 
-<img src='http://static.shihanmax.top/?path=non-parametric-fig1.png' alt='on-parametric-fig1.png' style='zoom:50%;' />
+<img src='https://imgbed4s.oss-cn-beijing.aliyuncs.com/non-parametric-fig1.png' alt='on-parametric-fig1.png' style='zoom:50%;' />
 
 其中，第一段作为被mask的query，第二段作为其reference corpus，被mask的位置是短语the Seattle Seahawks，则，对于$\mathrm{[MASK_s]}$，其正样本为the分词后的第一个token，而其余所有token所构成的span则为负样本。
 
 
 ## inference
 
-<img src='http://static.shihanmax.top/?path=non-para-fig2.png' alt='non-para-fig2.png' style='zoom:66%' />
+<img src='https://imgbed4s.oss-cn-beijing.aliyuncs.com/non-para-fig2.png' alt='non-para-fig2.png' style='zoom:66%' />
 
-如上图，在inference阶段，reference corpus中的每一个文本均进行了tokenize操作，并且，分词后的每一个token都获得了对应的向量表征，在query中，Thessaloniki这个词被mask后，使用$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$两个token来代替，被替换后的query进入encoder，得到$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$分别对应的表征，接着，两个mask分别与vector space中的每一个token进行相似度计算，在预训练完成的情况下，我们预期能够得到，$\mathrm{[MASK_s]}$的表征$q^{start}$与Thessaloniki的起始位置的token：The的相似度最高，$\mathrm{[MASK_e]} $的表征$q^{end}$则与Thessaloniki的结束位置的token：iki的相似度最高。因此，被mask的位置应当检索出词汇Thessaloniki。
+如上图，在inference阶段，reference corpus中的每一个文本均进行了tokenize操作，并且，分词后的每一个token都获得了对应的向量表征，在query中，Thessaloniki这个词被mask后，使用$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$两个token来代替，被替换后的query进入encoder，得到$\mathrm{[MASK_s]}$和$\mathrm{[MASK_e]}$分别对应的表征，接着，两个mask分别与vector space中的每一个token进行相似度计算，在预训练完成的情况下，我们预期能够得到，$\mathrm{[MASK_s]}$的表征$q^{start}$与Thessaloniki的起始位置的token：The的相似度最高，$\mathrm{[MASK_e]}$的表征$q^{end}$则与Thessaloniki的结束位置的token：iki的相似度最高。因此，被mask的位置应当检索出词汇Thessaloniki。
 
 
 ## batch讨论

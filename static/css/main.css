@@ -1,0 +1,1029 @@
+/* ==========================================================================
+   博客主样式文件 - 转换自Jekyll SCSS
+   ========================================================================== */
+
+/* 变量定义 */
+:root {
+    /* Colors via Solarized */
+    --c-base-03: #0D2B35;
+    --c-base-02: #163541;
+    --c-base-01: #5C6E74;
+    --c-base-00: #697B82;
+    --c-base-0: #869395;
+    --c-base-1: #96A0A0;
+    --c-base-2: #EDE7D6;
+    --c-base-3: #FCF5E4;
+    
+    --c-accent-blue: #0067FB;
+    --c-accent-green: #8BE367;
+    
+    /* Theme colors */
+    --dark-theme-background: #1a1a1a;
+    --dark-theme-text: #d8d8d8;
+    --dark-theme-link: #58a6ff;
+    --dark-theme-link-hover: #81a2ff;
+    --dark-theme-button-bg: #4a4a4a;
+    --dark-theme-button-border: #333;
+    --dark-theme-code-bg: #282c34;
+    --dark-theme-header-footer-bg: #111;
+    
+    /* Breakpoints */
+    --bp-sm: 45rem; /* 450px */
+    
+    /* Spacing */
+    --spacing-unit: 30px;
+    
+    /* Borders */
+    --m-border: 1px solid var(--c-base-2);
+    
+    /* Transitions */
+    --transition-time: 0.5s;
+    --transition-effect: linear;
+}
+
+/* ==========================================================================
+   Reset和基础样式
+   ========================================================================== */
+
+/* Reset */
+body, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, hr,
+dl, dd, ol, ul, figure {
+    margin: 0;
+    padding: 0;
+}
+
+/* 基础样式 */
+html {
+    font-size: 57%; /* 使1rem = 5.7px，与原版Jekyll一致 */
+    min-height: 100%;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inconsolata', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'STHeiti', 'WenQuanYi Micro Hei', 'Droid Sans Fallback', 'SimSun', monospace;
+    font-size: 1.8rem; /* 18px */
+    line-height: 1.55;
+    font-weight: 350; /* 统一修改为350 */
+    color: #333333;
+    background-color: #f5f5f5;
+    -webkit-text-size-adjust: 100%;
+    transition: background-color 0.3s linear, color 0.3s linear;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 中文字符优化 */
+body, p, h1, h2, h3, h4, h5, h6, li, td, th {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* 垂直间距 - 与原版Jekyll一致 */
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+}
+
+/* 图片 */
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.img-responsive {
+    clear: both;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.3), 0 0 40px rgba(0,0,0,0.1) inset;
+}
+
+figure > img {
+    display: block;
+}
+
+figcaption {
+    font-size: 1.6rem;
+}
+
+/* 列表 */
+ul, ol {
+    margin-left: var(--spacing-unit);
+}
+
+li > ul,
+li > ol {
+    margin-bottom: 0;
+}
+
+/* 标题 */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 350; /* 统一修改为350 */
+}
+
+/* 链接 */
+a {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+a:visited {
+    color: var(--c-accent-blue); /* 访问过的链接保持与普通链接相同的颜色 */
+}
+
+a:hover {
+    color: #333333;
+    text-decoration: underline;
+}
+
+/* 引用块 */
+blockquote {
+    color: var(--c-base-01);
+    border-left: 4px solid var(--c-base-2);
+    padding-left: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    font-size: 1.8rem;
+    letter-spacing: -1px;
+    font-style: italic;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+/* 代码格式 - GitHub风格 */
+pre, code {
+    font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+    font-size: 1.4rem;
+    border-radius: 6px;
+}
+
+code {
+    padding: 2px 6px;
+    background-color: rgba(175, 184, 193, 0.2);
+    border: 1px solid rgba(175, 184, 193, 0.4);
+    font-size: 1.3rem;
+}
+
+pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 1.4rem;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border: 1px solid #d0d7de;
+}
+
+pre > code {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    font-size: inherit;
+}
+
+/* MathJax数学公式样式 */
+.MathJax {
+    font-size: 1.1em !important;
+}
+
+/* 行间公式居中显示 */
+.MathJax_Display {
+    text-align: center !important;
+    margin: 1em 0 !important;
+}
+
+/* 确保数学公式不会被截断 */
+.MathJax_Display,
+.MathJax {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 深色主题下的数学公式样式 */
+body.dark-theme .MathJax {
+    color: #d8d8d8 !important;
+}
+
+body.dark-theme .MathJax_Display {
+    color: #d8d8d8 !important;
+}
+
+/* ==========================================================================
+   布局组件
+   ========================================================================== */
+
+/* 容器 */
+.u-container {
+    max-width: calc(800px - (var(--spacing-unit) * 2));
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: calc(var(--spacing-unit) * 2); /* 60px - 页面上边距设置为2倍 */
+    padding-right: var(--spacing-unit);
+    padding-left: var(--spacing-unit);
+    /* 移除额外的内边距，与Jekyll版本保持一致 */
+}
+
+@media screen and (max-width: 800px) {
+    .u-container {
+        max-width: calc(800px - var(--spacing-unit));
+        margin-top: calc(var(--spacing-unit) * 2); /* 60px - 响应式设计下保持相同的上边距 */
+        padding-right: calc(var(--spacing-unit) / 2);
+        padding-left: calc(var(--spacing-unit) / 2);
+    }
+}
+
+/* 清除浮动 */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* ==========================================================================
+   页面组件
+   ========================================================================== */
+
+/* 文章归档 - 调整间距与Jekyll保持一致 */
+.c-archives {
+    margin-bottom: calc(var(--spacing-unit) * 2); /* 60px - 与Jekyll保持一致 */
+}
+
+.c-archives__year {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    line-height: 1.2; /* 调整行高以与头部保持一致 */
+    font-size: 3.2rem; /* 32px */
+    font-weight: 350; /* 统一修改为350 */
+    color: var(--c-base-02);
+}
+
+.c-archives__list {
+    margin-bottom: var(--spacing-unit); /* 30px - 增加列表与下一年份的间距 */
+    list-style: none;
+    margin-left: 0;
+}
+
+.c-archives__item {
+    padding-top: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    padding-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    border-top: 1px solid #DADDE1;
+    margin-bottom: 0; /* 移除多余的底部外边距 */
+}
+
+@media screen and (min-width: 45rem) {
+    .c-archives__item {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+}
+
+.c-archives__item h3 a {
+    color: var(--c-accent-blue); /* 保持蓝色 */
+    text-decoration: none;
+}
+
+.c-archives__item h3 a:hover {
+    color: var(--c-accent-blue); /* 鼠标悬停时保持蓝色不变 */
+    text-decoration: none; /* 鼠标悬停时不加下划线 */
+}
+
+.c-archives__item h3 a:visited {
+    color: var(--c-accent-blue); /* 访问过的链接保持蓝色 */
+}
+
+.c-archives__item h3 {
+    line-height: 1.5; /* 恢复标准行高 */
+    font-size: 1.8rem;
+    margin-bottom: 0;
+    font-weight: 350; /* 统一修改为350 */
+}
+
+.c-archives__item p {
+    line-height: 1.5; /* 恢复标准行高 */
+    font-size: 1.8rem;
+    color: #515862;
+    margin-bottom: 0;
+}
+
+/* 文章样式 */
+.c-article {
+    margin-bottom: 10rem;
+}
+
+.c-article__header {
+    margin-bottom: var(--spacing-unit); /* 30px - 与Jekyll标准一致 */
+}
+
+@media screen and (min-width: 45rem) {
+    .c-article__header {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: baseline;
+        -webkit-align-items: baseline;
+        -ms-flex-align: baseline;
+        align-items: baseline;
+    }
+}
+
+.c-article__title {
+    line-height: 1.5;
+    font-size: 3.2rem;
+    color: var(--c-base-02);
+}
+
+.c-article__title a {
+    color: var(--c-accent-blue); /* 保持蓝色 */
+    text-decoration: none;
+}
+
+.c-article__title a:hover {
+    color: var(--c-accent-blue); /* 文章标题鼠标悬停时保持蓝色不变 */
+    text-decoration: none; /* 不加下划线 */
+}
+
+.c-article__title a:visited {
+    color: var(--c-accent-blue); /* 访问过的文章标题保持蓝色 */
+}
+
+.c-article__time {
+    line-height: 1.55;
+    font-size: 1.8rem;
+    color: var(--c-base-01);
+}
+
+.c-article__main {
+    margin-bottom: var(--spacing-unit); /* 30px - 与Jekyll标准一致 */
+    line-height: 1.55;
+    font-size: 1.8rem;
+    color: var(--c-base-01);
+}
+
+.c-article__main > * {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+}
+
+.c-article__main h2 {
+    line-height: 1.5;
+    font-size: 2.4rem;
+}
+
+.c-article__main h3 {
+    line-height: 1.5;
+    font-size: 2rem;
+}
+
+.c-article__main h4 {
+    line-height: 1.6;
+    font-size: 1.8rem;
+}
+
+.c-article__main h5 {
+    line-height: 1.55;
+    font-size: 1.8rem;
+}
+
+.c-article__main strong {
+    color: var(--c-base-02);
+    font-weight: 350; /* 统一修改为350 */
+}
+
+.c-article__main blockquote {
+    border-left: 1px solid #DADDE1;
+}
+
+.c-article__main ul,
+.c-article__main ol {
+    margin-left: 2.1rem;
+}
+
+/* 表格样式 */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+.table th,
+.table td {
+    padding: 0.5rem;
+    border: 1px solid #DADDE1;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 350; /* 统一修改为350 */
+}
+
+/* 语法高亮 - GitHub风格支持行号 */
+.highlight {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    overflow-x: auto;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    position: relative;
+}
+
+.highlight pre {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 16px;
+    font-size: 1.4rem;
+    line-height: 1.45;
+    overflow-x: visible; /* 允许行号区域可见 */
+}
+
+.highlight code {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+}
+
+/* 行号表格样式调整 */
+.highlight table {
+    margin: 0;
+    border: none;
+}
+
+/* ==========================================================================
+   深色主题
+   ========================================================================== */
+
+/* 支持HTML根元素和body元素的主题类 */
+html.dark-theme,
+body.dark-theme {
+    background-color: var(--dark-theme-background);
+    color: var(--dark-theme-text);
+}
+
+/* 为HTML根元素添加过渡效果 */
+html {
+    transition: background-color 0.3s linear, color 0.3s linear;
+}
+
+html.dark-theme .c-article__main,
+body.dark-theme .c-article__main {
+    color: #999999;
+    opacity: 0.9;
+}
+
+html.dark-theme h1,
+html.dark-theme h2,
+html.dark-theme h3,
+html.dark-theme h4,
+html.dark-theme h5,
+html.dark-theme h6,
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6 {
+    color: #fff;
+    opacity: 0.9;
+}
+
+body.dark-theme .c-archives__list .c-archives__item {
+    border-top: 1px solid #515862;
+}
+
+body.dark-theme img {
+    filter: brightness(0.8) saturate(1.25);
+}
+
+body.dark-theme a {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme a:hover {
+    color: var(--dark-theme-link-hover);
+}
+
+body.dark-theme code,
+body.dark-theme pre {
+    background-color: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark-theme code {
+    background-color: rgba(110, 118, 129, 0.4); /* 文章正文中的行内代码保持背景色 */
+    border-color: rgba(110, 118, 129, 0.4);
+}
+
+/* 代码块内的代码元素应该是透明背景 */
+body.dark-theme .highlight code,
+body.dark-theme pre code {
+    background-color: transparent !important;
+    border: none !important;
+    color: inherit;
+}
+
+body.dark-theme .highlight {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+body.dark-theme .table th {
+    background-color: #2d2d2d;
+    border-color: #444C56;
+}
+
+body.dark-theme .table td {
+    border-color: #444C56;
+}
+
+body.dark-theme blockquote {
+    border-left-color: #515862;
+    color: #999;
+}
+
+/* 深色主题下的标签样式 */
+body.dark-theme .tag-cloud-link {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .tag-cloud-link:hover {
+    color: var(--dark-theme-link-hover);
+}
+
+body.dark-theme .listing-item time {
+    color: #999999;
+}
+
+body.dark-theme .listing-item a {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .listing-item a:hover {
+    color: var(--dark-theme-link-hover);
+}
+
+body.dark-theme hr {
+    border-color: #515862;
+}
+
+/* 深色主题下的文章标题链接样式 */
+body.dark-theme .c-archives__item h3 a,
+body.dark-theme .c-article__title a {
+    color: var(--dark-theme-link); /* 深色主题下保持蓝色 */
+}
+
+body.dark-theme .c-archives__item h3 a:hover,
+body.dark-theme .c-article__title a:hover {
+    color: var(--dark-theme-link); /* 深色主题下文章标题鼠标悬停时保持蓝色不变 */
+    text-decoration: none;
+}
+
+body.dark-theme .c-archives__item h3 a:visited,
+body.dark-theme .c-article__title a:visited {
+    color: var(--dark-theme-link); /* 深色主题下访问过的文章标题保持蓝色 */
+}
+
+/* 浅色主题 */
+html.light-theme,
+body.light-theme {
+    background-color: #f5f5f5;
+    color: #333333;
+}
+
+html.light-theme h1,
+html.light-theme h2,
+html.light-theme h3,
+html.light-theme h4,
+html.light-theme h5,
+html.light-theme h6,
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme h5,
+body.light-theme h6 {
+    color: #333333;
+}
+
+/* ==========================================================================
+   主题切换按钮 - 与原版Jekyll一致
+   ========================================================================== */
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+.theme-switch .icon {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.5s;
+    font-size: 24px; /* 与原版一致 */
+}
+
+.container1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ==========================================================================
+   导航和页眉页脚
+   ========================================================================== */
+
+/* 页面头部 - 主要导航区域 */
+.c-page__header {
+    margin-bottom: calc(var(--spacing-unit) * 2); /* 60px - 导航链接与下面元素的间距调整为2倍 */
+}
+
+.c-page__header h1 {
+    font-size: 2.6rem;
+    line-height: 1.2;
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 标题下方间距 */
+    color: var(--c-base-02);
+    font-weight: 350; /* 统一修改为350 */
+}
+
+.c-page__header p {
+    line-height: 1.5;
+    font-size: 1.8rem;
+    margin-bottom: 0;
+}
+
+.c-page__header a {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+.c-page__header a:hover {
+    color: #0050C7;
+    text-decoration: underline;
+}
+
+/* 统一所有页面的字体粗细 */
+.tags-cloud,
+.tag-section,
+.listing-item,
+.c-article__main,
+.c-archives {
+    font-weight: 350; /* 统一修改为350 */
+}
+
+.tags-cloud a,
+.tag-section h3,
+.listing-item a,
+.listing-item time {
+    font-weight: 350; /* 统一修改为350 */
+}
+
+.site-header {
+    border-top: 5px solid var(--c-base-01);
+    border-bottom: 1px solid var(--c-base-2);
+    min-height: 56px;
+    position: relative;
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+}
+
+.site-title {
+    font-size: 2.6rem;
+    line-height: 56px;
+    letter-spacing: -1px;
+    margin-bottom: 0;
+    float: left;
+    color: var(--c-base-02);
+}
+
+.site-title:visited {
+    color: var(--c-base-02);
+}
+
+.site-nav {
+    float: right;
+    line-height: 56px;
+}
+
+.site-nav .page-link {
+    color: #333333;
+    line-height: 1.55;
+    margin-left: 20px;
+}
+
+.site-nav .page-link:first-child {
+    margin-left: 0;
+}
+
+.site-footer {
+    border-top: 1px solid var(--c-base-2);
+    padding: var(--spacing-unit) 0;
+    margin-top: var(--spacing-unit); /* 增加上方间距以与内容分开 */
+}
+
+.site-footer p {
+    margin-bottom: calc(var(--spacing-unit) / 6); /* 5px - 页脚元素间紧密间距 */
+    font-size: 1.8rem; /* 1em 等价于基础字号 */
+}
+
+.site-footer a {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+#fortune-text {
+    min-height: 2em;
+}
+
+/* 深色主题下的页脚样式 */
+body.dark-theme .site-footer {
+    border-top-color: #515862;
+}
+
+body.dark-theme .site-footer a {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .site-footer a:hover {
+    color: var(--dark-theme-link-hover);
+}
+
+/* ==========================================================================
+   卍助功能样式
+   ========================================================================== */
+
+/* 代码复制按钮 */
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #238636;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+pre:hover .copy-button {
+    opacity: 1;
+}
+
+.copy-button:hover {
+    background: #2ea043;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 深色主题下的复制按钮 */
+body.dark-theme .copy-button {
+    background: #238636;
+    color: #ffffff;
+}
+
+body.dark-theme .copy-button:hover {
+    background: #2ea043;
+}
+
+/* 目录样式 */
+.table-of-contents {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+}
+
+.table-of-contents h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.table-of-contents ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.table-of-contents ul ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.table-of-contents a {
+    color: var(--c-base-01);
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+}
+
+.table-of-contents a:hover {
+    color: var(--c-accent-blue);
+}
+
+/* 标签样式 */
+.tag-link {
+    display: inline;
+    background: none;
+    color: var(--c-accent-blue);
+    padding: 0;
+    border-radius: 0;
+    font-size: 1.8rem; /* 与原版c-tag一致 */
+    text-decoration: none;
+    margin-right: 5px;
+    transition: none;
+}
+
+.tag-link:hover {
+    background: none;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+.tag-link:visited {
+    background: none;
+    color: var(--c-accent-blue);
+}
+
+/* 标签云样式 - 仿照原版Jekyll */
+.tags-cloud {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px */
+    line-height: 1.8;
+}
+
+.tag-cloud-link {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+    font-size: 1.8rem;
+    margin-right: 8px;
+    transition: color 0.2s ease;
+}
+
+.tag-cloud-link:hover {
+    color: #0050C7;
+    text-decoration: underline;
+}
+
+/* 标签详细列表样式 */
+.listing-item {
+    margin-bottom: calc(var(--spacing-unit) / 4); /* 7.5px */
+}
+
+.listing-item time {
+    color: var(--c-base-01);
+    font-size: 1.6rem;
+    margin-right: 10px;
+}
+
+.listing-item a {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+    font-size: 1.8rem;
+}
+
+.listing-item a:hover {
+    color: #0050C7;
+    text-decoration: underline;
+}
+
+.c-article__tags {
+    margin-top: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    padding-top: calc(var(--spacing-unit) / 3); /* 10px - 边框间距 */
+    border-top: 1px solid #e9ecef;
+    font-size: 1.8rem; /* 与原版fs--body一致 */
+}
+
+.c-article__tags p {
+    font-size: 1.8rem; /* 确保"Tags:"文字也是正确大小 */
+    margin-bottom: 0;
+}
+
+.tag-section {
+    margin-bottom: var(--spacing-unit); /* 30px - 与Jekyll标准一致 */
+}
+
+/* 返回顶部按钮 */
+.back-to-top {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.back-to-top:hover {
+    background: #0050C7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* 分隔符 */
+.u-separate {
+    color: #999;
+    margin: 0 0.5rem;
+}
+
+/* 深色主题下的目录样式 */
+body.dark-theme .table-of-contents {
+    background: #2d2d2d;
+    border-color: #515862;
+}
+
+body.dark-theme .table-of-contents a {
+    color: #ccc;
+}
+
+body.dark-theme .table-of-contents a:hover {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .c-article__tags {
+    border-top-color: #515862;
+}
+
+/* 深色主题下的标签样式 */
+body.dark-theme .tag-link {
+    background: none;
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .tag-link:hover {
+    background: none;
+    color: var(--dark-theme-link);
+    text-decoration: none;
+}
+
+body.dark-theme .tag-link:visited {
+    background: none;
+    color: var(--dark-theme-link);
+}
+
+/* ==========================================================================
+   响应式设计
+   ========================================================================== */
+
+@media screen and (max-width: 600px) {
+    html {
+        font-size: 9px;
+    }
+    
+    .c-article__title {
+        font-size: 2.8rem;
+    }
+    
+    .c-archives__year {
+        font-size: 2.8rem;
+    }
+    
+    .site-title {
+        font-size: 2.2rem;
+    }
+    
+    .site-nav {
+        float: none;
+        margin-top: 1rem;
+    }
+    
+    .site-nav .page-link {
+        margin-left: 15px;
+    }
+}

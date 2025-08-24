@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 立即执行防闪烁脚本 -->
+    <script>
+        (function() {
+            // 立即读取主题偏好
+            var savedTheme = localStorage.getItem('themePreference');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = savedTheme ? (savedTheme === 'dark') : prefersDark;
+            
+            // 立即设置HTML根元素和body
+            var html = document.documentElement;
+            var body = document.body;
+            
+            if (isDark) {
+                html.classList.remove('light-theme');
+                html.classList.add('dark-theme');
+                html.setAttribute('data-theme', 'dark');
+                // 设置body样式（如果body已经存在）
+                if (body) {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                }
+                // 保存偏好
+                if (!savedTheme) localStorage.setItem('themePreference', 'dark');
+            } else {
+                html.classList.remove('dark-theme');
+                html.classList.add('light-theme');
+                html.setAttribute('data-theme', 'light');
+                // 设置body样式（如果body已经存在）
+                if (body) {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                }
+                // 保存偏好
+                if (!savedTheme) localStorage.setItem('themePreference', 'light');
+            }
+            
+            console.log('头部脚本 - 设置主题:', isDark ? 'dark' : 'light');
+        })();
+    </script>
+    
+    <!-- 立即生效的主题样式 -->
+    <style id="theme-flash-fix">
+        html.dark-theme, html.dark-theme body {
+            background-color: #1a1a1a !important;
+            color: #d8d8d8 !important;
+        }
+        html.light-theme, html.light-theme body {
+            background-color: #f5f5f5 !important;
+            color: #333333 !important;
+        }
+        /* 初始时禁用过渡效果 */
+        html, body {
+            transition: none !important;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% if title %}{{ title }} - {% endif %}Shihanmax's blog</title>
+    <meta name="description" content="Shihanmax's blog - 机器学习、深度学习、编程技术分享">
+
+    <!-- 字体 -->
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}">
+    
+    <!-- MathJax 优化配置 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore'
+            },
+            startup: {
+                ready() {
+                    MathJax.startup.defaultReady();
+                    console.log('MathJax已加载');
+                }
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <main class="u-container">
+        <!-- 页面头部 -->
+        <header class="c-page__header">
+            <div class="container1">
+                <h1>Shihanmax's blog</h1>
+                <!-- 切换明暗模式的按钮 -->
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" style="display:none">
+                    <span class="switch">
+                        <span class="icon" id="theme-icon-moon">&#127762;</span> 
+                        <span class="icon" id="theme-icon-sun">&#127773;</span>
+                    </span>
+                </label>
+            </div>
+
+            {% if page_type == 'home' %}
+            <p>
+                <a href="{{ url_for('index') }}">Home</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('about') }}">About</a>
+            </p>
+            {% else %}
+            <p>
+                <a href="{{ url_for('index') }}">&lt; Back</a>
+            </p>
+            {% endif %}
+        </header>
+
+        <!-- 页面内容 -->
+        {% block content %}{% endblock %}
+
+        <!-- 页面底部 -->
+        <footer class="site-footer">
+            <div style="margin:10px auto;">
+                <p style="text-align:center;font-size:1em" id="fortune-text"></p>
+                <p style="text-align:center;">&copy; Shihanmax {{ current_year }} | Powered by Flask</p>
+                <p style="text-align:center;font-size:1em;">
+                    <a href="http://beian.miit.gov.cn/">沪ICP备2024055727号</a>
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fortune.js') }}"></script>
+    
+    <!-- 启用过渡效果 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 等待所有脚本加载完成后启用过渡效果
+            setTimeout(function() {
+                var flashFixStyle = document.getElementById('theme-flash-fix');
+                if (flashFixStyle) {
+                    flashFixStyle.textContent = flashFixStyle.textContent.replace(/transition: none !important;/g, 'transition: background-color 0.3s ease, color 0.3s ease;');
+                }
+            }, 100);
+        });
+    </script>
+    
+    <!-- MathJax重新渲染脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查页面是否包含数学公式
+            const hasMath = document.body.innerHTML.includes('$');
+            
+            if (hasMath && typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                console.log('MathJax开始渲染');
+                MathJax.typesetPromise([document.body]).then(() => {
+                    console.log('MathJax渲染完成');
+                }).catch((err) => {
+                    console.error('MathJax渲染失败:', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

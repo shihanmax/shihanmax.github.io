@@ -1,0 +1,355 @@
+/* GitHub Dark Theme Syntax Highlighting */
+/* 基础样式 */
+.highlight {
+  background-color: #161b22;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  overflow: auto;
+}
+
+.highlight table td { 
+  padding: 0;
+  border: none;
+}
+
+.highlight table pre { 
+  margin: 0;
+  padding: 0;
+}
+
+/* 行号样式 - GitHub风格 */
+.highlight .linenos {
+  background-color: transparent;
+  color: #6e7681;
+  text-align: right;
+  padding-right: 8px; /* 进一步减少右边距 */
+  padding-left: 16px;
+  user-select: none;
+  border-right: 1px solid #30363d;
+  font-size: 12px;
+  line-height: 1.45;
+  width: 1%;
+  min-width: 50px;
+  vertical-align: top;
+  margin-right: 8px; /* 增加右边距创建视觉间隔 */
+}
+
+.highlight .code {
+  padding-left: 16px; /* 恢复左边距以匹配新的行号样式 */
+  padding-right: 16px;
+  width: 100%;
+}
+
+/* 确保代码内容不会换行到行号区域 */
+.highlight table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+  table-layout: fixed;
+}
+
+.highlight .linenos pre {
+  color: #6e7681;
+  background-color: transparent;
+  text-align: right;
+  padding: 0;
+  margin: 0;
+}
+
+.highlight .code pre {
+  background-color: transparent;
+  overflow-x: auto;
+  padding: 0;
+  margin: 0;
+}
+
+/* 通用文本 */
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #e6edf3;
+}
+
+/* 注释 */
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf,
+.highlight .c1, .highlight .cm, .highlight .cp, .highlight .cs {
+  color: #8b949e;
+  font-style: italic;
+}
+
+/* 字符串 */
+.highlight .s, .highlight .sa, .highlight .sb, .highlight .dl,
+.highlight .s1, .highlight .s2, .highlight .sd, .highlight .sh,
+.highlight .si, .highlight .sx {
+  color: #a5d6ff;
+}
+
+/* 数字 */
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh,
+.highlight .mi, .highlight .mo, .highlight .mx, .highlight .il {
+  color: #79c0ff;
+}
+
+/* 关键字 */
+.highlight .k, .highlight .kv, .highlight .kc, .highlight .kd,
+.highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt {
+  color: #ff7b72;
+}
+
+/* 运算符 */
+.highlight .o, .highlight .ow {
+  color: #ff7b72;
+}
+
+/* 函数名 */
+.highlight .nf, .highlight .fm {
+  color: #d2a8ff;
+}
+
+/* 类名 */
+.highlight .nc {
+  color: #ffa657;
+}
+
+/* 属性 */
+.highlight .na {
+  color: #79c0ff;
+}
+
+/* HTML/XML 标签 */
+.highlight .nt {
+  color: #7ee787;
+}
+
+/* 内置函数/变量 */
+.highlight .nb, .highlight .bp {
+  color: #ffa657;
+}
+
+/* 变量 */
+.highlight .nv, .highlight .vm, .highlight .vg, .highlight .vi, .highlight .vc {
+  color: #ffa657;
+}
+
+/* 装饰器 */
+.highlight .nd {
+  color: #d2a8ff;
+}
+
+/* 异常 */
+.highlight .ne {
+  color: #ffa657;
+}
+
+/* 名称空间 */
+.highlight .nn {
+  color: #ffa657;
+}
+
+/* 标签/标识符 */
+.highlight .nl, .highlight .ni {
+  color: #e6edf3;
+}
+
+/* 正则表达式 */
+.highlight .sr {
+  color: #a5d6ff;
+}
+
+/* 符号 */
+.highlight .ss, .highlight .sc, .highlight .se {
+  color: #a5d6ff;
+}
+
+/* 错误 */
+.highlight .err {
+  color: #f85149;
+  background-color: transparent;
+}
+
+/* Git diff */
+.highlight .gd {
+  color: #ffdcd7;
+  background-color: #67060c;
+}
+
+.highlight .gi {
+  color: #dafbe1;
+  background-color: #033a16;
+}
+
+.highlight .gh {
+  color: #8b949e;
+  font-weight: bold;
+}
+
+.highlight .go {
+  color: #8b949e;
+}
+
+.highlight .gp {
+  color: #8b949e;
+}
+
+.highlight .gr {
+  color: #f85149;
+}
+
+.highlight .gt {
+  color: #f85149;
+}
+
+.highlight .gu {
+  color: #8b949e;
+  font-weight: bold;
+}
+
+.highlight .ge {
+  font-style: italic;
+}
+
+.highlight .gs {
+  font-weight: bold;
+}
+
+.highlight .w {
+  color: #e6edf3;
+}
+
+.highlight .no {
+  color: #ffa657;
+}
+
+/* 浅色主题下的GitHub风格代码高亮 */
+body.light-theme .highlight {
+  background-color: #f6f8fa;
+  color: #24292f;
+  border: 1px solid #d0d7de;
+}
+
+/* 浅色主题行号样式 */
+body.light-theme .highlight .linenos {
+  color: #656d76;
+  border-right: 1px solid #d0d7de;
+  padding-right: 8px; /* 与暗色主题保持一致的间距 */
+  margin-right: 8px; /* 增加右边距创建视觉间隔 */
+}
+
+body.light-theme .highlight .linenos pre {
+  color: #656d76;
+}
+
+body.light-theme .highlight .n,
+body.light-theme .highlight .py,
+body.light-theme .highlight .nx {
+  color: #24292f;
+}
+
+body.light-theme .highlight .c,
+body.light-theme .highlight .ch,
+body.light-theme .highlight .cd,
+body.light-theme .highlight .cpf,
+body.light-theme .highlight .c1,
+body.light-theme .highlight .cm,
+body.light-theme .highlight .cp,
+body.light-theme .highlight .cs {
+  color: #6e7781;
+  font-style: italic;
+}
+
+body.light-theme .highlight .s,
+body.light-theme .highlight .sa,
+body.light-theme .highlight .sb,
+body.light-theme .highlight .dl,
+body.light-theme .highlight .s1,
+body.light-theme .highlight .s2,
+body.light-theme .highlight .sd,
+body.light-theme .highlight .sh,
+body.light-theme .highlight .si,
+body.light-theme .highlight .sx {
+  color: #0a3069;
+}
+
+body.light-theme .highlight .m,
+body.light-theme .highlight .mb,
+body.light-theme .highlight .mf,
+body.light-theme .highlight .mh,
+body.light-theme .highlight .mi,
+body.light-theme .highlight .mo,
+body.light-theme .highlight .mx,
+body.light-theme .highlight .il {
+  color: #0550ae;
+}
+
+body.light-theme .highlight .k,
+body.light-theme .highlight .kv,
+body.light-theme .highlight .kc,
+body.light-theme .highlight .kd,
+body.light-theme .highlight .kn,
+body.light-theme .highlight .kp,
+body.light-theme .highlight .kr,
+body.light-theme .highlight .kt {
+  color: #cf222e;
+}
+
+body.light-theme .highlight .o,
+body.light-theme .highlight .ow {
+  color: #cf222e;
+}
+
+body.light-theme .highlight .nf,
+body.light-theme .highlight .fm {
+  color: #8250df;
+}
+
+body.light-theme .highlight .nc {
+  color: #953800;
+}
+
+body.light-theme .highlight .na {
+  color: #0550ae;
+}
+
+body.light-theme .highlight .nt {
+  color: #116329;
+}
+
+body.light-theme .highlight .nb,
+body.light-theme .highlight .bp {
+  color: #953800;
+}
+
+body.light-theme .highlight .nv,
+body.light-theme .highlight .vm,
+body.light-theme .highlight .vg,
+body.light-theme .highlight .vi,
+body.light-theme .highlight .vc {
+  color: #953800;
+}
+
+body.light-theme .highlight .nd {
+  color: #8250df;
+}
+
+body.light-theme .highlight .ne {
+  color: #953800;
+}
+
+body.light-theme .highlight .nn {
+  color: #953800;
+}
+
+body.light-theme .highlight .err {
+  color: #cf222e;
+  background-color: transparent;
+}
+
+/* 深色主题下的代码高亮保持GitHub Dark样式 */
+body.dark-theme .highlight {
+  background-color: #161b22;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+}
+
+body.dark-theme .highlight pre {
+  background-color: transparent;
+}

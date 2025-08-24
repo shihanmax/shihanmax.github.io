@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="c-archives">
+    <h1 class="c-archives__year">Tags</h1>
+    
+    <!-- 标签集合 - 与原版Jekyll一致 -->
+    <div class="tags-cloud">
+        {% for tag, posts in tags.items() %}
+        <a href="#{{ tag }}" class="tag-cloud-link">{{ tag }} ({{ posts|length }})</a> &nbsp;
+        {% endfor %}
+    </div>
+    
+    <hr>
+    
+    <!-- 标签详细分组 -->
+    {% for tag, posts in tags.items() %}
+    <div class="tag-section" id="{{ tag }}">
+        <h3 id="{{ tag }}">{{ tag }} <a href="#">⤤</a></h3>
+        {% for post in posts %}
+        <ul style="list-style-type:circle">
+            <li class="listing-item">
+                <time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ post.date.strftime('%Y-%m-%d') }}</time>
+                <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+            </li>
+        </ul>
+        {% endfor %}
+        <br/>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}
