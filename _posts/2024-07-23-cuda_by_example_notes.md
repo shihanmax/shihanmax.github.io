@@ -10,7 +10,7 @@ mathjax: true
 * 导航
 {:toc #markdown-toc}
 
-⌛️ 更新中（last update: 2024-07-31）
+⌛️  更新中（last update: 2024-07-31）
 
 
 > Changelog:
