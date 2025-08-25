@@ -1027,3 +1027,539 @@ body.dark-theme .tag-link:visited {
         margin-left: 15px;
     }
 }
+
+/* ==========================================================================
+   书签页面样式
+   ========================================================================== */
+
+/* 书签页面描述 */
+
+/* 操作工具栏 */
+.bookmark-toolbar {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px */
+    padding: calc(var(--spacing-unit) / 3) 0; /* 10px */
+}
+
+.bookmark-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-weight: 350;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--c-accent-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0050C7;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-icon:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 表单样式 */
+.form-input,
+.form-select,
+.form-textarea {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 350;
+    background-color: white;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--c-accent-blue);
+    box-shadow: 0 0 0 2px rgba(0, 103, 251, 0.2);
+}
+
+.form-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* 书签容器 */
+.bookmark-container {
+    margin-top: calc(var(--spacing-unit) / 2); /* 15px */
+    /* 移除最大宽度限制，让其与父容器保持一致 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 书签网格 */
+.bookmark-grid {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) / 6); /* 5px */
+}
+
+/* 书签项目 */
+.bookmark-item {
+    background: white;
+    border: 1px solid #DADDE1;
+    border-radius: 6px;
+    padding: calc(var(--spacing-unit) / 3); /* 10px */
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.bookmark-item:hover {
+    border-color: var(--c-accent-blue);
+    box-shadow: 0 2px 8px rgba(0, 103, 251, 0.1);
+    transform: translateY(-1px);
+}
+
+/* 删除动画 */
+.bookmark-item.deleting {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+}
+
+/* 书签项目 */
+.bookmark-item {
+    background: white;
+    border: 1px solid #DADDE1;
+    border-radius: 6px;
+    padding: 8px 16px; /* 减少上下内边距 */
+    transition: all 0.2s ease;
+    position: relative;
+    width: 100%; /* 使用100%宽度，与容器保持一致 */
+    margin: 0 auto; /* 居中显示 */
+    box-sizing: border-box; /* 确保padding计算在内 */
+}
+
+.bookmark-item:hover {
+    border-color: var(--c-accent-blue);
+    box-shadow: 0 2px 8px rgba(0, 103, 251, 0.1);
+    transform: translateY(-1px);
+}
+
+.bookmark-content {
+    display: flex;
+    justify-content: space-between; /* 恢复左右分布 */
+    align-items: center; /* 垂直居中 */
+    gap: 15px;
+    line-height: 1; /* 减少行高 */
+    min-height: 36px; /* 减小最小高度 */
+}
+
+.bookmark-main-info {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    flex: 1;
+    gap: 12px;
+    min-width: 0;
+}
+
+/* 书签标题样式 */
+.bookmark-title {
+    margin: 0;
+    flex-shrink: 0; /* 防止标题被压缩 */
+}
+
+.bookmark-title a {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+    font-size: 1.8rem; /* 与正文字号一致 */
+    font-weight: 350;
+    line-height: 1; /* 减少行高 */
+}
+
+.bookmark-title a:hover {
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+.bookmark-title a:visited {
+    color: var(--c-accent-blue);
+}
+
+/* 标签样式 */
+.bookmark-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.bookmark-meta {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.bookmark-date {
+    font-size: 1.6rem; /* 比标题小一号 */
+    color: var(--c-base-01);
+}
+
+.bookmark-actions {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.tag {
+    background-color: #f1f3f4;
+    color: #5f6368;
+    padding: 1px 5px; /* 减少标签内边距 */
+    border-radius: 10px; /* 稍微减小圆角 */
+    font-size: 1.4rem; /* 减小标签字号，比日期更小 */
+    font-weight: 350;
+    border: 1px solid #e8eaed;
+}
+
+/* 空状态 */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-unit); /* 30px */
+    color: var(--c-base-01);
+    font-size: 1.6rem;
+}
+
+/* 模态框样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px; /* 稍微减小最大宽度 */
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin: 0 20px; /* 增加左右边距 */
+}
+
+.modal-small {
+    max-width: 400px;
+}
+
+.modal-header {
+    padding: calc(var(--spacing-unit) * 2 / 3) calc(var(--spacing-unit) * 2 / 3); /* 进一步增加内边距 20px -> 24px */
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 350;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 2.4rem;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: calc(var(--spacing-unit) / 3) calc(var(--spacing-unit) * 2 / 3) calc(var(--spacing-unit) / 3) calc(var(--spacing-unit) * 2 / 3); /* 进一步增加左右内边距 */
+}
+
+/* 修复书签表单内边距，确保输入框不会紧贴边界 */
+.modal-content form {
+    padding: 0 calc(var(--spacing-unit) * 2 / 3) calc(var(--spacing-unit) / 3); /* 20px 左右内边距，10px 底部内边距 */
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: calc(var(--spacing-unit) / 3); /* 10px */
+}
+
+/* 弹窗内的表单组 - 确保输入框有足够边距 */
+.modal-content .form-group {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px 底部间距 */
+}
+
+.modal-content .form-group input,
+.modal-content .form-group textarea {
+    margin: 0;
+    width: calc(100% - 4px); /* 减去边框宽度，避免溢出 */
+    max-width: calc(100% - 4px); /* 限制最大宽度 */
+    box-sizing: border-box;
+}
+
+/* 针对弹窗内的输入框的特殊样式 */
+.modal-content .form-input,
+.modal-content .form-select,
+.modal-content .form-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-family: inherit;
+    font-weight: 350;
+    background-color: white;
+    transition: border-color 0.2s ease;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--spacing-unit) / 3); /* 10px */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+    font-weight: 350;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    padding: calc(var(--spacing-unit) / 3) calc(var(--spacing-unit) * 2 / 3); /* 进一步增加左右内边距 */
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-actions {
+    padding: calc(var(--spacing-unit) / 3) calc(var(--spacing-unit) * 2 / 3); /* 进一步增加左右内边距 */
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+body.dark-theme .bookmark-item {
+    background: #2d2d2d;
+    border-color: #444C56;
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .bookmark-item:hover {
+    border-color: var(--dark-theme-link);
+    box-shadow: 0 2px 8px rgba(88, 166, 255, 0.1);
+}
+
+body.dark-theme .bookmark-title a {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .bookmark-title a:hover {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .bookmark-title a:visited {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .btn-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .form-input,
+body.dark-theme .form-select,
+body.dark-theme .form-textarea {
+    background-color: #333;
+    border-color: #555;
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .form-input:focus,
+body.dark-theme .form-select:focus,
+body.dark-theme .form-textarea:focus {
+    border-color: var(--dark-theme-link);
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+}
+
+body.dark-theme .tag {
+    background-color: #444;
+    color: #ccc;
+    border-color: #555;
+}
+
+body.dark-theme .modal-content {
+    background: #2d2d2d;
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .modal-header {
+    border-bottom-color: #444;
+}
+
+body.dark-theme .form-actions {
+    border-top-color: #444;
+}
+
+body.dark-theme .modal-actions {
+    border-top-color: #444;
+}
+
+body.dark-theme .form-group label {
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .btn-close {
+    color: #ccc;
+}
+
+body.dark-theme .btn-close:hover {
+    color: white;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 600px) {
+    .bookmark-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bookmark-container {
+        max-width: 100%; /* 移动端占满宽度 */
+        margin: calc(var(--spacing-unit) / 2) 10px 0; /* 移动端边距 */
+    }
+    
+    .bookmark-item {
+        width: 100%; /* 移动端保持占满容器宽度 */
+        margin: 0; /* 移动端不需要额外边距 */
+    }
+    
+    .bookmark-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 90%;
+        max-width: 350px; /* 移动端进一步减小宽度 */
+        margin: 15px; /* 增加移动端边距 */
+    }
+    
+    .modal-header,
+    .modal-body,
+    .form-actions,
+    .modal-actions {
+        padding-left: calc(var(--spacing-unit) / 2); /* 移动端适度减少内边距 */
+        padding-right: calc(var(--spacing-unit) / 2);
+    }
+    
+    .bookmark-content {
+        flex-direction: column; /* 移动端改为垂直布局 */
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .bookmark-main-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    
+    .bookmark-meta {
+        justify-content: space-between; /* 移动端两端对齐 */
+    }
+}

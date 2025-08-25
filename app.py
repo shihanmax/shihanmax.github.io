@@ -5,14 +5,31 @@
 完全替代Jekyll，保持原有视觉效果
 """
 
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for
 import os
 from datetime import datetime
+from functools import wraps
 from utils.post_manager import PostManager
 from utils.markdown_parser import MarkdownParser
+from utils.bookmark_manager import BookmarkManager
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
+app.config['SECRET_KEY'] = 'Gs67Gty3fged672'
+
+# 管理员认证配置
+ADMIN_USERNAME = 'max'  # 可以修改为您的用户名
+ADMIN_PASSWORD = 'sh123max'  # 请修改为您的密码
+
+
+# 认证装饰器
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            return jsonify({'success': False, 'error': '需要管理员权限'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # 配置路径
 BLOG_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +39,7 @@ PAGES_DIR = os.path.join(BLOG_ROOT, '_pages')
 # 初始化组件
 post_manager = PostManager(POSTS_DIR, PAGES_DIR)
 markdown_parser = MarkdownParser()
+bookmark_manager = BookmarkManager()
 
 # 全局模板变量
 @app.context_processor
@@ -66,6 +84,25 @@ def tags():
                          page_type='tags',
                          title='Tags')
 
+@app.route('/bookmarks')
+def bookmarks():
+    """书签页面"""
+    # 获取书签页面内容
+    bookmarks_content = post_manager.get_page_content('bookmarks.md')
+    if bookmarks_content:
+        bookmarks_content['rendered_content'] = post_manager.get_rendered_page_content(
+            'bookmarks.md', markdown_parser
+        )
+    
+    # 获取书签数据
+    bookmarks_list = bookmark_manager.get_all_bookmarks()
+    
+    return render_template('bookmarks.html',
+                         page=bookmarks_content,
+                         bookmarks=bookmarks_list,
+                         page_type='bookmarks',
+                         title='Bookmarks')
+
 @app.route('/about')
 def about():
     """关于页面"""
@@ -107,6 +144,137 @@ def timeline():
                          page_type='timeline',
                          title='Timeline')
 
+# API 路由 - 书签 CRUD 操作
+@app.route('/api/bookmarks', methods=['GET'])
+def api_get_bookmarks():
+    """获取所有书签"""
+    try:
+        # 获取查询参数
+        search = request.args.get('search')
+        tag = request.args.get('tag')
+        
+        if search:
+            bookmarks = bookmark_manager.search_bookmarks(search)
+        elif tag:
+            bookmarks = bookmark_manager.get_bookmarks_by_tag(tag)
+        else:
+            bookmarks = bookmark_manager.get_all_bookmarks()
+        
+        return jsonify({
+            'success': True,
+            'data': bookmarks
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/bookmarks', methods=['POST'])
+@admin_required
+def api_add_bookmark():
+    """添加新书签 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        
+        # 验证必需字段
+        if not data or not data.get('title') or not data.get('url'):
+            return jsonify({
+                'success': False,
+                'error': '标题和网址为必填项'
+            }), 400
+        
+        # 添加书签
+        bookmark = bookmark_manager.add_bookmark(
+            title=data['title'],
+            url=data['url'],
+            description=data.get('description', ''),
+            tags=data.get('tags', [])
+        )
+        
+        return jsonify({
+            'success': True,
+            'data': bookmark
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/bookmarks/<int:bookmark_id>', methods=['PUT'])
+@admin_required
+def api_update_bookmark(bookmark_id):
+    """更新书签 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': '无效的请求数据'
+            }), 400
+        
+        # 更新书签
+        bookmark = bookmark_manager.update_bookmark(
+            bookmark_id,
+            **{k: v for k, v in data.items() if k in ['title', 'url', 'description', 'tags']}
+        )
+        
+        if bookmark:
+            return jsonify({
+                'success': True,
+                'data': bookmark
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '书签不存在'
+            }), 404
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/bookmarks/<int:bookmark_id>', methods=['DELETE'])
+@admin_required
+def api_delete_bookmark(bookmark_id):
+    """删除书签 - 需要管理员权限"""
+    try:
+        success = bookmark_manager.delete_bookmark(bookmark_id)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': '书签删除成功'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '书签不存在'
+            }), 404
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/bookmarks/tags', methods=['GET'])
+def api_get_tags():
+    """获取所有标签"""
+    try:
+        tags = bookmark_manager.get_all_tags()
+        return jsonify({
+            'success': True,
+            'data': tags
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.errorhandler(404)
 def page_not_found(e):
     """404错误页面"""
@@ -123,6 +291,48 @@ def page_not_found(e):
     else:
         # 如果404.md不存在，回退到原有模板
         return render_template('404.html'), 404
+
+# 管理员登录路由
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    """管理员登录"""
+    if request.method == 'GET':
+        # 如果已经登录，重定向到书签页面
+        if session.get('admin_logged_in'):
+            return redirect(url_for('bookmarks'))
+        return render_template('admin_login.html')
+    
+    elif request.method == 'POST':
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
+        
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return jsonify({
+                'success': True,
+                'message': '登录成功'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '用户名或密码错误'
+            }), 401
+
+# 管理员登出路由
+@app.route('/admin/logout')
+def admin_logout():
+    """管理员登出"""
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('bookmarks'))
+
+# 检查登录状态API
+@app.route('/admin/status')
+def admin_status():
+    """检查管理员登录状态"""
+    return jsonify({
+        'logged_in': bool(session.get('admin_logged_in'))
+    })
 
 
 if __name__ == '__main__':

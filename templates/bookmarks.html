@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="c-article">
+    <header class="c-article__header">
+        <h1 class="c-article__title">{{ page.title if page else 'Bookmarks' }}</h1>
+    </header>
+
+    <main class="c-article__main">
+        <!-- 页面描述 -->
+        {% if page and page.rendered_content %}
+            <div class="bookmark-description">
+                {{ page.rendered_content | safe }}
+            </div>
+        {% endif %}
+
+        <!-- 操作工具栏 -->
+        <div class="bookmark-toolbar">
+            <div class="bookmark-controls">
+                <!-- 只有登录的管理员才能看到添加按钮 -->
+                <button id="add-bookmark-btn" class="btn btn-primary" style="display: none;">添加书签</button>
+                <input type="text" id="search-input" class="form-input" placeholder="搜索书签...">
+                
+                <!-- 登录/登出按钮 -->
+                <div class="admin-controls">
+                    <a href="/admin/login" id="login-btn" class="btn btn-secondary" style="display: none;">管理员登录</a>
+                    <button id="logout-btn" class="btn btn-secondary" style="display: none;">登出</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 书签列表 -->
+        <div class="bookmark-container">
+            {% if bookmarks %}
+                <div class="bookmark-grid">
+                    {% for bookmark in bookmarks %}
+                    <div class="bookmark-item" data-id="{{ bookmark.id }}">
+                        <div class="bookmark-content">
+                            <div class="bookmark-main-info">
+                                <h4 class="bookmark-title">
+                                    <a href="{{ bookmark.url }}" target="_blank" rel="noopener noreferrer">
+                                        {{ bookmark.title }}
+                                    </a>
+                                </h4>
+                                <div class="bookmark-tags">
+                                    {% for tag in bookmark.tags %}
+                                    <span class="tag">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="bookmark-meta">
+                                <span class="bookmark-date">{{ bookmark.created_at[:10] }}</span>
+                                <div class="bookmark-actions admin-only" style="display: none;">
+                                    <button class="btn-icon edit-bookmark" data-id="{{ bookmark.id }}" title="编辑">
+                                        ✏️
+                                    </button>
+                                    <button class="btn-icon delete-bookmark" data-id="{{ bookmark.id }}" title="删除">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>还没有书签，点击"添加书签"开始收藏吧！</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+</article>
+
+<!-- 添加/编辑书签模态框 -->
+<div id="bookmark-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">添加书签</h3>
+            <button id="close-modal" class="btn-close">&times;</button>
+        </div>
+        <form id="bookmark-form">
+            <input type="hidden" id="bookmark-id" value="">
+            
+            <div class="form-group">
+                <label for="bookmark-title">标题 *</label>
+                <input type="text" id="bookmark-title" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="bookmark-url">网址 *</label>
+                <input type="url" id="bookmark-url" class="form-input" required placeholder="https://example.com">
+            </div>
+            
+
+            
+            <div class="form-group">
+                <label for="bookmark-tags">标签 (用逗号分隔)</label>
+                <input type="text" id="bookmark-tags" class="form-input" placeholder="标签1, 标签2">
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" id="cancel-btn" class="btn btn-secondary">取消</button>
+                <button type="submit" id="save-btn" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 删除确认模态框 -->
+<div id="delete-modal" class="modal" style="display: none;">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3>确认删除</h3>
+        </div>
+        <div class="modal-body">
+            <p>确定要删除这个书签吗？此操作无法撤销。</p>
+        </div>
+        <div class="modal-actions">
+            <button id="cancel-delete" class="btn btn-secondary">取消</button>
+            <button id="confirm-delete" class="btn btn-danger">删除</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/bookmarks.js') }}"></script>
+{% endblock %}
