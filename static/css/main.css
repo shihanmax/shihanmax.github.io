@@ -769,6 +769,7 @@ body.light-theme h6 {
 
 #fortune-text {
     min-height: 2em;
+    font-size: 0.9em !important; /* 设置为0.9em并确保优先级 */
 }
 
 /* 深色主题下的页脚样式 */

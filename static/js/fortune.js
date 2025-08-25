@@ -94,7 +94,7 @@
         }
 
         const randomIndex = Math.floor(Math.random() * fortune.length);
-        const selectedFortune = fortune[randomIndex];
+        const selectedFortune = `"${fortune[randomIndex]}"`;
         
         fortuneElement.textContent = selectedFortune;
     }
