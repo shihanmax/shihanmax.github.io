@@ -51,6 +51,71 @@
             background-color: #f5f5f5 !important;
             color: #333333 !important;
         }
+        
+        /* 书签页面元素的暗色主题防闪烁样式 */
+        html.dark-theme .bookmark-item {
+            background: #2d2d2d !important;
+            border-color: #444C56 !important;
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .form-input {
+            background-color: #333 !important;
+            border-color: #555 !important;
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .bookmark-title a {
+            color: #58a6ff !important;
+        }
+        
+        /* 书签标题样式 */
+        html.dark-theme .bookmark-title {
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .tag {
+            background-color: #444 !important;
+            color: #ccc !important;
+            border-color: #555 !important;
+        }
+        
+        html.dark-theme .modal-content {
+            background: #2d2d2d !important;
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .bookmark-toolbar,
+        html.dark-theme .bookmark-controls {
+            background: transparent !important;
+        }
+        
+        /* 追加更多书签元素样式 */
+        html.dark-theme .bookmark-container,
+        html.dark-theme .bookmark-grid {
+            background: transparent !important;
+        }
+        
+        html.dark-theme .bookmark-date {
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .form-group label {
+            color: #d8d8d8 !important;
+        }
+        
+        html.dark-theme .modal-header {
+            border-bottom-color: #444 !important;
+        }
+        
+        html.dark-theme .form-actions {
+            border-top-color: #444 !important;
+        }
+        
+        html.dark-theme .btn-close {
+            color: #ccc !important;
+        }
+        
         /* 初始时禁用过渡效果 */
         html, body {
             transition: none !important;
@@ -115,6 +180,7 @@
                 <a href="{{ url_for('index') }}">Home</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('bookmarks') }}">Bookmarks</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('about') }}">About</a>
             </p>
             {% else %}
