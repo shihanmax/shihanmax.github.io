@@ -324,7 +324,7 @@ def admin_login():
 def admin_logout():
     """管理员登出"""
     session.pop('admin_logged_in', None)
-    return redirect(url_for('bookmarks'))
+    return redirect(url_for('index'))
 
 # 检查登录状态API
 @app.route('/admin/status')

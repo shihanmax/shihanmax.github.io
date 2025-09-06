@@ -181,7 +181,8 @@
                 <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('bookmarks') }}">Bookmarks</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('about') }}">About</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('admin_login') }}" id="global-login-btn">Login</a>
             </p>
             {% else %}
             <p>
@@ -229,8 +230,8 @@
     <!-- MathJax重新渲染脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 检查管理员状态并显示/隐藏管理员功能
-            checkAdminStatus();
+            // 检查管理员状态并应用相应的标题样式
+            checkAdminStatusAndUpdateTitle();
             
             // 检查页面是否包含数学公式
             const hasMath = document.body.innerHTML.includes('$');
@@ -245,8 +246,8 @@
             }
         });
         
-        // 检查管理员状态的函数
-        async function checkAdminStatus() {
+        // 检查管理员状态并更新标题样式的函数
+        async function checkAdminStatusAndUpdateTitle() {
             try {
                 const response = await fetch('/admin/status');
                 const result = await response.json();
@@ -255,6 +256,23 @@
                 adminOnlyElements.forEach(el => {
                     el.style.display = result.logged_in ? 'flex' : 'none';
                 });
+                
+                // 控制全局登录按钮的显示
+                const globalLoginBtn = document.getElementById('global-login-btn');
+                if (globalLoginBtn) {
+                    globalLoginBtn.textContent = result.logged_in ? 'Logout' : 'Login';
+                    globalLoginBtn.href = result.logged_in ? '/admin/logout' : '/admin/login';
+                }
+                
+                // 根据登录状态更新标题样式
+                const headerTitle = document.querySelector('header h1');
+                if (headerTitle) {
+                    if (result.logged_in) {
+                        headerTitle.classList.add('rainbow-title');
+                    } else {
+                        headerTitle.classList.remove('rainbow-title');
+                    }
+                }
             } catch (error) {
                 console.error('Error checking admin status:', error);
             }

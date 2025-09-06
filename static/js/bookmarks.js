@@ -31,19 +31,19 @@ class BookmarkManager {
     updateUI() {
         // 显示/隐藏管理员功能
         const addBtn = document.getElementById('add-bookmark-btn');
-        const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const adminOnlyElements = document.querySelectorAll('.admin-only');
+        const globalLoginBtn = document.getElementById('global-login-btn');
 
         if (this.isAdmin) {
             if (addBtn) addBtn.style.display = 'block';
-            if (loginBtn) loginBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'block';
+            if (globalLoginBtn) globalLoginBtn.style.display = 'none';
             adminOnlyElements.forEach(el => el.style.display = 'flex');
         } else {
             if (addBtn) addBtn.style.display = 'none';
-            if (loginBtn) loginBtn.style.display = 'block';
             if (logoutBtn) logoutBtn.style.display = 'none';
+            if (globalLoginBtn) globalLoginBtn.style.display = 'inline';
             adminOnlyElements.forEach(el => el.style.display = 'none');
         }
     }
@@ -53,12 +53,6 @@ class BookmarkManager {
         const addBtn = document.getElementById('add-bookmark-btn');
         if (addBtn) {
             addBtn.addEventListener('click', () => this.showAddModal());
-        }
-
-        // 登出按钮
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => this.handleLogout());
         }
 
         // 模态框控制
@@ -188,8 +182,9 @@ class BookmarkManager {
             const response = await fetch('/admin/logout');
             if (response.ok) {
                 this.showMessage('已退出登录', 'success');
+                // 登出后跳转到首页
                 setTimeout(() => {
-                    window.location.reload();
+                    window.location.href = '/';
                 }, 1000);
             }
         } catch (error) {

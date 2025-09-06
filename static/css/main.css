@@ -202,6 +202,42 @@ pre > code {
     overflow-y: hidden;
 }
 
+/* 彩虹色标题样式 - 静态红到紫色均布 */
+.rainbow-title {
+    background: linear-gradient(90deg, 
+        #ff0000 0%,    /* 红色 */
+        #ff8000 16.6%, /* 橙色 */
+        #ffff00 33.3%, /* 黄色 */
+        #00ff00 50%,   /* 绿色 */
+        #0080ff 66.6%, /* 蓝色 */
+        #8000ff 83.3%, /* 靛色 */
+        #ff00ff 100%   /* 紫色 */
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+/* 深色主题下的彩虹色标题 */
+html.dark-theme .rainbow-title {
+    background: linear-gradient(90deg, 
+        #ff4d4d 0%,    /* 浅红色 */
+        #ff9933 16.6%, /* 浅橙色 */
+        #ffff66 33.3%, /* 浅黄色 */
+        #66ff66 50%,   /* 浅绿色 */
+        #66b2ff 66.6%, /* 浅蓝色 */
+        #b266ff 83.3%, /* 浅靛色 */
+        #ff66ff 100%   /* 浅紫色 */
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
 /* ==========================================================================
    编辑器样式
    ========================================================================== */

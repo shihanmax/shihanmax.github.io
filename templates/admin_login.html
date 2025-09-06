@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (result.success) {
                 showMessage('登录成功，正在跳转...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/bookmarks';
+                    window.location.href = '/';
                 }, 1000);
             } else {
                 showMessage(result.error || '登录失败', 'error');
