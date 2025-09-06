@@ -451,7 +451,12 @@ class MarkdownEditor {
         const lineStart = textBeforeCursor.lastIndexOf('\n') + 1;
         const columnPosition = cursorPosition - lineStart;
         
-        // 提取光标前后的子串
+        // 检查是否在代码块中
+        if (this.isInCodeBlockContext(currentLineNumber)) {
+            return this.findCodeBlockElement(currentLineNumber);
+        }
+        
+        // 提取光标位置周围的子串
         const substring = this.extractSubstring(currentLine, columnPosition, 12);
         
         console.log(`当前行: ${currentLineNumber}, 子串: "${substring}"`);
@@ -465,6 +470,61 @@ class MarkdownEditor {
         const result = this.findMatchingElement(substring);
         console.log('匹配结果:', result);
         return result;
+    }
+    
+    // 检查指定行号是否在代码块上下文中
+    isInCodeBlockContext(lineNumber) {
+        const content = this.editor.value;
+        const lines = content.split('\n');
+        
+        let inCodeBlock = false;
+        for (let i = 0; i <= lineNumber; i++) {
+            const line = lines[i];
+            if (line && line.trim().startsWith('```')) {
+                inCodeBlock = !inCodeBlock;
+            }
+        }
+        
+        return inCodeBlock;
+    }
+    
+    // 查找代码块元素
+    findCodeBlockElement(currentLineNumber) {
+        // 获取所有代码块元素
+        const codeBlocks = this.preview.querySelectorAll('pre.highlight');
+        if (codeBlocks.length === 0) return null;
+        
+        // 计算当前行在哪个代码块中
+        const content = this.editor.value;
+        const lines = content.split('\n');
+        
+        let codeBlockIndex = 0;
+        let inCodeBlock = false;
+        let codeBlockStartLine = -1;
+        
+        for (let i = 0; i <= currentLineNumber; i++) {
+            const line = lines[i];
+            if (line && line.trim().startsWith('```')) {
+                if (!inCodeBlock) {
+                    inCodeBlock = true;
+                    codeBlockStartLine = i;
+                } else {
+                    inCodeBlock = false;
+                    if (i >= currentLineNumber) {
+                        break;
+                    }
+                    codeBlockIndex++;
+                }
+            }
+        }
+        
+        // 返回对应的代码块元素
+        if (codeBlockIndex < codeBlocks.length) {
+            return codeBlocks[codeBlockIndex];
+        }
+        
+        // 如果没有找到精确匹配，返回第一个代码块
+        return codeBlocks[0];
     }
     
     // 提取光标位置周围的子串
@@ -617,6 +677,12 @@ class MarkdownEditor {
         const actualLineEnd = lineEnd === -1 ? this.editor.value.length : lineEnd;
         
         return this.editor.value.substring(lineStart, actualLineEnd);
+    }
+    
+    // 获取指定行号的内容
+    getLineContent(lineNumber) {
+        const lines = this.editor.value.split('\n');
+        return lines[lineNumber] || '';
     }
 
     // 新增：平滑滚动到指定位置
