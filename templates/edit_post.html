@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="editor-container">
+    <!-- 编辑器工具栏 -->
+    <div class="editor-toolbar">
+        <div class="toolbar-left">
+            <h2 class="editor-title">编辑: {{ post.title }}</h2>
+        </div>
+        <div class="toolbar-right">
+            <button id="save-btn" class="btn btn-save" disabled>
+                <span class="icon">💾</span>
+                保存
+            </button>
+            <a href="{{ url_for('post_detail', year=post.year, month=post.month, slug=post.slug) }}" 
+               class="btn btn-cancel">
+                <span class="icon">❌</span>
+                取消
+            </a>
+        </div>
+    </div>
+
+    <!-- 编辑器主体 -->
+    <div class="editor-main">
+        <!-- 左侧：Markdown编辑器 -->
+        <div class="editor-pane">
+            <div class="pane-header">
+                <h3>Markdown 编辑器</h3>
+                <div class="pane-tools">
+                    <button id="format-bold" class="tool-btn" title="粗体">
+                        <strong>B</strong>
+                    </button>
+                    <button id="format-italic" class="tool-btn" title="斜体">
+                        <em>I</em>
+                    </button>
+                    <button id="format-link" class="tool-btn" title="链接">
+                        🔗
+                    </button>
+                    <button id="format-code" class="tool-btn" title="代码">
+                        &lt;/&gt;
+                    </button>
+                    <button id="format-math" class="tool-btn" title="数学公式">
+                        ∑
+                    </button>
+                </div>
+            </div>
+            <textarea id="markdown-editor" class="markdown-textarea" 
+                      placeholder="在此输入Markdown内容...">{{ raw_content }}</textarea>
+        </div>
+
+        <!-- 右侧：预览窗格 -->
+        <div class="preview-pane">
+            <div class="pane-header">
+                <h3>实时预览</h3>
+                <div class="pane-tools">
+                    <button id="refresh-preview" class="tool-btn" title="刷新预览">
+                        🔄
+                    </button>
+                </div>
+            </div>
+            <div id="preview-content" class="preview-content">
+                <!-- 预览内容将在这里动态加载 -->
+                <div class="preview-loading">
+                    正在加载预览...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 状态栏 -->
+    <div class="editor-status">
+        <div class="status-left">
+            <span id="char-count">字符数: 0</span>
+            <span id="word-count">单词数: 0</span>
+        </div>
+        <div class="status-right">
+            <span id="save-status">未保存的更改</span>
+        </div>
+    </div>
+</div>
+
+<!-- 隐藏的数据 -->
+<script>
+    window.postData = {
+        year: {{ post.year }},
+        month: {{ post.month }},
+        slug: "{{ post.slug }}",
+        title: "{{ post.title }}",
+        saveUrl: "{{ url_for('save_post', year=post.year, month=post.month, slug=post.slug) }}",
+        previewUrl: "{{ url_for('preview_post', year=post.year, month=post.month, slug=post.slug) }}"
+    };
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

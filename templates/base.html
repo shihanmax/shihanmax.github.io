@@ -210,6 +210,9 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/fortune.js') }}"></script>
     
+    <!-- 额外的JavaScript文件 -->
+    {% block extra_js %}{% endblock %}
+    
     <!-- 启用过渡效果 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -226,6 +229,9 @@
     <!-- MathJax重新渲染脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 检查管理员状态并显示/隐藏管理员功能
+            checkAdminStatus();
+            
             // 检查页面是否包含数学公式
             const hasMath = document.body.innerHTML.includes('$');
             
@@ -238,6 +244,21 @@
                 });
             }
         });
+        
+        // 检查管理员状态的函数
+        async function checkAdminStatus() {
+            try {
+                const response = await fetch('/admin/status');
+                const result = await response.json();
+                
+                const adminOnlyElements = document.querySelectorAll('.admin-only');
+                adminOnlyElements.forEach(el => {
+                    el.style.display = result.logged_in ? 'flex' : 'none';
+                });
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+            }
+        }
     </script>
 </body>
 </html>

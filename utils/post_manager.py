@@ -270,3 +270,48 @@ class PostManager:
         self._rendered_cache[cache_key] = rendered_content
         
         return rendered_content
+    
+    def save_post_content(self, filepath: str, content: str) -> bool:
+        """保存文章内容到文件"""
+        try:
+            # 创建备份文件
+            backup_path = filepath + '.backup'
+            if os.path.exists(filepath):
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    backup_content = f.read()
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(backup_content)
+            
+            # 保存新内容
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            # 清除相关缓存
+            self._posts_cache = None
+            self._rendered_cache.clear()
+            self._page_cache.clear()
+            
+            # 删除备份文件（保存成功后）
+            if os.path.exists(backup_path):
+                os.remove(backup_path)
+            
+            logger.info(f"Successfully saved post content to {filepath}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error saving post content to {filepath}: {e}")
+            
+            # 如果保存失败，尝试恢复备份
+            backup_path = filepath + '.backup'
+            if os.path.exists(backup_path):
+                try:
+                    with open(backup_path, 'r', encoding='utf-8') as f:
+                        backup_content = f.read()
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(backup_content)
+                    os.remove(backup_path)
+                    logger.info(f"Restored backup for {filepath}")
+                except Exception as restore_error:
+                    logger.error(f"Failed to restore backup for {filepath}: {restore_error}")
+            
+            return False

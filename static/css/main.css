@@ -202,6 +202,348 @@ pre > code {
     overflow-y: hidden;
 }
 
+/* ==========================================================================
+   编辑器样式
+   ========================================================================== */
+
+/* 编辑器容器 */
+.editor-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--c-base-3);
+}
+
+/* 工具栏 */
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--c-base-2);
+    border-bottom: var(--m-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.toolbar-left .editor-title {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--c-base-01);
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 编辑器主体 */
+.editor-main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+/* 编辑窗格和预览窗格 */
+.editor-pane,
+.preview-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.editor-pane {
+    border-right: var(--m-border);
+}
+
+/* 窗格标题栏 */
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--c-base-2);
+    border-bottom: var(--m-border);
+}
+
+.pane-header h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: var(--c-base-01);
+}
+
+.pane-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 工具按钮 */
+.tool-btn {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--c-base-1);
+    background-color: white;
+    color: var(--c-base-01);
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.tool-btn:hover {
+    background-color: var(--c-base-2);
+    color: var(--c-base-00);
+}
+
+/* Markdown编辑器 */
+.markdown-textarea {
+    flex: 1;
+    padding: 2rem;
+    border: none;
+    resize: none;
+    font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    background-color: white;
+    outline: none;
+}
+
+/* 预览内容 */
+.preview-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: white;
+}
+
+.preview-loading,
+.preview-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--c-base-01);
+    font-style: italic;
+}
+
+.preview-error {
+    color: #d73a49;
+}
+
+/* 状态栏 */
+.editor-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    background-color: var(--c-base-2);
+    border-top: var(--m-border);
+    font-size: 1.3rem;
+    color: var(--c-base-01);
+}
+
+.status-left {
+    display: flex;
+    gap: 2rem;
+}
+
+.status-right {
+    font-weight: 500;
+}
+
+/* 保存状态样式 */
+.status-dirty {
+    color: #d73a49;
+}
+
+.status-saving {
+    color: #fd7e14;
+}
+
+.status-clean {
+    color: #28a745;
+}
+
+.status-error {
+    color: #d73a49;
+    font-weight: bold;
+}
+
+/* 按钮样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--c-base-1);
+    background-color: white;
+    color: var(--c-base-01);
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background-color: var(--c-base-2);
+    color: var(--c-base-00);
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-save {
+    background-color: var(--c-accent-blue);
+    color: white;
+    border-color: var(--c-accent-blue);
+}
+
+.btn-save:hover:not(:disabled) {
+    background-color: #0056d2;
+    border-color: #0056d2;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.btn-cancel:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+    color: white;
+}
+
+.btn-edit {
+    background-color: var(--c-accent-green);
+    color: white;
+    border-color: var(--c-accent-green);
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+}
+
+.btn-edit:hover {
+    background-color: #7bc653;
+    border-color: #7bc653;
+    color: white;
+}
+
+/* 编辑按钮在文章标题旁的样式 */
+.c-article__actions {
+    margin-top: 1rem;
+}
+
+/* 通知样式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    color: white;
+    font-size: 1.4rem;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-success {
+    background-color: #28a745;
+}
+
+.notification-error {
+    background-color: #dc3545;
+}
+
+.notification-info {
+    background-color: #17a2b8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .editor-main {
+        flex-direction: column;
+    }
+    
+    .editor-pane {
+        border-right: none;
+        border-bottom: var(--m-border);
+    }
+    
+    .toolbar-left .editor-title {
+        font-size: 1.6rem;
+    }
+    
+    .toolbar-right {
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .markdown-textarea,
+    .preview-content {
+        padding: 1rem;
+    }
+}
+
+/* 暗色主题下的编辑器样式 */
+[data-theme="dark"] .editor-container {
+    background-color: var(--dark-theme-background);
+}
+
+[data-theme="dark"] .editor-toolbar,
+[data-theme="dark"] .pane-header,
+[data-theme="dark"] .editor-status {
+    background-color: var(--dark-theme-header-footer-bg);
+    border-color: #333;
+}
+
+[data-theme="dark"] .toolbar-left .editor-title,
+[data-theme="dark"] .pane-header h3,
+[data-theme="dark"] .editor-status {
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .editor-pane,
+[data-theme="dark"] .preview-pane {
+    background-color: var(--dark-theme-background);
+    border-color: #333;
+}
+
+[data-theme="dark"] .markdown-textarea,
+[data-theme="dark"] .preview-content {
+    background-color: var(--dark-theme-background);
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .tool-btn,
+[data-theme="dark"] .btn {
+    background-color: var(--dark-theme-button-bg);
+    border-color: var(--dark-theme-button-border);
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .tool-btn:hover,
+[data-theme="dark"] .btn:hover:not(.btn-save):not(.btn-cancel):not(.btn-edit) {
+    background-color: #555;
+}
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 /* 深色主题下的数学公式样式 */
 body.dark-theme .MathJax {
     color: #d8d8d8 !important;

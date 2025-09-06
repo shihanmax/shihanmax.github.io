@@ -334,6 +334,92 @@ def admin_status():
         'logged_in': bool(session.get('admin_logged_in'))
     })
 
+# 编辑器路由
+@app.route('/<int:year>/<int:month>/<slug>/edit')
+@admin_required
+def edit_post(year, month, slug):
+    """文章编辑页面 - 需要管理员权限"""
+    post = post_manager.get_post_by_slug(year, month, slug)
+    if not post:
+        abort(404)
+    
+    # 读取原始markdown内容
+    try:
+        with open(post['filepath'], 'r', encoding='utf-8') as f:
+            raw_content = f.read()
+    except Exception as e:
+        abort(500)
+    
+    return render_template('edit_post.html', 
+                         post=post, 
+                         raw_content=raw_content,
+                         page_type='editor',
+                         title=f'Edit: {post["title"]}')
+
+@app.route('/api/posts/<int:year>/<int:month>/<slug>/save', methods=['POST'])
+@admin_required
+def save_post(year, month, slug):
+    """保存文章内容 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        content = data.get('content')
+        
+        if not content:
+            return jsonify({
+                'success': False,
+                'error': '内容不能为空'
+            }), 400
+        
+        # 获取文章信息
+        post = post_manager.get_post_by_slug(year, month, slug)
+        if not post:
+            return jsonify({
+                'success': False,
+                'error': '文章不存在'
+            }), 404
+        
+        # 保存文件
+        success = post_manager.save_post_content(post['filepath'], content)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': '保存成功'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '保存失败'
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/posts/<int:year>/<int:month>/<slug>/preview', methods=['POST'])
+@admin_required
+def preview_post(year, month, slug):
+    """预览文章内容 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        content = data.get('content', '')
+        
+        # 渲染markdown内容
+        rendered_content = markdown_parser.render(content)
+        
+        return jsonify({
+            'success': True,
+            'html': rendered_content
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8081))
