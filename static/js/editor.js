@@ -15,6 +15,27 @@ class MarkdownEditor {
         this.isPreviewLoading = false;
         this.lastContent = this.editor.value;
         this.previewTimeout = null;
+        this.scrollSyncEnabled = true;
+        this.isScrollingEditor = false;
+        this.isScrollingPreview = false;
+        this.cursorSyncEnabled = true;
+        this.lastCursorLine = 0;
+        this.highlightTimeout = null;
+        this.cursorSyncTimeout = null;
+        this.lastScrollSync = 0;
+        
+        // Enhanced sync control
+        this.isSyncingAfterUpdate = false;
+        this.updateSyncTimeout = null;
+        this.scrollThrottle = null;
+        this.lastPreviewUpdate = 0;
+        this.syncOperationQueue = [];
+        this.isProcessingSyncQueue = false;
+        
+        // 用户滚动检测（不再需要）
+        // this.isUserScrollingEditor = false;
+        // this.userScrollTimeout = null;
+        // this.lastEditorScrollTop = 0;
         
         this.init();
     }
@@ -24,6 +45,36 @@ class MarkdownEditor {
         this.updateCounters();
         this.loadInitialPreview();
         this.setupAutoSave();
+        this.setupScrollSync();
+        this.setupCursorSync();
+        this.initScrollSyncButton();
+        this.preventPreviewInteraction();
+    }
+    
+    // 防止预览区域的交互引起跳转
+    preventPreviewInteraction() {
+        // 移除预览区域中所有链接的点击事件
+        this.preview.addEventListener('click', (e) => {
+            // 防止所有链接点击
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            
+            // 防止标题点击导致的跳转
+            const heading = e.target.closest('h1, h2, h3, h4, h5, h6');
+            if (heading) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+        
+        // 防止鼠标右键菜单引起的意外交互
+        this.preview.addEventListener('contextmenu', (e) => {
+            // 允许右键菜单，但不允许其他交互
+        });
     }
 
     bindEvents() {
@@ -100,6 +151,40 @@ class MarkdownEditor {
                 // 行内公式
                 this.wrapSelection('$', '$');
             }
+        });
+        
+        // 切换滚动同步（禁用）
+        document.getElementById('toggle-scroll-sync').addEventListener('click', () => {
+            // 滚动同步已被禁用
+            const button = document.getElementById('toggle-scroll-sync');
+            button.textContent = '🔐';
+            button.title = '滚动同步已禁用';
+            button.className = 'tool-btn sync-disabled';
+            
+            this.showNotification('滚动同步功能已禁用', 'info');
+        });
+        
+        // 切换光标同步
+        document.getElementById('toggle-cursor-sync').addEventListener('click', () => {
+            this.cursorSyncEnabled = !this.cursorSyncEnabled;
+            const button = document.getElementById('toggle-cursor-sync');
+            
+            if (this.cursorSyncEnabled) {
+                button.textContent = '🎯';
+                button.title = '禁用点击居中';
+                button.className = 'tool-btn sync-enabled';
+            } else {
+                button.textContent = '⚫';
+                button.title = '启用点击居中';
+                button.className = 'tool-btn sync-disabled';
+                // 禁用时清除所有高亮
+                this.clearPreviousHighlight();
+            }
+            
+            this.showNotification(
+                this.cursorSyncEnabled ? '点击居中已启用' : '点击居中已禁用', 
+                'info'
+            );
         });
     }
 
@@ -215,6 +300,9 @@ class MarkdownEditor {
             const result = await response.json();
             
             if (result.success) {
+                // 保存当前预览的滚动位置
+                const currentPreviewScrollTop = this.preview.scrollTop;
+                
                 this.preview.innerHTML = result.html;
                 
                 // 重新初始化MathJax（如果有数学公式）
@@ -227,6 +315,18 @@ class MarkdownEditor {
                     this.preview.querySelectorAll('pre code').forEach((block) => {
                         window.hljs.highlightBlock(block);
                     });
+                }
+                
+                // 恢复预览的滚动位置（防止跳到顶部）
+                if (!force) {
+                    // 等待DOM更新完成后恢复位置
+                    requestAnimationFrame(() => {
+                        this.preview.scrollTop = currentPreviewScrollTop;
+                        // 然后处理同步操作
+                        this.handlePostUpdateSync();
+                    });
+                } else {
+                    // 强制更新时不进行同步操作
                 }
             } else {
                 this.preview.innerHTML = `<div class=\"preview-error\">预览失败: ${result.error}</div>`;
@@ -283,6 +383,242 @@ class MarkdownEditor {
         }
     }
 
+    setupScrollSync() {
+        // 禁用滚动同步功能
+        // 不再监听编辑器滚动事件
+        // 不再监听预览区滚动事件
+        
+        // 只保留点击事件监听，用于居中滚动
+        this.editor.addEventListener('click', () => {
+            if (this.cursorSyncEnabled) {
+                // 延迟一点执行，确保光标位置已更新
+                setTimeout(() => {
+                    this.scrollPreviewToCenter();
+                }, 50);
+            }
+        });
+        
+        // 监听键盘导航事件
+        this.editor.addEventListener('keyup', (e) => {
+            if (this.cursorSyncEnabled && ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
+                setTimeout(() => {
+                    this.scrollPreviewToCenter();
+                }, 50);
+            }
+        });
+    }
+    
+    // 简化的居中滚动功能
+    scrollPreviewToCenter() {
+        if (!this.cursorSyncEnabled) return;
+        
+        const cursorPosition = this.editor.selectionStart;
+        const content = this.editor.value;
+        
+        // 计算当前光标行号
+        const currentLine = (content.substring(0, cursorPosition).match(/\n/g) || []).length;
+        const lines = content.split('\n');
+        const currentLineText = lines[currentLine] || '';
+        
+        // 查找对应的预览元素
+        const targetElement = this.findPreviewElementForLine(currentLine);
+        
+        if (targetElement) {
+            // 高亮目标元素
+            this.clearPreviousHighlight();
+            targetElement.classList.add('cursor-highlight');
+            
+            // 滚动到居中位置
+            this.scrollElementToCenter(targetElement);
+            
+            // 1秒后移除高亮
+            if (this.highlightTimeout) {
+                clearTimeout(this.highlightTimeout);
+            }
+            
+            this.highlightTimeout = setTimeout(() => {
+                if (targetElement.classList.contains('cursor-highlight')) {
+                    targetElement.classList.remove('cursor-highlight');
+                }
+            }, 1000);
+        }
+    }
+
+    // 将元素滚动到预览区域的居中位置
+    scrollElementToCenter(element) {
+        if (!element) return;
+        
+        const previewContainer = this.preview;
+        const elementTop = element.offsetTop;
+        const containerHeight = previewContainer.clientHeight;
+        const elementHeight = element.offsetHeight;
+        
+        // 计算居中位置
+        const centerPosition = elementTop - (containerHeight / 2) + (elementHeight / 2);
+        
+        // 确保不会滚动到负值或超出范围
+        const maxScroll = previewContainer.scrollHeight - containerHeight;
+        const targetScrollTop = Math.max(0, Math.min(centerPosition, maxScroll));
+        
+        // 平滑滚动到目标位置
+        this.smoothScrollTo(targetScrollTop);
+    }
+    
+    getLineHeight(element) {
+        const computedStyle = window.getComputedStyle(element);
+        return parseFloat(computedStyle.lineHeight) || parseFloat(computedStyle.fontSize) * 1.2;
+    }
+    
+    calculateMatchScore(editorText, previewText) {
+        // 清理文本，移除markdown语法
+        const cleanEditorText = editorText
+            .replace(/[#*_`~\[\]()]/g, '') // 移除markdown符号
+            .replace(/!\[.*?\]\(.*?\)/g, '') // 移除图片链接
+            .replace(/\[.*?\]\(.*?\)/g, '$1') // 保留链接文本
+            .toLowerCase()
+            .trim();
+            
+        const cleanPreviewText = previewText
+            .toLowerCase()
+            .trim();
+        
+        if (!cleanEditorText || !cleanPreviewText) return 0;
+        
+        // 完全匹配检查
+        if (cleanEditorText === cleanPreviewText) return 1.0;
+        
+        // 包含关系检查
+        if (cleanPreviewText.includes(cleanEditorText)) return 0.8;
+        if (cleanEditorText.includes(cleanPreviewText)) return 0.7;
+        
+        // 分词匹配
+        const editorWords = cleanEditorText.split(/\s+/).filter(w => w.length > 2);
+        const previewWords = cleanPreviewText.split(/\s+/).filter(w => w.length > 2);
+        
+        if (editorWords.length === 0 || previewWords.length === 0) return 0;
+        
+        let matches = 0;
+        let totalWords = 0;
+        
+        editorWords.forEach(word => {
+            if (word.length > 2) { // 忽略太短的单词
+                totalWords++;
+                if (previewWords.some(pw => pw.includes(word) || word.includes(pw))) {
+                    matches++;
+                }
+            }
+        });
+        
+        // 加权平均，考虑文本长度
+        const lengthFactor = Math.min(cleanEditorText.length, cleanPreviewText.length) / 
+                           Math.max(cleanEditorText.length, cleanPreviewText.length);
+        
+        return totalWords > 0 ? (matches / totalWords) * lengthFactor : 0;
+    }
+    
+    setupCursorSync() {
+        // 简化光标同步：只在点击和键盘导航时触发
+        
+        // 点击事件已在 setupScrollSync 中处理
+        
+        // 键盘事件已在 setupScrollSync 中处理
+        
+        // 不再监听 selectionchange 事件，避免输入时的频繁触发
+    }
+
+    
+    clearPreviousHighlight() {
+        const highlightedElements = this.preview.querySelectorAll('.cursor-highlight');
+        highlightedElements.forEach(element => {
+            element.classList.remove('cursor-highlight');
+        });
+        
+        if (this.highlightTimeout) {
+            clearTimeout(this.highlightTimeout);
+            this.highlightTimeout = null;
+        }
+    }
+    
+    // 查找预览中对应的元素
+    findPreviewElementForLine(currentLineNumber) {
+        const lines = this.editor.value.split('\n');
+        const currentLine = lines[currentLineNumber] || '';
+        
+        // 获取光标位置
+        const cursorPosition = this.editor.selectionStart;
+        const textBeforeCursor = this.editor.value.substring(0, cursorPosition);
+        
+        // 计算光标在当前行的位置
+        const lineStart = textBeforeCursor.lastIndexOf('\n') + 1;
+        const columnPosition = cursorPosition - lineStart;
+        
+        // 提取光标前后的子串
+        const substring = this.extractSubstring(currentLine, columnPosition, 12);
+        
+        console.log(`当前行: ${currentLineNumber}, 子串: "${substring}"`);
+        
+        if (!substring.trim()) {
+            console.log('子串为空，返回null');
+            return null;
+        }
+        
+        // 在预览中搜索匹配的元素
+        const result = this.findMatchingElement(substring);
+        console.log('匹配结果:', result);
+        return result;
+    }
+    
+    // 提取光标位置周围的子串
+    extractSubstring(line, cursorPosition, initialLength) {
+        const start = Math.max(0, cursorPosition - Math.floor(initialLength / 2));
+        const end = Math.min(line.length, cursorPosition + Math.floor(initialLength / 2));
+        return line.substring(start, end);
+    }
+    
+    // 在预览中查找匹配的元素
+    findMatchingElement(initialSubstring) {
+        let substring = initialSubstring;
+        let substringLength = 12;
+        const maxAttempts = 5;
+        
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const matches = this.searchInPreview(substring);
+            console.log(`第${attempt + 1}次尝试, 子串: "${substring}", 匹配数: ${matches.length}`);
+            
+            if (matches.length === 1) {
+                console.log('找到唯一匹配，返回结果');
+                return matches[0];
+            } else if (matches.length === 0) {
+                // 没有匹配，尝试减少子串长度
+                if (substring.length > 3) {
+                    substring = substring.substring(1, substring.length - 1);
+                    continue;
+                } else {
+                    console.log('没有找到匹配，返回null');
+                    return null;
+                }
+            } else if (matches.length > 1 && attempt < maxAttempts - 1) {
+                // 多个匹配，增加子串长度
+                substringLength += 5;
+                const cursorPosition = Math.floor(substring.length / 2);
+                const lineContent = this.getCurrentLineContent();
+                if (lineContent) {
+                    substring = this.extractSubstring(lineContent, cursorPosition, substringLength);
+                }
+            } else {
+                // 最后一次尝试或无法扩展，返回第一个匹配
+                console.log('返回第一个匹配结果');
+                return matches[0];
+            }
+        }
+        
+        console.log('超过最大尝试次数，返回null');
+        return null;
+    }
+    
+
+
+
     setupAutoSave() {
         // 每30秒自动保存一次（如果有更改）
         setInterval(() => {
@@ -290,6 +626,149 @@ class MarkdownEditor {
                 this.saveContent();
             }
         }, 30000);
+    }
+    
+    // 简化的更新后处理（只做必要的清理）
+    handlePostUpdateSync() {
+        // 清除之前的延迟任务
+        if (this.updateSyncTimeout) {
+            clearTimeout(this.updateSyncTimeout);
+        }
+        
+        // 简化处理，不进行自动同步
+        this.isSyncingAfterUpdate = true;
+        
+        this.updateSyncTimeout = setTimeout(() => {
+            // 只重新设置光标同步，不进行自动滚动
+            if (this.cursorSyncEnabled) {
+                this.clearPreviousHighlight();
+                // 不自动触发光标同步，等待用户下次移动光标
+            }
+            
+            // 结束更新后同步标记
+            this.isSyncingAfterUpdate = false;
+        }, 100);
+    }
+    
+    // 在预览中搜索子串
+    searchInPreview(substring) {
+        const matches = [];
+        const cleanSubstring = substring.trim();
+        
+        if (!cleanSubstring) {
+            return matches;
+        }
+        
+        // 遍历预览中的所有文本节点
+        const walker = document.createTreeWalker(
+            this.preview,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+            const text = node.textContent;
+            if (text.includes(cleanSubstring)) {
+                // 找到包含子串的文本节点，获取其最近的有意义元素
+                let element = node.parentElement;
+                
+                // 向上查找到合适的容器元素
+                while (element && element !== this.preview) {
+                    if (this.isValidTargetElement(element)) {
+                        if (!matches.includes(element)) {
+                            matches.push(element);
+                        }
+                        break;
+                    }
+                    element = element.parentElement;
+                }
+            }
+        }
+        
+        return matches;
+    }
+    
+    // 判断是否是有效的目标元素
+    isValidTargetElement(element) {
+        const tagName = element.tagName.toLowerCase();
+        
+        // 排除不适合的元素
+        if (['script', 'style', 'meta', 'link'].includes(tagName)) {
+            return false;
+        }
+        
+        // 优先选择语义化元素
+        if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'blockquote', 'pre', 'code'].includes(tagName)) {
+            return true;
+        }
+        
+        // 其他块级元素也可以接受
+        const style = window.getComputedStyle(element);
+        return style.display === 'block' || style.display === 'list-item';
+    }
+    
+    // 获取当前行内容
+    getCurrentLineContent() {
+        const cursorPosition = this.editor.selectionStart;
+        const textBeforeCursor = this.editor.value.substring(0, cursorPosition);
+        const lineStart = textBeforeCursor.lastIndexOf('\n') + 1;
+        const lineEnd = this.editor.value.indexOf('\n', cursorPosition);
+        const actualLineEnd = lineEnd === -1 ? this.editor.value.length : lineEnd;
+        
+        return this.editor.value.substring(lineStart, actualLineEnd);
+    }
+
+    // 新增：平滑滚动到指定位置
+    smoothScrollTo(targetScrollTop) {
+        const currentScrollTop = this.preview.scrollTop;
+        const distance = targetScrollTop - currentScrollTop;
+        
+        // 如果距离太小，直接设置
+        if (Math.abs(distance) < 10) {
+            this.preview.scrollTop = targetScrollTop;
+            return;
+        }
+        
+        // 渐进式滚动
+        const duration = Math.min(300, Math.abs(distance) * 2); // 动态调整持续时间
+        const startTime = performance.now();
+        
+        const scroll = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // 使用easeOutCubic缓动函数
+            const eased = 1 - Math.pow(1 - progress, 3);
+            
+            this.preview.scrollTop = currentScrollTop + distance * eased;
+            
+            if (progress < 1) {
+                requestAnimationFrame(scroll);
+            }
+        };
+        
+        requestAnimationFrame(scroll);
+    }
+    
+    initScrollSyncButton() {
+        const scrollButton = document.getElementById('toggle-scroll-sync');
+        const cursorButton = document.getElementById('toggle-cursor-sync');
+        
+        // 滚动同步已禁用
+        if (scrollButton) {
+            scrollButton.className = 'tool-btn sync-disabled';
+            scrollButton.textContent = '🔐';
+            scrollButton.title = '滚动同步已禁用';
+        }
+        
+        // 点击居中默认启用
+        if (cursorButton) {
+            cursorButton.className = 'tool-btn sync-enabled';
+            cursorButton.textContent = '🎯';
+            cursorButton.title = '禁用点击居中';
+        }
     }
 
     // 文本操作辅助方法

@@ -312,6 +312,17 @@ pre > code {
     color: var(--c-base-00);
 }
 
+/* 滚动同步按钮状态 */
+.tool-btn.sync-enabled {
+    background-color: var(--c-accent-green);
+    color: white;
+}
+
+.tool-btn.sync-disabled {
+    background-color: #dc3545;
+    color: white;
+}
+
 /* Markdown编辑器 */
 .markdown-textarea {
     flex: 1;
@@ -599,6 +610,31 @@ pre > code {
 [data-theme="dark"] .btn-close:hover {
     background-color: rgba(255,255,255,0.1);
     color: var(--dark-theme-text);
+}
+
+/* 光标同步高亮样式 */
+.cursor-highlight {
+    background-color: rgba(0, 103, 251, 0.15);
+    border-left: 4px solid var(--c-accent-blue);
+    transition: all 0.3s ease;
+    animation: highlightFadeOut 1s ease-out forwards;
+}
+
+@keyframes highlightFadeOut {
+    0% {
+        background-color: rgba(0, 103, 251, 0.25);
+        border-left-color: var(--c-accent-blue);
+    }
+    100% {
+        background-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
+/* 暗色主题下的高亮样式 */
+[data-theme="dark"] .cursor-highlight {
+    background-color: rgba(88, 166, 255, 0.15);
+    border-left-color: var(--dark-theme-link);
 }
 
 /* 深色主题下的数学公式样式 */
