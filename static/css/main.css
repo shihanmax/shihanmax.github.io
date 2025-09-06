@@ -208,7 +208,13 @@ pre > code {
 
 /* 编辑器容器 */
 .editor-container {
+    /* 置顶布局，占满整个视口 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100vh;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     background-color: var(--c-base-3);
@@ -240,20 +246,32 @@ pre > code {
 .editor-main {
     display: flex;
     flex: 1;
-    min-height: 0;
+    /* 回到固定高度，只显示一屏 */
+    height: 0; /* 让flex生效 */
+    /* 左右留出间距 */
+    padding: 0 1rem;
+    gap: 1rem; /* 中间间距 */
 }
 
 /* 编辑窗格和预览窗格 */
-.editor-pane,
-.preview-pane {
-    flex: 1;
+.editor-pane {
+    flex: 1; /* 各占半屏 */
     display: flex;
     flex-direction: column;
     background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden; /* 防止内容溢出 */
 }
 
-.editor-pane {
-    border-right: var(--m-border);
+.preview-pane {
+    flex: 1; /* 各占半屏 */
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden; /* 防止内容溢出 */
 }
 
 /* 窗格标题栏 */
@@ -305,14 +323,17 @@ pre > code {
     line-height: 1.6;
     background-color: white;
     outline: none;
+    /* 恢复滚动条，只显示一屏 */
+    overflow-y: auto;
 }
 
 /* 预览内容 */
 .preview-content {
     flex: 1;
     padding: 2rem;
-    overflow-y: auto;
     background-color: white;
+    /* 恢复滚动条，只显示一屏 */
+    overflow-y: auto;
 }
 
 .preview-loading,
@@ -418,6 +439,31 @@ pre > code {
     color: white;
 }
 
+/* 关闭按钮特殊样式 */
+.btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--c-base-01);
+    cursor: pointer;
+    z-index: 1001;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+    background-color: rgba(0,0,0,0.1);
+    color: var(--c-base-00);
+}
+
 .btn-edit {
     background-color: var(--c-accent-green);
     color: white;
@@ -473,11 +519,14 @@ pre > code {
 @media (max-width: 768px) {
     .editor-main {
         flex-direction: column;
+        padding: 0 0.5rem;
+        gap: 0.5rem;
     }
     
-    .editor-pane {
-        border-right: none;
-        border-bottom: var(--m-border);
+    .editor-pane,
+    .preview-pane {
+        flex: 1;
+        min-height: 45vh; /* 移动设备上各占一半高度 */
     }
     
     .toolbar-left .editor-title {
@@ -521,6 +570,7 @@ pre > code {
 [data-theme="dark"] .preview-pane {
     background-color: var(--dark-theme-background);
     border-color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 [data-theme="dark"] .markdown-textarea,
@@ -540,8 +590,15 @@ pre > code {
 [data-theme="dark"] .btn:hover:not(.btn-save):not(.btn-cancel):not(.btn-edit) {
     background-color: #555;
 }
-    overflow-x: auto;
-    overflow-y: hidden;
+
+/* 暗色主题下的关闭按钮 */
+[data-theme="dark"] .btn-close {
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .btn-close:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: var(--dark-theme-text);
 }
 
 /* 深色主题下的数学公式样式 */

@@ -2,6 +2,11 @@
 
 {% block content %}
 <div class="editor-container">
+    <!-- 关闭按钮 -->
+    <button class="btn-close" onclick="window.location.href='{{ url_for('post_detail', year=post.year, month=post.month, slug=post.slug) }}'" title="关闭编辑器">
+        ×
+    </button>
+    
     <!-- 编辑器工具栏 -->
     <div class="editor-toolbar">
         <div class="toolbar-left">
