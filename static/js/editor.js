@@ -16,26 +16,10 @@ class MarkdownEditor {
         this.lastContent = this.editor.value;
         this.previewTimeout = null;
         this.scrollSyncEnabled = true;
-        this.isScrollingEditor = false;
-        this.isScrollingPreview = false;
         this.cursorSyncEnabled = true;
-        this.lastCursorLine = 0;
         this.highlightTimeout = null;
-        this.cursorSyncTimeout = null;
-        this.lastScrollSync = 0;
         
-        // Enhanced sync control
-        this.isSyncingAfterUpdate = false;
-        this.updateSyncTimeout = null;
-        this.scrollThrottle = null;
-        this.lastPreviewUpdate = 0;
-        this.syncOperationQueue = [];
-        this.isProcessingSyncQueue = false;
-        
-        // 用户滚动检测（不再需要）
-        // this.isUserScrollingEditor = false;
-        // this.userScrollTimeout = null;
-        // this.lastEditorScrollTop = 0;
+        // 删除未使用的滚动同步相关属性
         
         this.init();
     }
@@ -47,7 +31,6 @@ class MarkdownEditor {
         this.setupAutoSave();
         this.setupScrollSync();
         this.setupCursorSync();
-        this.initScrollSyncButton();
         this.preventPreviewInteraction();
     }
     
@@ -153,39 +136,7 @@ class MarkdownEditor {
             }
         });
         
-        // 切换滚动同步（禁用）
-        document.getElementById('toggle-scroll-sync').addEventListener('click', () => {
-            // 滚动同步已被禁用
-            const button = document.getElementById('toggle-scroll-sync');
-            button.textContent = '🔐';
-            button.title = '滚动同步已禁用';
-            button.className = 'tool-btn sync-disabled';
-            
-            this.showNotification('滚动同步功能已禁用', 'info');
-        });
-        
-        // 切换光标同步
-        document.getElementById('toggle-cursor-sync').addEventListener('click', () => {
-            this.cursorSyncEnabled = !this.cursorSyncEnabled;
-            const button = document.getElementById('toggle-cursor-sync');
-            
-            if (this.cursorSyncEnabled) {
-                button.textContent = '🎯';
-                button.title = '禁用点击居中';
-                button.className = 'tool-btn sync-enabled';
-            } else {
-                button.textContent = '⚫';
-                button.title = '启用点击居中';
-                button.className = 'tool-btn sync-disabled';
-                // 禁用时清除所有高亮
-                this.clearPreviousHighlight();
-            }
-            
-            this.showNotification(
-                this.cursorSyncEnabled ? '点击居中已启用' : '点击居中已禁用', 
-                'info'
-            );
-        });
+        // 删除滚动同步和光标同步按钮相关的事件监听器
     }
 
     bindKeyboardShortcuts() {
@@ -464,58 +415,6 @@ class MarkdownEditor {
         this.smoothScrollTo(targetScrollTop);
     }
     
-    getLineHeight(element) {
-        const computedStyle = window.getComputedStyle(element);
-        return parseFloat(computedStyle.lineHeight) || parseFloat(computedStyle.fontSize) * 1.2;
-    }
-    
-    calculateMatchScore(editorText, previewText) {
-        // 清理文本，移除markdown语法
-        const cleanEditorText = editorText
-            .replace(/[#*_`~\[\]()]/g, '') // 移除markdown符号
-            .replace(/!\[.*?\]\(.*?\)/g, '') // 移除图片链接
-            .replace(/\[.*?\]\(.*?\)/g, '$1') // 保留链接文本
-            .toLowerCase()
-            .trim();
-            
-        const cleanPreviewText = previewText
-            .toLowerCase()
-            .trim();
-        
-        if (!cleanEditorText || !cleanPreviewText) return 0;
-        
-        // 完全匹配检查
-        if (cleanEditorText === cleanPreviewText) return 1.0;
-        
-        // 包含关系检查
-        if (cleanPreviewText.includes(cleanEditorText)) return 0.8;
-        if (cleanEditorText.includes(cleanPreviewText)) return 0.7;
-        
-        // 分词匹配
-        const editorWords = cleanEditorText.split(/\s+/).filter(w => w.length > 2);
-        const previewWords = cleanPreviewText.split(/\s+/).filter(w => w.length > 2);
-        
-        if (editorWords.length === 0 || previewWords.length === 0) return 0;
-        
-        let matches = 0;
-        let totalWords = 0;
-        
-        editorWords.forEach(word => {
-            if (word.length > 2) { // 忽略太短的单词
-                totalWords++;
-                if (previewWords.some(pw => pw.includes(word) || word.includes(pw))) {
-                    matches++;
-                }
-            }
-        });
-        
-        // 加权平均，考虑文本长度
-        const lengthFactor = Math.min(cleanEditorText.length, cleanPreviewText.length) / 
-                           Math.max(cleanEditorText.length, cleanPreviewText.length);
-        
-        return totalWords > 0 ? (matches / totalWords) * lengthFactor : 0;
-    }
-    
     setupCursorSync() {
         // 简化光标同步：只在点击和键盘导航时触发
         
@@ -750,25 +649,6 @@ class MarkdownEditor {
         };
         
         requestAnimationFrame(scroll);
-    }
-    
-    initScrollSyncButton() {
-        const scrollButton = document.getElementById('toggle-scroll-sync');
-        const cursorButton = document.getElementById('toggle-cursor-sync');
-        
-        // 滚动同步已禁用
-        if (scrollButton) {
-            scrollButton.className = 'tool-btn sync-disabled';
-            scrollButton.textContent = '🔐';
-            scrollButton.title = '滚动同步已禁用';
-        }
-        
-        // 点击居中默认启用
-        if (cursorButton) {
-            cursorButton.className = 'tool-btn sync-enabled';
-            cursorButton.textContent = '🎯';
-            cursorButton.title = '禁用点击居中';
-        }
     }
 
     // 文本操作辅助方法

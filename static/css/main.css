@@ -312,17 +312,6 @@ pre > code {
     color: var(--c-base-00);
 }
 
-/* 滚动同步按钮状态 */
-.tool-btn.sync-enabled {
-    background-color: var(--c-accent-green);
-    color: white;
-}
-
-.tool-btn.sync-disabled {
-    background-color: #dc3545;
-    color: white;
-}
-
 /* Markdown编辑器 */
 .markdown-textarea {
     flex: 1;
