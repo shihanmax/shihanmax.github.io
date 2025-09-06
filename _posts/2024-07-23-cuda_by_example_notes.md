@@ -19,12 +19,11 @@ mathjax: true
 > - 2024-07-18: 更新第二章：Getting Started
 > - 2024-07-04: 更新第一章：Why CUDA? Why Now?
 
-
 <hr/>
 <br/>
 
 
-本文是书籍《CUDA By Example》的阅读笔记（or 不信达雅的翻译）。
+本文是书籍《CUDA By Example》的阅读笔记（or 不“信达雅”的翻译）。
 
 ## 第一章：为什么要用 CUDA C (Why CUDA? Why Now?)
 
