@@ -1,7 +1,7 @@
 ---
 Mathjax: true
 date: 2020-09-22 22:35:01
-display: true
+display_type: post
 layout: post
 syntaxHighlighter: true
 tags:

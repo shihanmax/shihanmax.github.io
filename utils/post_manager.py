@@ -111,15 +111,22 @@ class PostManager:
                 with open(filepath, 'r', encoding='utf-8') as f:
                     post = frontmatter.load(f)
                 
-                # 检查display字段，默认值根据文件名格式决定
-                display = post.metadata.get('display')
-                if display is None:
-                    # 默认值：以日期开头的文件为True，否则为False
-                    display = self._is_valid_filename(filename)
+                # 检查display_type字段，根据旧的display字段值进行转换
+                display_type = post.metadata.get('display_type')
+                if display_type is None:
+                    # 如果没有display_type字段，检查旧的display字段
+                    old_display = post.metadata.get('display')
+                    if old_display is True:
+                        display_type = 'post'
+                    elif old_display is False:
+                        display_type = 'none'
+                    else:
+                        # 默认值：以日期开头的文件为post，否则为none
+                        display_type = 'post' if self._is_valid_filename(filename) else 'none'
                 
-                # 如果display为False，则不展示这篇文章
-                if not display:
-                    print(f"Skipping post {filename} because display is set to False")
+                # 如果display_type为none，则不展示这篇文章
+                if display_type == 'none':
+                    print(f"Skipping post {filename} because display_type is set to 'none'")
                     continue
                 
                 # 构建文章数据
@@ -135,7 +142,7 @@ class PostManager:
                     'categories': post.metadata.get('categories', []),
                     'description': post.metadata.get('description', ''),
                     'layout': post.metadata.get('layout', 'post'),
-                    'display': display,  # 添加display字段到post_data
+                    'display_type': display_type,  # 添加display_type字段到post_data
                     'filename': filename,
                     'filepath': filepath
                 }

@@ -1,5 +1,5 @@
 ---
-display: false
+display_type: none
 ---
 
 #### 

@@ -1,6 +1,6 @@
 ---
 date: 2018-10-25 00:00:00
-display: true
+display_type: post
 layout: post
 syntaxHighlighter: true
 tags:

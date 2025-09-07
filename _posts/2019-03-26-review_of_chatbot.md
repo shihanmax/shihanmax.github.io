@@ -1,6 +1,6 @@
 ---
 date: 2019-03-26 00:00:00
-display: true
+display_type: post
 layout: post
 syntaxHighlighter: true
 tags:

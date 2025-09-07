@@ -1,6 +1,6 @@
 ---
 date: 2020-08-04 21:34:18
-display: true
+display_type: post
 layout: post
 mathjax: true
 syntaxHighlighter: true
