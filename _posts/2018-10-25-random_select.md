@@ -1,9 +1,11 @@
 ---
-title: "海量数据之随机选取"
-layout: post
 date: 2018-10-25 00:00:00
-tags: ["算法"]
-syntaxHighlighter: yes
+display: true
+layout: post
+syntaxHighlighter: true
+tags:
+- 算法
+title: 海量数据之随机选取
 ---
 
 问题：

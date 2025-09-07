@@ -1,10 +1,14 @@
 ---
-title:  "强化学习的数学基础 Lecture 0: Introduction"
-layout: post
 date: 2023-06-27 23:22:23
-tags:  ["Deep Learning", "RL", "强化学习的数学基础"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- RL
+- 强化学习的数学基础
+title: '强化学习的数学基础 Lecture 0: Introduction'
 ---
 
 西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：课程介绍（P2-P3）。
@@ -83,4 +87,3 @@ DP：1957年提出动态规划，用于最优控制、强化学习等。
 ## 4. 本课程相关细节
 
 线上课程同学可跳过这部分。
-

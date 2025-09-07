@@ -1,10 +1,13 @@
 ---
-title:  "《GPU高性能编程CUDA实战（CUDA By Example）》阅读笔记 合集"
-layout: post
 date: 2024-07-31 23:18:18
-tags:  ["CUDA", "HPC"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- CUDA
+- HPC
+title: 《GPU高性能编程CUDA实战（CUDA By Example）》阅读笔记 合集
 ---
 
 * 导航

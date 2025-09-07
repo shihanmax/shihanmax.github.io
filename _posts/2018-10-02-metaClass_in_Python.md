@@ -1,9 +1,11 @@
 ---
-title:  "Python元类（MetaClass）"
+date: 2018-10-02 00:00:00
+display: true
 layout: post
-date:   2018-10-02 00:00:00
-tags:  ["编程语言"]
-syntaxHighlighter: yes
+syntaxHighlighter: true
+tags:
+- 编程语言
+title: Python元类（MetaClass）
 ---
 
 ### 元类

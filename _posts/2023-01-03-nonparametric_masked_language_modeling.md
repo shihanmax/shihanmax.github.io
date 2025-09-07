@@ -1,10 +1,13 @@
 ---
-title:  "Non-parametric masked language modeling"
-layout: post
 date: 2023-01-03 22:22:18
-tags:  ["Deep Learning", "Language Model"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Language Model
+title: Non-parametric masked language modeling
 ---
 
 这篇文章简单记录一下最近读的Meta的一篇的有关非参掩码语言模型的论文。这篇文章主要讨论的是类似BERT中的掩码语言模型，仅涉及encoder，不涉及decoder。

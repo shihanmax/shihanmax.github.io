@@ -1,10 +1,13 @@
 ---
-title: How Transferable Are Features In Deep Neural Networks
-layout: post
-tags: ["Deep Learning", "Transfer Learning"]
-mathjax: true
-syntaxHighlighter: yes
 date: 2019-08-22 19:38:33
+display: true
+layout: post
+mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Transfer Learning
+title: How Transferable Are Features In Deep Neural Networks
 ---
 
 Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson
@@ -43,20 +46,3 @@ Jason Yosinski, Jeff Clune, Yoshua Bengio, and Hod Lipson
 3.  量化研究了随着任务差异性的提升，泛化能力如何下降
 4.  对比了浅层随机初始化和迁移学习的效果，后者更好
 5.  我们发现前层权重在新的数据集上微调后，在旧的数据集上的效果依然保持
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

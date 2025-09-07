@@ -1,10 +1,15 @@
 ---
-title:  "PyTorch源码阅读"
-layout: post
 date: 2022-04-09 23:05:29
-tags:  ["Deep Learning", "PyTorch", "源码阅读", "Catalog"]
-syntaxHighlighter: yes
+display: false
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- PyTorch
+- 源码阅读
+- Catalog
+title: PyTorch源码阅读
 ---
 
 工作后一直在用PyTorch编写模型，对于经常用到的一些API和类，结合搜索引擎基本上能够满足需求，但在这个过程中其实也存在一个认知较浅的问题，所谓“知其然却不知其所以然”，在日常使用中，我经常会产生一些疑问，比如：

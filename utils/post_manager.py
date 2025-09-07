@@ -98,11 +98,6 @@ class PostManager:
             if not filename.endswith('.md'):
                 continue
             
-            # 如果文件名不符合格式也跳过（不以yyyy-mm-dd-xxx.md开头）
-            if not self._is_valid_filename(filename):
-                logger.warning(f"Skipping file {filename} because it does not follow the format yyyy-mm-dd-xxx.md")
-                continue
-            
             # 解析文件名
             parsed = self._parse_filename(filename)
             if not parsed:
@@ -115,6 +110,17 @@ class PostManager:
             try:
                 with open(filepath, 'r', encoding='utf-8') as f:
                     post = frontmatter.load(f)
+                
+                # 检查display字段，默认值根据文件名格式决定
+                display = post.metadata.get('display')
+                if display is None:
+                    # 默认值：以日期开头的文件为True，否则为False
+                    display = self._is_valid_filename(filename)
+                
+                # 如果display为False，则不展示这篇文章
+                if not display:
+                    print(f"Skipping post {filename} because display is set to False")
+                    continue
                 
                 # 构建文章数据
                 post_data = {
@@ -129,6 +135,7 @@ class PostManager:
                     'categories': post.metadata.get('categories', []),
                     'description': post.metadata.get('description', ''),
                     'layout': post.metadata.get('layout', 'post'),
+                    'display': display,  # 添加display字段到post_data
                     'filename': filename,
                     'filepath': filepath
                 }

@@ -1,10 +1,13 @@
 ---
-title:  "序列标注实践"
-layout: post
 date: 2020-05-10 17:16:03
-tags: ["Sequence Labeling", "Machine Learning"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Sequence Labeling
+- Machine Learning
+title: 序列标注实践
 ---
 
 序列标注问题是一类典型的NLP问题，具体应用有：分词、词性标注、命名实体识别等。
@@ -196,24 +199,3 @@ pi, a, b = build_params(word2id, tag2id, n_tag, n_word, train_data_path)
 tag_sequence = viterbi(test_sentence, pi, a, b, word2id, id2tag)
 print(tag_sequence)  # ['DT', 'JJ', 'NN', 'VBZ', 'IN', 'DT', 'NN', 'MD', 'VB', 'DT', 'NN', '.']
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

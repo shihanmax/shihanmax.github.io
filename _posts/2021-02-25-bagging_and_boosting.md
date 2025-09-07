@@ -1,10 +1,13 @@
 ---
-title:  "集成学习小结"
+date: 2021-02-27 09:21:09
+display: true
 layout: post
-date:   2021-02-27 09:21:09
-tags:  ["集成学习", "Machine Learning"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- 集成学习
+- Machine Learning
+title: 集成学习小结
 ---
 
 集成学习主要有两个思路，Bagging和Boosting。
@@ -206,4 +209,3 @@ CatBoost相对于XGB和LGB的改进：
 7. [CatBoost: unbiased boosting with categorical features](https://arxiv.org/pdf/1706.09516.pdf)
 8. [Catboost: A Deeper Dive](https://www.kaggle.com/abhinand05/catboost-a-deeper-dive)
 9. [Catboost完全指南](https://zhuanlan.zhihu.com/p/102570430)
-

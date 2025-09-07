@@ -1,10 +1,12 @@
 ---
-title:  "实体、关系标注工具brat的使用"
-layout: post
 date: 2021-10-03 00:17:56
-tags:  ["NER"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- NER
+title: 实体、关系标注工具brat的使用
 ---
 
 brat是一个基于web的文本标注工具，可以对文本进行结构化注释。能够用于NLP中实体、关系、事件的数据标注，使用简单，可扩展性较高，这里简单记录一下安装和使用方法。

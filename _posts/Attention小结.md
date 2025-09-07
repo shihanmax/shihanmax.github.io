@@ -1,3 +1,7 @@
+---
+display: false
+---
+
 #### 
 
 attention最早在machine translation中被提出，用于seq2seq的解码过程中与encoder作注意力计算。
@@ -25,9 +29,4 @@ decoder RNN在第t个时间步的隐状态：$\rm{s}_t=f(\rm{s}_{t-1},y_{t-1},\r
   - Dot
   - General
   - Concat（Additive）
-- Scaled Dot-product 
-
-
-
-
-
+- Scaled Dot-product

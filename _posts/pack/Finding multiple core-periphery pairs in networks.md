@@ -1,13 +1,13 @@
 ---
-title:  "网络中的多C-P结构检测"
-layout: post
-date:   2018-12-13 00:00:00
 categories: Algorithm
-tags:  "CP"
-syntaxHighlighter: yes
+date: 2018-12-13 00:00:00
+display: false
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags: CP
+title: 网络中的多C-P结构检测
 ---
-
 
 # Finding multiple core-periphery pairs in networks
 

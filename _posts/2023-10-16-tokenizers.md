@@ -1,11 +1,15 @@
 ---
-title:  "语言模型中的tokenizer"
-layout: post
 date: 2023-09-16 15:02:12
-tags:  ["Transformer", "LLM"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Transformer
+- LLM
+title: 语言模型中的tokenizer
 ---
+
 在自然语言处理（NLP）任务中，分词算法扮演着至关重要的角色。它是语言模型理解文本的基础，通过对文本的切分，模型能够更有效地提取特征、捕捉语义。本文将深入探讨分词算法的不同类型、工作流程以及它们在实际应用中的表现。
 
 ## 分词流程

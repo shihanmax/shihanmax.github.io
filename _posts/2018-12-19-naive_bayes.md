@@ -1,10 +1,13 @@
 ---
-title:  "朴素贝叶斯"
+date: 2018-12-19 00:00:00
+display: true
 layout: post
-date:   2018-12-19 00:00:00
-tags:  ["Machine Learning", "PGM"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+- PGM
+title: 朴素贝叶斯
 ---
 
 ## 一、优缺点

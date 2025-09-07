@@ -1,10 +1,12 @@
 ---
-title:  "On Sentence Embedding"
-layout: post
 date: 2020-09-24 23:34:18
-tags:  ["Deep Learning"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+title: On Sentence Embedding
 ---
 
 This article will briefly introduce some papers on document representation.

@@ -1,12 +1,15 @@
 ---
-title:  "概率图模型"
-layout: post
 date: 2022-05-02 13:20:04
-tags: ["Machine Learning", "PGM", "Review"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+- PGM
+- Review
+title: 概率图模型
 ---
-
 
 ## 概率图模型总览
 

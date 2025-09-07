@@ -1,11 +1,15 @@
 ---
-title:  "RNN Training Tips and Tricks"
+date: 2019-01-25 00:00:00
+display: true
 layout: post
-date:   2019-01-25 00:00:00
-tags:  ["Deep Learning", "RNN"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- RNN
+title: RNN Training Tips and Tricks
 ---
+
 本文是一些在训练RNN模型的技巧和建议，来自[Andrej Karpathy](https://github.com/karpathy/char-rnn#tips-and-tricks).
 
 ## 监视训练集和验证集损失

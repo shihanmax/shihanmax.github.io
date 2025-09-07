@@ -1,12 +1,15 @@
 ---
-title:  "PyTorch源码阅读"
-layout: post
 date: 2022-05-01 23:02:34
-tags:  ["Deep Learning", "PyTorch", "源码阅读"]
-syntaxHighlighter: yes
+display: false
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- PyTorch
+- 源码阅读
+title: PyTorch源码阅读
 ---
-
 
 | 模型         | 训练数据量 | 训练数据构成                | tokenizer | 词表大小 | 位置编码 | 激活函数 | attention                     | Layer normalization        |
 | ------------ | ---------- | --------------------------- | --------- | -------- | -------- | -------- | ----------------------------- | -------------------------- |

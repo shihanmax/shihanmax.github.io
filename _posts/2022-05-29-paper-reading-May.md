@@ -1,10 +1,12 @@
 ---
-title:  "Paper Reading小结"
-layout: post
 date: 2022-05-29 12:17:16
-tags:  ["Paper Reading"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Paper Reading
+title: Paper Reading小结
 ---
 
 近期的paper reading小结。

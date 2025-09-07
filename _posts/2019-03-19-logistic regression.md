@@ -1,10 +1,12 @@
 ---
-title:  "逻辑回归(Logistic Regression)"
+date: 2019-03-19 00:00:00
+display: true
 layout: post
-date:   2019-03-19 00:00:00
-tags:  ["Machine Learning"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+title: 逻辑回归(Logistic Regression)
 ---
 
 ### A. 模型推导
@@ -85,8 +87,3 @@ $Loss_{L2}=\cfrac{1}{2}\beta \mid\mid\theta\mid\mid_2^2$
 - 不能解决非线性的问题，因为LR的决策面是线性的
 - 数据特征缺失或特征空间很大时效果不好
 - 包含高度线性相关特征时，不适合使用逻辑回归，会影响特征的解释性
-
-
-
-
-

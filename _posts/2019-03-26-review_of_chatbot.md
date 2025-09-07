@@ -1,9 +1,11 @@
 ---
-title:  "Recent Advances In Conversational NLP"
+date: 2019-03-26 00:00:00
+display: true
 layout: post
-date:   2019-03-26 00:00:00
-tags: ["Dialogue System"]
-syntaxHighlighter: yes
+syntaxHighlighter: true
+tags:
+- Dialogue System
+title: Recent Advances In Conversational NLP
 ---
 
 论文《Recent advances in conversational NLP :
@@ -158,6 +160,3 @@ $$Perplexity=e^{-\frac{1}{N} \sum log( P_{w_i})}$$
 1. 关于chatbot设计方面作了综述，基本框架与《自然语言处理综论》中相关章节基本相似，其中seq2seq相关部分并没有提到目前SOTA的Attention模型；
 2. 多轮对话没有涉及；
 3. 副标题是Towards the standardization of Chatbot building，但仅指出了目前chatbot设计不统一的现象，关于对话系统设计标准化，作者其实可以写的更丰富些。
-
-
-

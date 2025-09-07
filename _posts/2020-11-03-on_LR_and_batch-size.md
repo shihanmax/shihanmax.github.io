@@ -1,10 +1,13 @@
 ---
-title:  "学习率和batch size讨论"
+date: 2020-11-05 22:02:23
+display: true
 layout: post
-date:   2020-11-05 22:02:23
-tags:  ["Machine Learning", "Optimization"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+- Optimization
+title: 学习率和batch size讨论
 ---
 
 ## 一、学习率
@@ -85,8 +88,3 @@ mathjax: true
 [Essentially No Barriers in Neural Network Energy Landscape]( https://icml.cc/Conferences/2018/Schedule?showEvent=2780)
 
 [ON LARGE-BATCH TRAINING FOR DEEP LEARNING: GENERALIZATION GAP AND SHARP MINIMA ](https://arxiv.org/pdf/1609.04836.pdf)
-
-
-
-
-

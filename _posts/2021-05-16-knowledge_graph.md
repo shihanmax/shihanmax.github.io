@@ -1,12 +1,15 @@
 ---
-title:  "知识图谱"
-layout: post
 date: 2021-05-16 20:36:38
-tags:  ["Deep Learning", "Review", "Knowledge Graph"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Review
+- Knowledge Graph
+title: 知识图谱
 ---
-
 
 本文是对文章A Survey on Knowledge Graphs: Representation, Acquisition and Applications的内容摘要，主要讨论了以下四个方面：
 - knowledge graph representation learning：图谱表示学习

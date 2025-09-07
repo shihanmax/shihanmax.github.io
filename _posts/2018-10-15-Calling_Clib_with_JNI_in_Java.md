@@ -1,9 +1,12 @@
 ---
-title:  "Java通过JNI调用C库"
+date: 2018-10-15 00:00:00
+display: true
 layout: post
-date:   2018-10-15 00:00:00
-tags:  ["JNI", "编程语言"]
-syntaxHighlighter: yes
+syntaxHighlighter: true
+tags:
+- JNI
+- 编程语言
+title: Java通过JNI调用C库
 ---
 
 ### 什么是库

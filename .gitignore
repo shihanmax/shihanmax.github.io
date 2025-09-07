@@ -123,3 +123,4 @@ output/
 /online_resources
 
 .sass-cache/
+.qoder/

@@ -1,10 +1,12 @@
 ---
-title:  "Python中的模块、包、库与导入相关"
-layout: post
 date: 2022-04-04 14:06:06
-tags:  ["编程语言"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- 编程语言
+title: Python中的模块、包、库与导入相关
 ---
 
 今天简单梳理一下Python中的模块（Module）、包（Package）、库（Library）的区别，记录有关Python的模块和包导入的问题。

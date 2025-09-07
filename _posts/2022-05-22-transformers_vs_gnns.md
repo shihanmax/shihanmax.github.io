@@ -1,11 +1,16 @@
 ---
-title:  "Transformers and GNN"
-layout: post
 date: 2022-05-22 12:46:05
-tags:  ["Deep Learning", "GNN", "Transformer"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- GNN
+- Transformer
+title: Transformers and GNN
 ---
+
 在推荐系统、社交网络等场景中，图神经网络（Graph Neural Networks）的应用比较广泛，近年来一些GNN的变种如GCN（Graph convolutional Network）、GraphSAGE (Graph SAmple and aggreGatE)、GAT (Graph Attention Network)、GRN（Graph Recurrent Network）等在深度学习领域内逐渐引起关注，有一些模型在NLP领域也取得了不错的成绩。
 
 卷积神经网络（CNN）或递归神经网络（RNN）可以处理规整的输入（eg., grid-like structure$^{1}$），比如对于图像，可以看做一个张量，其中任意一个元素周围总是具有相同的结构，这样我们便可以使用一个卷积核对所有位置的元素进行投影和聚合；又比如可以将文本视为一个一维的token序列，使用RNN依序对每一个token进行处理（同时考虑上文的信息）。图神经网络的一个优势在于，其可以处理非结构化的数据，比如，在一个图中的两个节点，其一度、二度、..，邻居节点的数量不相同，但GNN可以对这种结构进行特征抽取。

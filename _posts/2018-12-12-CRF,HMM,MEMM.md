@@ -1,10 +1,13 @@
 ---
-title:  "CRF,HMM,MEMM的区别和联系"
+date: 2018-12-22 00:00:00
+display: true
 layout: post
-date:   2018-12-22 00:00:00
-tags:  ["Machine Learning", "PGM"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+- PGM
+title: CRF,HMM,MEMM的区别和联系
 ---
 
 ## 生成式模型和判别式模型

@@ -1,11 +1,14 @@
 ---
-title:  "HMM在中文分词中的应用"
+date: 2018-12-07 00:00:00
+display: false
 layout: post
-date:   2018-12-07 00:00:00
-tags: ["PGM"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- PGM
+title: HMM在中文分词中的应用
 ---
+
 ### 前言
 
 分词，命名实体识别，关系抽取，甚至是指代消解，都可以看成是一个序列标注的问题，这是NLP领域的基本问题，掌握序列标注对于更好地理解NLP任务有很大的帮助。这篇文章主要参考[^1]，是对这篇博文和网上其他一些资料的阅读笔记。

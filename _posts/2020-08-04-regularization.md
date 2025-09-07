@@ -1,11 +1,12 @@
 ---
-title:  "正则化"
-layout: post
 date: 2020-08-04 21:34:18
-tags: ["Machine Learning"]
-syntaxHighlighter: yes
-
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+title: 正则化
 ---
 
 在机器学习中，模型的训练过程即是在寻找一个**足够好**的函数$F^{\star}$，使得$F^{\star}$在训练数据和未来的新数据上都具有良好的推理效果。为了从候选函数空间$\{F\}$选择“好”的模型，人们引入损失函数的概念。一般地，对于样本$(x, y)$和模型$F$，假设模型对样本的预测值为$\hat{y}$，则损失函数被定义在$\mathbb{R}$的函数$l(y, \hat{y})$，用于描述预测值和真值的差距。
@@ -126,4 +127,3 @@ _{i \cdot}\Vert_1+\sum\limits_{i=1}^{R}\sum\limits_{j=1}^{r_i}\lambda_2\Vert w_{
 3. [wikipedia: 正则化](https://zh.wikipedia.org/wiki/正则化_(数学))
 4. [wikipedia: matrix norm](https://en.wikipedia.org/wiki/Matrix_norm)
 5. [CMU: Coordinate Descent](https://www.cs.cmu.edu/~ggordon/10725-F12/slides/25-coord-desc.pdf)
-

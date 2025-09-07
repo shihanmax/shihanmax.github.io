@@ -1,9 +1,12 @@
 ---
-title: "Elasticsearch初探"
-layout: post
 date: 2018-11-23 00:00:00
-tags: ["编程语言", "搜索"]
-syntaxHighlighter: yes
+display: true
+layout: post
+syntaxHighlighter: true
+tags:
+- 编程语言
+- 搜索
+title: Elasticsearch初探
 ---
 
 ## Elasticsearch ##

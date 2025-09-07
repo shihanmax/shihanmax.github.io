@@ -1,10 +1,14 @@
 ---
-title:  "算法工程基础 笔记"
-layout: post
 date: 2024-04-26 23:57:56
-tags:  ["Deep Learning", "LLM", "分布式训练"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- LLM
+- 分布式训练
+title: 算法工程基础 笔记
 ---
 
 本文是大模型训练基础课程的笔记，主要对分布式训练策略、机器学习框架和GPU作一些简单的总结。

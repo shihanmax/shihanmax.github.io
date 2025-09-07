@@ -1,9 +1,11 @@
 ---
-title:  "Python垃圾回收机制（GC）"
+date: 2018-10-10 00:00:00
+display: true
 layout: post
-date:   2018-10-10 00:00:00
-tags:  ["编程语言"]
-syntaxHighlighter: yes
+syntaxHighlighter: true
+tags:
+- 编程语言
+title: Python垃圾回收机制（GC）
 ---
 
 ### Python中的GC机制：

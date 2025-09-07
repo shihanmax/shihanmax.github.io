@@ -1,10 +1,13 @@
 ---
-title:  "多模态学习"
-layout: post
-date: 2020-09-22 22:35:01
-tags:  ["Multi-modal Learning", "Deep Learning"]
-syntaxHighlighter: yes
 Mathjax: true
+date: 2020-09-22 22:35:01
+display: true
+layout: post
+syntaxHighlighter: true
+tags:
+- Multi-modal Learning
+- Deep Learning
+title: 多模态学习
 ---
 
 多模态学习旨在搭建能够处理多种模态信息的模型，文章[Multimodal Machine Learning: A Survey and Taxonomy ](https://arxiv.org/pdf/1705.09406.pdf) 从表示（Representation）、翻译（Translate）、对齐（Alignment）、融合（Fusion）、协同学习（Co-learning）等几个方面对多模态学习进行综述。重点关注语言、图像和声音三种模态。
@@ -146,4 +149,3 @@ Refs:
 3. [One model to learn them all](https://arxiv.org/pdf/1706.05137.pdf)
 
 4. [UniT: Multimodal Multitask Learning with a Unified Transformer](http://xxx.itp.ac.cn/pdf/2102.10772.pdf)
-

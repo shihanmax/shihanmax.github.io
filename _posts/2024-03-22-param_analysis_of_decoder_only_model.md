@@ -1,10 +1,13 @@
 ---
-title:  "Decoder-only模型的参数与计算量分析"
-layout: post
 date: 2024-03-22 23:37:56
-tags:  ["Deep Learning", "LLM"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- LLM
+title: Decoder-only模型的参数与计算量分析
 ---
 
 目前主流大语言模型都采用transformer decoder作为基础架构，本文简单总结：大模型参数计算方法、训练及推理状态的显存占用分析，以及训练状态下所需计算量、计算时间分析。

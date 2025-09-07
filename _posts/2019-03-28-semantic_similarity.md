@@ -1,10 +1,13 @@
 ---
-title:  "语义相似度"
+date: 2019-03-28 00:00:00
+display: true
 layout: post
-date:   2019-03-28 00:00:00
-tags:  ["Deep Learning", "Similarity"] 
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Similarity
+title: 语义相似度
 ---
 
 论文《APPLYING DEEP LEARNING TO ANSWER SELECTION:
@@ -94,4 +97,3 @@ A STUDY AND AN OPEN TASK》阅读笔记
    3. 基于内积的：the angle between Q and A
 
    我们提出的*ESD是基于L2和基于内积的结合，在模型评估中表现最好。
-

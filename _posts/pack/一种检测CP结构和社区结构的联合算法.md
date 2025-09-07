@@ -1,12 +1,14 @@
 ---
-title:  "一种检测CP结构和社区结构的联合算法"
-layout: post
-date:   2018-12-20 00:00:00
 categories: 算法
-tags:  CP
-syntaxHighlighter: yes
+date: 2018-12-20 00:00:00
+display: false
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags: CP
+title: 一种检测CP结构和社区结构的联合算法
 ---
+
 Bing-Bing Xiang et.al
 
 ## Abstract

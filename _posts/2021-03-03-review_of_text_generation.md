@@ -1,10 +1,17 @@
 ---
-title:  "文本生成概览"
-layout: post
 date: 2021-03-03 21:32:02
-tags:  ["Deep Learning", "Text Generation", "GAN", "RNN", "VAE", "RL"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Text Generation
+- GAN
+- RNN
+- VAE
+- RL
+title: 文本生成概览
 ---
 
 ## 一、文本生成概览
@@ -237,4 +244,3 @@ abstracter的结构和PGN是一致的。
 14. [Extractive-abstractive summarization with pointer and coverage mechanism](https://dl.acm.org/doi/abs/10.1145/3226116.3226126)
 15. [Guiding Generation for Abstractive Text Summarization based on Key Information Guide Network](https://link.zhihu.com/?target=http%3A//aclweb.org/anthology/N18-2009)
 16. [Get To The Point: Summarization with Pointer-Generator Networks](https://link.zhihu.com/?target=http%3A//aclweb.org/anthology/P17-1099)
-

@@ -1,10 +1,13 @@
 ---
-title:  "优化算法"
+date: 2020-11-24 22:04:26
+display: true
 layout: post
-date:   2020-11-24 22:04:26
-tags:  ["Optimization", "Machine Learning"]
-syntaxHighlighter: yes
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Optimization
+- Machine Learning
+title: 优化算法
 ---
 
 根据优化目标是否受条件约束，优化算法分为无约束优化算法和带约束优化算法。

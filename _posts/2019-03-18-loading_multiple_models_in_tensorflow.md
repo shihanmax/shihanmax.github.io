@@ -1,9 +1,12 @@
 ---
-title:  "使用Tensotflow同时加载多个模型"
+date: 2019-03-18 17:38:00
+display: true
 layout: post
-date:   2019-03-18 17:38:00
-tags:  ["Deep Learning", "Tensorflow"]
-syntaxHighlighter: yes
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Tensorflow
+title: 使用Tensotflow同时加载多个模型
 ---
 
 使用单个模型时，一种模型的保存和加载的方式如下：

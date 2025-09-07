@@ -1,9 +1,11 @@
 ---
-title: 毕业旅行小记
-layout: post
-tags: ['旅行']
-syntaxHighlighter: yes
 date: 2019-06-20 16:18:22
+display: true
+layout: post
+syntaxHighlighter: true
+tags:
+- 旅行
+title: 毕业旅行小记
 ---
 
 ## 1. 出发

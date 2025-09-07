@@ -1,10 +1,12 @@
 ---
-title:  "Derivation of EM"
-layout: post
 date: 2020-08-09 17:16:03
-tags: ["Machine Learning"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Machine Learning
+title: Derivation of EM
 ---
 
 隐变量模型（Latent Variable Models）指模型中包含不可观测的隐含变量$z$，隐变量模型的求解根据$z$的已知与否分为两类：

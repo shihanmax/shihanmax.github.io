@@ -1,10 +1,14 @@
 ---
-title:  "文本的表示"
-layout: post
 date: 2022-05-08 11:52:06
-tags:  ["Deep Learning", "Representation Learning", "Review"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Representation Learning
+- Review
+title: 文本的表示
 ---
 
 现实世界中的数据模态类型很多，如图像，文本，表格，模拟信号等。表示学习的任务是：针对特定的模态，自动学习到一种对数据的表示，该表示能够方便地使用数学描述和计算的同时，对数据中的高维信息进行抽象和聚合。从而尽可能减弱对特征工程的依赖。

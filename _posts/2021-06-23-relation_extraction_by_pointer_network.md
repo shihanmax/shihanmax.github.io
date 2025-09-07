@@ -1,10 +1,15 @@
 ---
-title:  "一种使用Copy机制进行关系抽取的思路"
-layout: post
 date: 2021-06-24 20:34:56
-tags:  ["Deep Learning", "Knowledge Graph", "Pointer Net", "Relation Extraction"]
-syntaxHighlighter: yes
+display: true
+layout: post
 mathjax: true
+syntaxHighlighter: true
+tags:
+- Deep Learning
+- Knowledge Graph
+- Pointer Net
+- Relation Extraction
+title: 一种使用Copy机制进行关系抽取的思路
 ---
 
 在知识图谱构建过程中，实体识别和关系抽取是两个非常基础的任务，前者是一个典型的序列标注任务，目的是将文本中所有的实体抽取出来；后者则需要对所有有关系的实体间的关系进行识别，根据关系是否有层级，可看作是一个（多级）多类分类任务。
