@@ -273,11 +273,9 @@ class MarkdownEditor {
                     // 等待DOM更新完成后恢复位置
                     requestAnimationFrame(() => {
                         this.preview.scrollTop = currentPreviewScrollTop;
-                        // 然后处理同步操作
-                        this.handlePostUpdateSync();
                     });
                 } else {
-                    // 强制更新时不进行同步操作
+                    // 强制更新时保持当前位置
                 }
             } else {
                 this.preview.innerHTML = `<div class=\"preview-error\">预览失败: ${result.error}</div>`;
@@ -361,7 +359,13 @@ class MarkdownEditor {
     
     // 简化的居中滚动功能
     scrollPreviewToCenter() {
+        // 只在用户明确操作时才进行滚动同步，避免在输入时自动滚动
         if (!this.cursorSyncEnabled) return;
+        
+        // 避免在内容更新过程中触发滚动
+        if (this.isPreviewLoading || this.isSyncingAfterUpdate) {
+            return;
+        }
         
         const cursorPosition = this.editor.selectionStart;
         const content = this.editor.value;
@@ -657,9 +661,6 @@ class MarkdownEditor {
         return null;
     }
     
-
-
-
     setupAutoSave() {
         // 每30秒自动保存一次（如果有更改）
         setInterval(() => {
