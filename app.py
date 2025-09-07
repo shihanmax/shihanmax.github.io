@@ -402,18 +402,16 @@ def save_post(year, month, slug):
         success = post_manager.save_post_content(post['filepath'], content)
         
         if success:
-            # 触发同步
-            sync_success = post_manager.sync_blog()
-            if sync_success:
-                return jsonify({
-                    'success': True,
-                    'message': '保存成功并已同步'
-                })
-            else:
-                return jsonify({
-                    'success': True,
-                    'message': '保存成功，但同步失败。请检查网络连接或SSH配置。'
-                })
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=post_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
+            
+            return jsonify({
+                'success': True,
+                'message': '保存成功'
+            })
         else:
             return jsonify({
                 'success': False,
