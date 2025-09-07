@@ -453,26 +453,28 @@ html.dark-theme .rainbow-title {
 }
 
 .btn-save {
-    background-color: var(--c-accent-blue);
+    background-color: #28a745; /* 绿色，表示保存操作 */
     color: white;
-    border-color: var(--c-accent-blue);
+    border-color: #28a745;
+    font-weight: 500;
 }
 
 .btn-save:hover:not(:disabled) {
-    background-color: #0056d2;
-    border-color: #0056d2;
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 
 .btn-cancel {
-    background-color: #6c757d;
-    color: white;
+    background-color: #6c757d; /* 灰色，表示取消操作 */
+    color: white !important; /* 强制白色文字 */
     border-color: #6c757d;
+    font-weight: 500;
 }
 
 .btn-cancel:hover {
-    background-color: #545b62;
+    background-color: #5a6268;
     border-color: #545b62;
-    color: white;
+    color: white !important; /* 悬停时保持白色文字 */
 }
 
 /* 关闭按钮特殊样式 */
@@ -483,7 +485,7 @@ html.dark-theme .rainbow-title {
     background: none;
     border: none;
     font-size: 2rem;
-    color: var(--c-base-01);
+    color: #6c757d; /* 灰色，与取消按钮保持一致 */
     cursor: pointer;
     z-index: 1001;
     width: 3rem;
@@ -496,22 +498,28 @@ html.dark-theme .rainbow-title {
 }
 
 .btn-close:hover {
-    background-color: rgba(0,0,0,0.1);
-    color: var(--c-base-00);
+    background-color: rgba(108, 117, 125, 0.1); /* 灰色背景 */
+    color: #495057; /* 深灰色文字 */
 }
 
 .btn-edit {
-    background-color: var(--c-accent-green);
-    color: white;
-    border-color: var(--c-accent-green);
-    font-size: 1.2rem;
-    padding: 0.5rem 1rem;
+    background-color: #007bff; /* 使用更专业的蓝色 */
+    color: white !important; /* 强制白色文字 */
+    border-color: #007bff;
+    font-size: 1.4rem; /* 增大字体 */
+    padding: 0.6rem 1.2rem; /* 增加内边距 */
+    border-radius: 6px; /* 更圆润的边角 */
+    font-weight: 500; /* 稍微加粗 */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); /* 添加阴影效果 */
+    transition: all 0.3s ease; /* 平滑过渡效果 */
 }
 
 .btn-edit:hover {
-    background-color: #7bc653;
-    border-color: #7bc653;
-    color: white;
+    background-color: #0069d9; /* 悬停时更深的蓝色 */
+    border-color: #0062cc;
+    color: white !important; /* 悬停时保持白色文字 */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* 悬停时增强阴影 */
+    transform: translateY(-2px); /* 轻微上移效果 */
 }
 
 /* 编辑按钮在文章标题旁的样式 */
@@ -616,7 +624,7 @@ html.dark-theme .rainbow-title {
 }
 
 [data-theme="dark"] .tool-btn,
-[data-theme="dark"] .btn {
+[data-theme="dark"] .btn:not(.btn-edit) {
     background-color: var(--dark-theme-button-bg);
     border-color: var(--dark-theme-button-border);
     color: var(--dark-theme-text);
@@ -629,12 +637,12 @@ html.dark-theme .rainbow-title {
 
 /* 暗色主题下的关闭按钮 */
 [data-theme="dark"] .btn-close {
-    color: var(--dark-theme-text);
+    color: #adb5bd; /* 暗色主题下的灰色 */
 }
 
 [data-theme="dark"] .btn-close:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: var(--dark-theme-text);
+    background-color: rgba(108, 117, 125, 0.2); /* 暗色主题下的灰色背景 */
+    color: #f8f9fa; /* 暗色主题下的白色文字 */
 }
 
 /* 光标同步高亮样式 */
@@ -1962,11 +1970,12 @@ body.dark-theme .form-group label {
 }
 
 body.dark-theme .btn-close {
-    color: #ccc;
+    color: #adb5bd; /* 暗色主题下的灰色 */
 }
 
 body.dark-theme .btn-close:hover {
-    color: white;
+    background-color: rgba(108, 117, 125, 0.2); /* 暗色主题下的灰色背景 */
+    color: #f8f9fa; /* 暗色主题下的白色文字 */
 }
 
 /* 移动端适配 */

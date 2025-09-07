@@ -371,8 +371,15 @@ class MarkdownEditor {
         const lines = content.split('\n');
         const currentLineText = lines[currentLine] || '';
         
+        console.log('=== 滚动预览到中心 ===');
+        console.log('光标位置:', cursorPosition);
+        console.log('当前行号:', currentLine);
+        console.log('当前行内容:', currentLineText);
+        
         // 查找对应的预览元素
         const targetElement = this.findPreviewElementForLine(currentLine);
+        
+        console.log('目标元素:', targetElement);
         
         if (targetElement) {
             // 高亮目标元素
@@ -392,7 +399,10 @@ class MarkdownEditor {
                     targetElement.classList.remove('cursor-highlight');
                 }
             }, 1000);
+        } else {
+            console.log('未找到目标元素');
         }
+        console.log('=== 滚动预览到中心结束 ===');
     }
 
     // 将元素滚动到预览区域的居中位置
@@ -451,9 +461,20 @@ class MarkdownEditor {
         const lineStart = textBeforeCursor.lastIndexOf('\n') + 1;
         const columnPosition = cursorPosition - lineStart;
         
+        console.log('当前行号:', currentLineNumber);
+        console.log('当前行内容:', currentLine);
+        console.log('光标位置:', columnPosition);
+        
         // 检查是否在代码块中
         if (this.isInCodeBlockContext(currentLineNumber)) {
+            console.log('检测到在代码块中');
             return this.findCodeBlockElement(currentLineNumber);
+        }
+        
+        // 检查是否在行内代码中
+        if (this.isInInlineCodeContext(currentLine, columnPosition)) {
+            console.log('检测到在行内代码中');
+            return this.findInlineCodeElement(currentLine, columnPosition);
         }
         
         // 提取光标位置周围的子串
@@ -485,13 +506,41 @@ class MarkdownEditor {
             }
         }
         
+        console.log('是否在代码块中:', inCodeBlock);
         return inCodeBlock;
+    }
+    
+    // 检查是否在行内代码上下文中
+    isInInlineCodeContext(line, columnPosition) {
+        // 查找所有行内代码标记的位置
+        const inlineCodeMatches = [];
+        let match;
+        const regex = /`[^`]*`/g;
+        
+        while ((match = regex.exec(line)) !== null) {
+            inlineCodeMatches.push({
+                start: match.index,
+                end: match.index + match[0].length
+            });
+        }
+        
+        // 检查光标是否在任何一个行内代码标记内
+        for (const codeMatch of inlineCodeMatches) {
+            if (columnPosition >= codeMatch.start && columnPosition <= codeMatch.end) {
+                console.log('在行内代码中:', line.substring(codeMatch.start, codeMatch.end));
+                return true;
+            }
+        }
+        
+        console.log('不在行内代码中');
+        return false;
     }
     
     // 查找代码块元素
     findCodeBlockElement(currentLineNumber) {
         // 获取所有代码块元素
         const codeBlocks = this.preview.querySelectorAll('pre.highlight');
+        console.log('找到代码块数量:', codeBlocks.length);
         if (codeBlocks.length === 0) return null;
         
         // 计算当前行在哪个代码块中
@@ -500,16 +549,17 @@ class MarkdownEditor {
         
         let codeBlockIndex = 0;
         let inCodeBlock = false;
-        let codeBlockStartLine = -1;
         
         for (let i = 0; i <= currentLineNumber; i++) {
             const line = lines[i];
             if (line && line.trim().startsWith('```')) {
-                if (!inCodeBlock) {
-                    inCodeBlock = true;
-                    codeBlockStartLine = i;
+                inCodeBlock = !inCodeBlock;
+                if (inCodeBlock) {
+                    // 进入代码块
+                    console.log('进入代码块，行号:', i);
                 } else {
-                    inCodeBlock = false;
+                    // 离开代码块
+                    console.log('离开代码块，行号:', i);
                     if (i >= currentLineNumber) {
                         break;
                     }
@@ -518,13 +568,45 @@ class MarkdownEditor {
             }
         }
         
-        // 返回对应的代码块元素
-        if (codeBlockIndex < codeBlocks.length) {
+        console.log('代码块索引:', codeBlockIndex);
+        console.log('当前是否在代码块中:', inCodeBlock);
+        
+        // 如果当前行在代码块中，返回对应的代码块元素
+        if (inCodeBlock && codeBlockIndex < codeBlocks.length) {
+            console.log('返回代码块元素:', codeBlocks[codeBlockIndex]);
             return codeBlocks[codeBlockIndex];
         }
         
         // 如果没有找到精确匹配，返回第一个代码块
+        console.log('返回第一个代码块元素:', codeBlocks[0]);
         return codeBlocks[0];
+    }
+    
+    // 查找行内代码元素
+    findInlineCodeElement(currentLine, columnPosition) {
+        // 获取所有行内代码元素
+        const inlineCodeElements = this.preview.querySelectorAll('code');
+        console.log('找到行内代码元素数量:', inlineCodeElements.length);
+        if (inlineCodeElements.length === 0) return null;
+        
+        // 提取光标周围的文本作为搜索关键字
+        const substring = this.extractSubstring(currentLine, columnPosition, 15);
+        console.log('搜索子串:', substring);
+        
+        // 在行内代码元素中查找包含该文本的元素
+        for (let i = 0; i < inlineCodeElements.length; i++) {
+            const element = inlineCodeElements[i];
+            // 检查元素文本是否包含子串，并且不是代码块内的code元素
+            if (element.textContent.includes(substring) && 
+                !element.closest('pre')) {  // 不是代码块内的code元素
+                console.log('找到匹配的行内代码元素:', element);
+                return element;
+            }
+        }
+        
+        // 如果没有找到精确匹配，返回第一个行内代码元素
+        console.log('返回第一个行内代码元素:', inlineCodeElements[0]);
+        return inlineCodeElements[0];
     }
     
     // 提取光标位置周围的子串
