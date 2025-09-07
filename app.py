@@ -51,7 +51,9 @@ def inject_global_vars():
 @app.route('/')
 def index():
     """首页 - 显示文章归档"""
-    posts = post_manager.get_all_posts()
+    # 根据登录状态获取可见的文章
+    is_logged_in = bool(session.get('admin_logged_in'))
+    posts = post_manager.get_posts_by_visibility(is_logged_in)
     posts_by_year = post_manager.group_posts_by_year(posts)
     return render_template('index.html', 
                          posts_by_year=posts_by_year, 
@@ -63,6 +65,14 @@ def post_detail(year, month, slug):
     """文章详情页"""
     post = post_manager.get_post_by_slug(year, month, slug)
     if not post:
+        abort(404)
+    
+    # 检查文章的可见性
+    display_type = post.get('display_type', 'post')
+    is_logged_in = bool(session.get('admin_logged_in'))
+    
+    # 非登录状态下，隐藏display_type为'none'或'note'的文章
+    if not is_logged_in and display_type in ['none', 'note']:
         abort(404)
     
     # 使用缓存渲染markdown内容
@@ -78,7 +88,9 @@ def post_detail(year, month, slug):
 @app.route('/tags')
 def tags():
     """标签页面"""
-    all_tags = post_manager.get_all_tags()
+    # 根据登录状态获取可见的文章标签
+    is_logged_in = bool(session.get('admin_logged_in'))
+    all_tags = post_manager.get_tags_by_visibility(is_logged_in)
     return render_template('tags.html', 
                          tags=all_tags, 
                          page_type='tags',
@@ -134,8 +146,9 @@ def timeline():
     """时间线页面"""
     print("Timeline route called")
     
-    # 直接生成时间线视图，不使用timeline.md文件
-    posts = post_manager.get_all_posts()
+    # 根据登录状态获取可见的文章
+    is_logged_in = bool(session.get('admin_logged_in'))
+    posts = post_manager.get_posts_by_visibility(is_logged_in)
     print(f"Found {len(posts)} posts for timeline")
     if posts:
         print(f"First post: {posts[0].get('title', 'No title')} ({posts[0].get('date', 'No date')})")

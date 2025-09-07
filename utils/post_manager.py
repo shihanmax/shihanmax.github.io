@@ -170,6 +170,22 @@ class PostManager:
         
         return self._posts_cache or []
     
+    def get_posts_by_visibility(self, is_logged_in: bool = False) -> List[Dict]:
+        """根据登录状态获取可见的文章
+        非登录状态下：只显示display_type为'post'的文章
+        登录状态下：显示display_type为'post'和'note'的文章
+        """
+        all_posts = self.get_all_posts()
+        
+        if is_logged_in:
+            # 登录状态下显示post和note类型的文章
+            filtered_posts = [post for post in all_posts if post.get('display_type') in ['post', 'note']]
+        else:
+            # 非登录状态下只显示post类型的文章
+            filtered_posts = [post for post in all_posts if post.get('display_type') == 'post']
+        
+        return filtered_posts
+    
     def get_post_by_slug(self, year: int, month: int, slug: str) -> Optional[Dict]:
         """根据年月和slug获取文章"""
         posts = self.get_all_posts()
@@ -192,9 +208,34 @@ class PostManager:
         # 转换为有序字典，按年份降序
         return OrderedDict(sorted(grouped.items(), reverse=True))
     
+    def group_posts_by_tags(self, posts: List[Dict]) -> Dict[str, List[Dict]]:
+        """根据指定文章列表获取所有标签及对应的文章"""
+        tags = defaultdict(list)
+        
+        for post in posts:
+            for tag in post.get('tags', []):
+                tags[tag].append(post)
+        
+        # 按标签名排序
+        return dict(sorted(tags.items()))
+    
     def get_all_tags(self) -> Dict[str, List[Dict]]:
         """获取所有标签及对应的文章"""
+        # 注意：这个方法返回所有文章的标签，不考虑可见性过滤
+        # 如果需要根据登录状态过滤标签，应该使用get_tags_by_visibility方法
         posts = self.get_all_posts()
+        tags = defaultdict(list)
+        
+        for post in posts:
+            for tag in post.get('tags', []):
+                tags[tag].append(post)
+        
+        # 按标签名排序
+        return dict(sorted(tags.items()))
+    
+    def get_tags_by_visibility(self, is_logged_in: bool = False) -> Dict[str, List[Dict]]:
+        """根据登录状态获取可见文章的标签"""
+        posts = self.get_posts_by_visibility(is_logged_in)
         tags = defaultdict(list)
         
         for post in posts:
@@ -207,6 +248,11 @@ class PostManager:
     def get_posts_by_tag(self, tag: str) -> List[Dict]:
         """获取指定标签的文章"""
         posts = self.get_all_posts()
+        return [post for post in posts if tag in post.get('tags', [])]
+    
+    def get_posts_by_tag_with_visibility(self, tag: str, is_logged_in: bool = False) -> List[Dict]:
+        """根据标签和登录状态获取文章"""
+        posts = self.get_posts_by_visibility(is_logged_in)
         return [post for post in posts if tag in post.get('tags', [])]
     
     def get_recent_posts(self, limit: int = 10) -> List[Dict]:
