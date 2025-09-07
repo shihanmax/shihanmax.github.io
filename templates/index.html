@@ -7,7 +7,12 @@
         <ul class="c-archives__list">
             {% for post in posts %}
             <li class="c-archives__item">
-                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                <h3>
+                    <a href="{{ post.url }}">{{ post.title }}</a>
+                    {% if post.display_type == 'note' %}
+                    <span class="note-tag">NOTE</span>
+                    {% endif %}
+                </h3>
                 <p>{{ post.date.strftime('%b %-d, %Y') }}</p>
             </li>
             {% endfor %}

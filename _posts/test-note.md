@@ -2,6 +2,9 @@
 title: "测试笔记文章"
 date: 2024-01-01
 display_type: note
+tag:
+    - note
+    - sss
 ---
 
 这是一个测试笔记类型的文章，只有在登录状态下才会显示。
