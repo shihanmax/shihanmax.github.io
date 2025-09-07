@@ -205,7 +205,7 @@ def api_add_bookmark():
             return jsonify({
                 'success': True,
                 'data': bookmark,
-                'message': '书签添加成功，但同步失败'
+                'message': '书签添加成功，但同步失败。请检查网络连接或SSH配置。'
             })
     except Exception as e:
         return jsonify({
@@ -246,7 +246,7 @@ def api_update_bookmark(bookmark_id):
                 return jsonify({
                     'success': True,
                     'data': bookmark,
-                    'message': '书签更新成功，但同步失败'
+                    'message': '书签更新成功，但同步失败。请检查网络连接或SSH配置。'
                 })
         else:
             return jsonify({
@@ -278,7 +278,7 @@ def api_delete_bookmark(bookmark_id):
             else:
                 return jsonify({
                     'success': True,
-                    'message': '书签删除成功，但同步失败'
+                    'message': '书签删除成功，但同步失败。请检查网络连接或SSH配置。'
                 })
         else:
             return jsonify({
@@ -374,7 +374,7 @@ def edit_post(year, month, slug):
     if not post:
         abort(404)
     
-    # 读取原始markdown内容
+    # 读取原始内容
     try:
         with open(post['filepath'], 'r', encoding='utf-8') as f:
             raw_content = f.read()
@@ -423,7 +423,7 @@ def save_post(year, month, slug):
             else:
                 return jsonify({
                     'success': True,
-                    'message': '保存成功，但同步失败'
+                    'message': '保存成功，但同步失败。请检查网络连接或SSH配置。'
                 })
         else:
             return jsonify({
@@ -445,7 +445,7 @@ def preview_post(year, month, slug):
         data = request.get_json()
         content = data.get('content', '')
         
-        # 渲染markdown内容
+        # 渲染内容
         rendered_content = markdown_parser.render(content)
         
         return jsonify({

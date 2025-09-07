@@ -1,19 +1,5 @@
 {
-  "bookmarks": [
-    {
-      "id": 6,
-      "title": "test",
-      "url": "http://shihanmax.top",
-      "description": "",
-      "tags": [
-        "代码",
-        "开源",
-        "版本控制，1，2，3"
-      ],
-      "created_at": "2025-09-07T00:15:31.886211",
-      "updated_at": "2025-09-07T00:15:31.886219"
-    }
-  ],
+  "bookmarks": [],
   "categories": [
     "开发工具",
     "学习资源",

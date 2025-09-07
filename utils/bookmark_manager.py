@@ -102,7 +102,11 @@ class BookmarkManager:
                 print(f"Output: {result.stdout.strip()}")
                 return True
             else:
-                print(f"Blog sync failed: {result.stderr.strip()}")
+                error_msg = result.stderr.strip()
+                print(f"Blog sync failed: {error_msg}")
+                # Check if it's an SSH connection error
+                if "kex_exchange_identification" in error_msg or "Connection reset by peer" in error_msg:
+                    print("SSH connection issue detected. This may be due to network problems or SSH key configuration issues.")
                 return False
                 
         except subprocess.TimeoutExpired:
