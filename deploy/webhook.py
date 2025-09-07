@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # 博客根目录
-BLOG_ROOT = "/Users/shihanmax/Documents/code/blog"
+BLOG_ROOT = "."
 
 
 def git_pull():

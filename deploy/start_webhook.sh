@@ -24,7 +24,7 @@ source venv/bin/activate
 
 # 安装额外依赖
 echo "安装webhook服务依赖..."
-pip install psutil
+pip install psutil flask
 
 # 检查环境
 echo "检查环境..."
