@@ -7,6 +7,7 @@
 
 import json
 import os
+import subprocess
 from datetime import datetime
 from typing import List, Dict, Optional
 
@@ -76,7 +77,41 @@ class BookmarkManager:
         """保存书签数据"""
         with open(self.data_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
-    
+
+    def sync_blog(self) -> bool:
+        """执行博客同步脚本"""
+        try:
+            blog_root = os.path.dirname(os.path.dirname(__file__))
+            update_script = os.path.join(blog_root, 'update.sh')
+            
+            if not os.path.exists(update_script):
+                print(f"Update script not found: {update_script}")
+                return False
+            
+            # 切换到博客根目录并执行update.sh
+            result = subprocess.run(
+                ['bash', update_script], 
+                cwd=blog_root,
+                capture_output=True, 
+                text=True, 
+                timeout=60
+            )
+            
+            if result.returncode == 0:
+                print("Blog sync completed successfully")
+                print(f"Output: {result.stdout.strip()}")
+                return True
+            else:
+                print(f"Blog sync failed: {result.stderr.strip()}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            print("Blog sync timeout")
+            return False
+        except Exception as e:
+            print(f"Error during blog sync: {e}")
+            return False
+
     def get_all_bookmarks(self) -> List[Dict]:
         """获取所有书签"""
         data = self._load_data()

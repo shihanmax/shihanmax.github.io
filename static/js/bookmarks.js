@@ -251,8 +251,9 @@ class BookmarkManager {
             const result = await response.json();
             
             if (result.success) {
+                // 显示完整的消息，包括同步状态
                 this.showMessage(
-                    this.currentBookmarkId ? '书签更新成功' : '书签添加成功',
+                    result.message || (this.currentBookmarkId ? '书签更新成功' : '书签添加成功'),
                     'success'
                 );
                 this.hideModal();

@@ -11,6 +11,7 @@ import os
 import re
 import logging
 import frontmatter
+import subprocess
 from datetime import datetime
 from collections import defaultdict, OrderedDict
 from typing import List, Dict, Optional, Tuple
@@ -314,4 +315,38 @@ class PostManager:
                 except Exception as restore_error:
                     logger.error(f"Failed to restore backup for {filepath}: {restore_error}")
             
+            return False
+
+    def sync_blog(self) -> bool:
+        """执行博客同步脚本"""
+        try:
+            blog_root = os.path.dirname(os.path.dirname(__file__))
+            update_script = os.path.join(blog_root, 'update.sh')
+            
+            if not os.path.exists(update_script):
+                logger.error(f"Update script not found: {update_script}")
+                return False
+            
+            # 切换到博客根目录并执行update.sh
+            result = subprocess.run(
+                ['bash', update_script], 
+                cwd=blog_root,
+                capture_output=True, 
+                text=True, 
+                timeout=60
+            )
+            
+            if result.returncode == 0:
+                logger.info("Blog sync completed successfully")
+                logger.info(f"Output: {result.stdout.strip()}")
+                return True
+            else:
+                logger.error(f"Blog sync failed: {result.stderr.strip()}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            logger.error("Blog sync timeout")
+            return False
+        except Exception as e:
+            logger.error(f"Error during blog sync: {e}")
             return False

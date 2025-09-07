@@ -192,10 +192,21 @@ def api_add_bookmark():
             tags=data.get('tags', [])
         )
         
-        return jsonify({
-            'success': True,
-            'data': bookmark
-        })
+        # 触发同步
+        sync_success = bookmark_manager.sync_blog()
+        
+        if sync_success:
+            return jsonify({
+                'success': True,
+                'data': bookmark,
+                'message': '书签添加成功并已同步'
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'data': bookmark,
+                'message': '书签添加成功，但同步失败'
+            })
     except Exception as e:
         return jsonify({
             'success': False,
@@ -222,10 +233,21 @@ def api_update_bookmark(bookmark_id):
         )
         
         if bookmark:
-            return jsonify({
-                'success': True,
-                'data': bookmark
-            })
+            # 触发同步
+            sync_success = bookmark_manager.sync_blog()
+            
+            if sync_success:
+                return jsonify({
+                    'success': True,
+                    'data': bookmark,
+                    'message': '书签更新成功并已同步'
+                })
+            else:
+                return jsonify({
+                    'success': True,
+                    'data': bookmark,
+                    'message': '书签更新成功，但同步失败'
+                })
         else:
             return jsonify({
                 'success': False,
@@ -245,10 +267,19 @@ def api_delete_bookmark(bookmark_id):
         success = bookmark_manager.delete_bookmark(bookmark_id)
         
         if success:
-            return jsonify({
-                'success': True,
-                'message': '书签删除成功'
-            })
+            # 触发同步
+            sync_success = bookmark_manager.sync_blog()
+            
+            if sync_success:
+                return jsonify({
+                    'success': True,
+                    'message': '书签删除成功并已同步'
+                })
+            else:
+                return jsonify({
+                    'success': True,
+                    'message': '书签删除成功，但同步失败'
+                })
         else:
             return jsonify({
                 'success': False,
@@ -382,10 +413,18 @@ def save_post(year, month, slug):
         success = post_manager.save_post_content(post['filepath'], content)
         
         if success:
-            return jsonify({
-                'success': True,
-                'message': '保存成功'
-            })
+            # 触发同步
+            sync_success = post_manager.sync_blog()
+            if sync_success:
+                return jsonify({
+                    'success': True,
+                    'message': '保存成功并已同步'
+                })
+            else:
+                return jsonify({
+                    'success': True,
+                    'message': '保存成功，但同步失败'
+                })
         else:
             return jsonify({
                 'success': False,

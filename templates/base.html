@@ -132,8 +132,8 @@
     <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese" rel="stylesheet">
     
     <!-- 样式 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=1.0.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}?v=1.0.1">
     
     <!-- MathJax 优化配置 -->
     <script>
@@ -207,9 +207,9 @@
     </main>
 
     <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/fortune.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}?v=1.0.1"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0.1"></script>
+    <script src="{{ url_for('static', filename='js/fortune.js') }}?v=1.0.1"></script>
     
     <!-- 额外的JavaScript文件 -->
     {% block extra_js %}{% endblock %}
@@ -268,9 +268,11 @@
                 const headerTitle = document.querySelector('header h1');
                 if (headerTitle) {
                     if (result.logged_in) {
-                        headerTitle.classList.add('rainbow-title');
+                        headerTitle.classList.add('logged-in-title');
+                        headerTitle.classList.remove('rainbow-title'); // 移除旧的彩虹样式
                     } else {
-                        headerTitle.classList.remove('rainbow-title');
+                        headerTitle.classList.remove('logged-in-title');
+                        headerTitle.classList.remove('rainbow-title'); // 确保清除所有特殊样式
                     }
                 }
             } catch (error) {

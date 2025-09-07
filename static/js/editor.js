@@ -321,7 +321,7 @@ class MarkdownEditor {
             
             if (result.success) {
                 this.markAsClean();
-                this.showNotification('保存成功！', 'success');
+                this.showNotification(result.message || '保存成功！', 'success');
             } else {
                 throw new Error(result.error || '保存失败');
             }
