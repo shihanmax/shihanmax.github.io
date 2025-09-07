@@ -1,18 +1,6 @@
 {
   "bookmarks": [
     {
-      "id": 5,
-      "title": "测试撒",
-      "url": "http://127.0.0.1:8081/bookmarks",
-      "description": "",
-      "tags": [
-        "标签",
-        "开源"
-      ],
-      "created_at": "2025-08-25T22:52:26.577375",
-      "updated_at": "2025-08-25T22:52:26.577383"
-    },
-    {
       "id": 6,
       "title": "test",
       "url": "http://shihanmax.top",
