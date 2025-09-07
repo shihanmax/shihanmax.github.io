@@ -7,6 +7,15 @@
         <p class="c-article__time">
             <time datetime="{{ post.date.isoformat() }}">{{ post.date.strftime('%B %-d, %Y') }}</time>
         </p>
+        <!-- 编辑按钮（仅对管理员显示） -->
+        <div class="c-article__actions admin-only" style="display: none;">
+            <a href="{{ url_for('edit_post', year=post.year, month=post.month, slug=post.slug) }}" 
+               class="btn btn-edit" 
+               title="编辑文章">
+                <span class="icon">✏️</span>
+                编辑
+            </a>
+        </div>
     </header>
 
     <main class="c-article__main">

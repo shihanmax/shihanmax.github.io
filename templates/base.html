@@ -132,8 +132,8 @@
     <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese" rel="stylesheet">
     
     <!-- 样式 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=1.0.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}?v=1.0.1">
     
     <!-- MathJax 优化配置 -->
     <script>
@@ -181,7 +181,8 @@
                 <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
                 <a href="{{ url_for('bookmarks') }}">Bookmarks</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('about') }}">About</a><span class="u-separate"> | </span>
+                <a href="{{ url_for('admin_login') }}" id="global-login-btn">Login</a>
             </p>
             {% else %}
             <p>
@@ -206,9 +207,12 @@
     </main>
 
     <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/fortune.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}?v=1.0.1"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0.1"></script>
+    <script src="{{ url_for('static', filename='js/fortune.js') }}?v=1.0.1"></script>
+    
+    <!-- 额外的JavaScript文件 -->
+    {% block extra_js %}{% endblock %}
     
     <!-- 启用过渡效果 -->
     <script>
@@ -226,6 +230,9 @@
     <!-- MathJax重新渲染脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 检查管理员状态并应用相应的标题样式
+            checkAdminStatusAndUpdateTitle();
+            
             // 检查页面是否包含数学公式
             const hasMath = document.body.innerHTML.includes('$');
             
@@ -238,6 +245,40 @@
                 });
             }
         });
+        
+        // 检查管理员状态并更新标题样式的函数
+        async function checkAdminStatusAndUpdateTitle() {
+            try {
+                const response = await fetch('/admin/status');
+                const result = await response.json();
+                
+                const adminOnlyElements = document.querySelectorAll('.admin-only');
+                adminOnlyElements.forEach(el => {
+                    el.style.display = result.logged_in ? 'flex' : 'none';
+                });
+                
+                // 控制全局登录按钮的显示
+                const globalLoginBtn = document.getElementById('global-login-btn');
+                if (globalLoginBtn) {
+                    globalLoginBtn.textContent = result.logged_in ? 'Logout' : 'Login';
+                    globalLoginBtn.href = result.logged_in ? '/admin/logout' : '/admin/login';
+                }
+                
+                // 根据登录状态更新标题样式
+                const headerTitle = document.querySelector('header h1');
+                if (headerTitle) {
+                    if (result.logged_in) {
+                        headerTitle.classList.add('logged-in-title');
+                        headerTitle.classList.remove('rainbow-title'); // 移除旧的彩虹样式
+                    } else {
+                        headerTitle.classList.remove('logged-in-title');
+                        headerTitle.classList.remove('rainbow-title'); // 确保清除所有特殊样式
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+            }
+        }
     </script>
 </body>
 </html>

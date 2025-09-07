@@ -11,6 +11,7 @@ import os
 import re
 import logging
 import frontmatter
+import subprocess
 from datetime import datetime
 from collections import defaultdict, OrderedDict
 from typing import List, Dict, Optional, Tuple
@@ -270,3 +271,86 @@ class PostManager:
         self._rendered_cache[cache_key] = rendered_content
         
         return rendered_content
+    
+    def save_post_content(self, filepath: str, content: str) -> bool:
+        """保存文章内容到文件"""
+        try:
+            # 创建备份文件
+            backup_path = filepath + '.backup'
+            if os.path.exists(filepath):
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    backup_content = f.read()
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(backup_content)
+            
+            # 保存新内容
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            # 清除相关缓存
+            self._posts_cache = None
+            self._rendered_cache.clear()
+            self._page_cache.clear()
+            
+            # 删除备份文件（保存成功后）
+            if os.path.exists(backup_path):
+                os.remove(backup_path)
+            
+            logger.info(f"Successfully saved post content to {filepath}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error saving post content to {filepath}: {e}")
+            
+            # 如果保存失败，尝试恢复备份
+            backup_path = filepath + '.backup'
+            if os.path.exists(backup_path):
+                try:
+                    with open(backup_path, 'r', encoding='utf-8') as f:
+                        backup_content = f.read()
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(backup_content)
+                    os.remove(backup_path)
+                    logger.info(f"Restored backup for {filepath}")
+                except Exception as restore_error:
+                    logger.error(f"Failed to restore backup for {filepath}: {restore_error}")
+            
+            return False
+
+    def sync_blog(self) -> bool:
+        """执行博客同步脚本"""
+        try:
+            blog_root = os.path.dirname(os.path.dirname(__file__))
+            update_script = os.path.join(blog_root, 'update.sh')
+            
+            if not os.path.exists(update_script):
+                logger.error(f"Update script not found: {update_script}")
+                return False
+            
+            # 切换到博客根目录并执行update.sh
+            result = subprocess.run(
+                ['bash', update_script], 
+                cwd=blog_root,
+                capture_output=True, 
+                text=True, 
+                timeout=30  # 减少超时时间以避免卡住
+            )
+            
+            if result.returncode == 0:
+                logger.info("Blog sync completed successfully")
+                logger.info(f"Output: {result.stdout.strip()}")
+                return True
+            else:
+                error_msg = result.stderr.strip()
+                logger.error(f"Blog sync failed: {error_msg}")
+                # Check if it's an SSH connection error
+                if "kex_exchange_identification" in error_msg or "Connection reset by peer" in error_msg:
+                    logger.error("SSH connection issue detected. This may be due to network problems or SSH key configuration issues.")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            logger.error("Blog sync timeout")
+            return False
+        except Exception as e:
+            logger.error(f"Error during blog sync: {e}")
+            return False

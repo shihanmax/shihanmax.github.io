@@ -192,9 +192,16 @@ def api_add_bookmark():
             tags=data.get('tags', [])
         )
         
+        # 触发同步（异步执行，不阻塞主操作）
+        import threading
+        sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+        sync_thread.daemon = True
+        sync_thread.start()
+        
         return jsonify({
             'success': True,
-            'data': bookmark
+            'data': bookmark,
+            'message': '书签添加成功'
         })
     except Exception as e:
         return jsonify({
@@ -222,9 +229,16 @@ def api_update_bookmark(bookmark_id):
         )
         
         if bookmark:
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
+            
             return jsonify({
                 'success': True,
-                'data': bookmark
+                'data': bookmark,
+                'message': '书签更新成功'
             })
         else:
             return jsonify({
@@ -245,6 +259,12 @@ def api_delete_bookmark(bookmark_id):
         success = bookmark_manager.delete_bookmark(bookmark_id)
         
         if success:
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
+            
             return jsonify({
                 'success': True,
                 'message': '书签删除成功'
@@ -324,7 +344,7 @@ def admin_login():
 def admin_logout():
     """管理员登出"""
     session.pop('admin_logged_in', None)
-    return redirect(url_for('bookmarks'))
+    return redirect(url_for('index'))
 
 # 检查登录状态API
 @app.route('/admin/status')
@@ -333,6 +353,98 @@ def admin_status():
     return jsonify({
         'logged_in': bool(session.get('admin_logged_in'))
     })
+
+# 编辑器路由
+@app.route('/<int:year>/<int:month>/<slug>/edit')
+@admin_required
+def edit_post(year, month, slug):
+    """文章编辑页面 - 需要管理员权限"""
+    post = post_manager.get_post_by_slug(year, month, slug)
+    if not post:
+        abort(404)
+    
+    # 读取原始内容
+    try:
+        with open(post['filepath'], 'r', encoding='utf-8') as f:
+            raw_content = f.read()
+    except Exception as e:
+        abort(500)
+    
+    return render_template('edit_post.html', 
+                         post=post, 
+                         raw_content=raw_content,
+                         page_type='editor',
+                         title=f'Edit: {post["title"]}')
+
+@app.route('/api/posts/<int:year>/<int:month>/<slug>/save', methods=['POST'])
+@admin_required
+def save_post(year, month, slug):
+    """保存文章内容 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        content = data.get('content')
+        
+        if not content:
+            return jsonify({
+                'success': False,
+                'error': '内容不能为空'
+            }), 400
+        
+        # 获取文章信息
+        post = post_manager.get_post_by_slug(year, month, slug)
+        if not post:
+            return jsonify({
+                'success': False,
+                'error': '文章不存在'
+            }), 404
+        
+        # 保存文件
+        success = post_manager.save_post_content(post['filepath'], content)
+        
+        if success:
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=post_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
+            
+            return jsonify({
+                'success': True,
+                'message': '保存成功'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '保存失败'
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/posts/<int:year>/<int:month>/<slug>/preview', methods=['POST'])
+@admin_required
+def preview_post(year, month, slug):
+    """预览文章内容 - 需要管理员权限"""
+    try:
+        data = request.get_json()
+        content = data.get('content', '')
+        
+        # 渲染内容
+        rendered_content = markdown_parser.render(content)
+        
+        return jsonify({
+            'success': True,
+            'html': rendered_content
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 
 if __name__ == '__main__':

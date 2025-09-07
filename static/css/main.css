@@ -202,6 +202,472 @@ pre > code {
     overflow-y: hidden;
 }
 
+/* 彩虹色标题样式 - 静态红到紫色均布 */
+/* 已废弃，现在使用金色下划线样式 */
+
+/* 深色主题下的彩虹色标题 */
+/* 已废弃，现在使用金色下划线样式 */
+
+/* 登录后的金色下划线标题样式 */
+.logged-in-title {
+    position: relative;
+    display: inline-block;
+}
+
+.logged-in-title::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700); /* 金色渐变下划线 */
+    border-radius: 2px;
+}
+
+/* 深色主题下的登录标题样式 */
+html.dark-theme .logged-in-title::after {
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700); /* 深色主题下也使用金色 */
+}
+
+/* ==========================================================================
+   编辑器样式
+   ========================================================================== */
+
+/* 编辑器容器 */
+.editor-container {
+    /* 置顶布局，占满整个视口 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5 !important; /* 与博客整体风格一致的浅色背景 */
+}
+
+/* 深色主题下的编辑器容器 */
+/* 深色主题下的编辑器容器 */
+html.dark-theme .editor-container {
+    background-color: #1a1a1a !important; /* 与博客整体风格一致的深色背景 */
+}
+
+/* 工具栏 */
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--c-base-2);
+    border-bottom: var(--m-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.toolbar-left .editor-title {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--c-base-01);
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 编辑器主体 */
+.editor-main {
+    display: flex;
+    flex: 1;
+    /* 回到固定高度，只显示一屏 */
+    height: 0; /* 让flex生效 */
+    /* 左右留出间距 */
+    padding: 0 1rem;
+    gap: 1rem; /* 中间间距 */
+}
+
+/* 编辑窗格和预览窗格 */
+.editor-pane {
+    flex: 1; /* 各占半屏 */
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+.preview-pane {
+    flex: 1; /* 各占半屏 */
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+/* 窗格标题栏 */
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--c-base-2);
+    border-bottom: var(--m-border);
+}
+
+.pane-header h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: var(--c-base-01);
+}
+
+.pane-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 工具按钮 */
+.tool-btn {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--c-base-1);
+    background-color: white;
+    color: var(--c-base-01);
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.tool-btn:hover {
+    background-color: var(--c-base-2);
+    color: var(--c-base-00);
+}
+
+/* Markdown编辑器 */
+.markdown-textarea {
+    flex: 1;
+    padding: 2rem;
+    border: none;
+    resize: none;
+    font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    background-color: white;
+    outline: none;
+    /* 恢复滚动条，只显示一屏 */
+    overflow-y: auto;
+}
+
+/* 预览内容 */
+.preview-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: white;
+    /* 恢复滚动条，只显示一屏 */
+    overflow-y: auto;
+}
+
+.preview-loading,
+.preview-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--c-base-01);
+    font-style: italic;
+}
+
+.preview-error {
+    color: #d73a49;
+}
+
+/* 状态栏 */
+.editor-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    background-color: var(--c-base-2);
+    border-top: var(--m-border);
+    font-size: 1.3rem;
+    color: var(--c-base-01);
+}
+
+.status-left {
+    display: flex;
+    gap: 2rem;
+}
+
+.status-right {
+    font-weight: 500;
+}
+
+/* 保存状态样式 */
+.status-dirty {
+    color: #d73a49;
+}
+
+.status-saving {
+    color: #fd7e14;
+}
+
+.status-clean {
+    color: #28a745;
+}
+
+.status-error {
+    color: #d73a49;
+    font-weight: bold;
+}
+
+/* 按钮样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--c-base-1);
+    background-color: white;
+    color: var(--c-base-01);
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background-color: var(--c-base-2);
+    color: var(--c-base-00);
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-save {
+    background-color: #28a745; /* 绿色，表示保存操作 */
+    color: white;
+    border-color: #28a745;
+    font-weight: 500;
+}
+
+.btn-save:hover:not(:disabled) {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-cancel {
+    background-color: #6c757d; /* 灰色，表示取消操作 */
+    color: white !important; /* 强制白色文字 */
+    border-color: #6c757d;
+    font-weight: 500;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    color: white !important; /* 悬停时保持白色文字 */
+}
+
+/* 关闭按钮特殊样式 */
+.btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #6c757d; /* 灰色，与取消按钮保持一致 */
+    cursor: pointer;
+    z-index: 1001;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+    background-color: rgba(108, 117, 125, 0.1); /* 灰色背景 */
+    color: #495057; /* 深灰色文字 */
+}
+
+.btn-edit {
+    background-color: #007bff; /* 使用更专业的蓝色 */
+    color: white !important; /* 强制白色文字 */
+    border-color: #007bff;
+    font-size: 1.4rem; /* 增大字体 */
+    padding: 0.6rem 1.2rem; /* 增加内边距 */
+    border-radius: 6px; /* 更圆润的边角 */
+    font-weight: 500; /* 稍微加粗 */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); /* 添加阴影效果 */
+    transition: all 0.3s ease; /* 平滑过渡效果 */
+}
+
+.btn-edit:hover {
+    background-color: #0069d9; /* 悬停时更深的蓝色 */
+    border-color: #0062cc;
+    color: white !important; /* 悬停时保持白色文字 */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); /* 悬停时增强阴影 */
+    transform: translateY(-2px); /* 轻微上移效果 */
+}
+
+/* 编辑按钮在文章标题旁的样式 */
+.c-article__actions {
+    margin-top: 1rem;
+}
+
+/* 通知样式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    color: white;
+    font-size: 1.4rem;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-success {
+    background-color: #28a745;
+}
+
+.notification-error {
+    background-color: #dc3545;
+}
+
+.notification-info {
+    background-color: #17a2b8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .editor-main {
+        flex-direction: column;
+        padding: 0 0.5rem;
+        gap: 0.5rem;
+    }
+    
+    .editor-pane,
+    .preview-pane {
+        flex: 1;
+        min-height: 45vh; /* 移动设备上各占一半高度 */
+    }
+    
+    .toolbar-left .editor-title {
+        font-size: 1.6rem;
+    }
+    
+    .toolbar-right {
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .markdown-textarea,
+    .preview-content {
+        padding: 1rem;
+    }
+}
+
+/* 暗色主题下的编辑器样式 */
+[data-theme="dark"] .editor-container {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .editor-toolbar,
+[data-theme="dark"] .pane-header,
+[data-theme="dark"] .editor-status {
+    background-color: var(--dark-theme-header-footer-bg);
+    border-color: #333;
+}
+
+[data-theme="dark"] .toolbar-left .editor-title,
+[data-theme="dark"] .pane-header h3,
+[data-theme="dark"] .editor-status {
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .editor-pane,
+[data-theme="dark"] .preview-pane {
+    background-color: var(--dark-theme-background);
+    border-color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .markdown-textarea,
+[data-theme="dark"] .preview-content {
+    background-color: var(--dark-theme-background);
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .tool-btn,
+[data-theme="dark"] .btn:not(.btn-edit) {
+    background-color: var(--dark-theme-button-bg);
+    border-color: var(--dark-theme-button-border);
+    color: var(--dark-theme-text);
+}
+
+[data-theme="dark"] .tool-btn:hover,
+[data-theme="dark"] .btn:hover:not(.btn-save):not(.btn-cancel):not(.btn-edit) {
+    background-color: #555;
+}
+
+/* 暗色主题下的关闭按钮 */
+[data-theme="dark"] .btn-close {
+    color: #adb5bd; /* 暗色主题下的灰色 */
+}
+
+[data-theme="dark"] .btn-close:hover {
+    background-color: rgba(108, 117, 125, 0.2); /* 暗色主题下的灰色背景 */
+    color: #f8f9fa; /* 暗色主题下的白色文字 */
+}
+
+/* 光标同步高亮样式 */
+.cursor-highlight {
+    background-color: rgba(0, 103, 251, 0.15);
+    border-left: 4px solid var(--c-accent-blue);
+    transition: all 0.3s ease;
+    animation: highlightFadeOut 1s ease-out forwards;
+}
+
+@keyframes highlightFadeOut {
+    0% {
+        background-color: rgba(0, 103, 251, 0.25);
+        border-left-color: var(--c-accent-blue);
+    }
+    100% {
+        background-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
+/* 暗色主题下的高亮样式 */
+[data-theme="dark"] .cursor-highlight {
+    background-color: rgba(88, 166, 255, 0.15);
+    border-left-color: var(--dark-theme-link);
+}
+
 /* 深色主题下的数学公式样式 */
 body.dark-theme .MathJax {
     color: #d8d8d8 !important;
@@ -1502,11 +1968,12 @@ body.dark-theme .form-group label {
 }
 
 body.dark-theme .btn-close {
-    color: #ccc;
+    color: #adb5bd; /* 暗色主题下的灰色 */
 }
 
 body.dark-theme .btn-close:hover {
-    color: white;
+    background-color: rgba(108, 117, 125, 0.2); /* 暗色主题下的灰色背景 */
+    color: #f8f9fa; /* 暗色主题下的白色文字 */
 }
 
 /* 移动端适配 */
