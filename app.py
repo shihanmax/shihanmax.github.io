@@ -192,21 +192,17 @@ def api_add_bookmark():
             tags=data.get('tags', [])
         )
         
-        # 触发同步
-        sync_success = bookmark_manager.sync_blog()
+        # 触发同步（异步执行，不阻塞主操作）
+        import threading
+        sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+        sync_thread.daemon = True
+        sync_thread.start()
         
-        if sync_success:
-            return jsonify({
-                'success': True,
-                'data': bookmark,
-                'message': '书签添加成功并已同步'
-            })
-        else:
-            return jsonify({
-                'success': True,
-                'data': bookmark,
-                'message': '书签添加成功，但同步失败。请检查网络连接或SSH配置。'
-            })
+        return jsonify({
+            'success': True,
+            'data': bookmark,
+            'message': '书签添加成功'
+        })
     except Exception as e:
         return jsonify({
             'success': False,
@@ -233,21 +229,17 @@ def api_update_bookmark(bookmark_id):
         )
         
         if bookmark:
-            # 触发同步
-            sync_success = bookmark_manager.sync_blog()
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
             
-            if sync_success:
-                return jsonify({
-                    'success': True,
-                    'data': bookmark,
-                    'message': '书签更新成功并已同步'
-                })
-            else:
-                return jsonify({
-                    'success': True,
-                    'data': bookmark,
-                    'message': '书签更新成功，但同步失败。请检查网络连接或SSH配置。'
-                })
+            return jsonify({
+                'success': True,
+                'data': bookmark,
+                'message': '书签更新成功'
+            })
         else:
             return jsonify({
                 'success': False,
@@ -267,19 +259,16 @@ def api_delete_bookmark(bookmark_id):
         success = bookmark_manager.delete_bookmark(bookmark_id)
         
         if success:
-            # 触发同步
-            sync_success = bookmark_manager.sync_blog()
+            # 触发同步（异步执行，不阻塞主操作）
+            import threading
+            sync_thread = threading.Thread(target=bookmark_manager.sync_blog)
+            sync_thread.daemon = True
+            sync_thread.start()
             
-            if sync_success:
-                return jsonify({
-                    'success': True,
-                    'message': '书签删除成功并已同步'
-                })
-            else:
-                return jsonify({
-                    'success': True,
-                    'message': '书签删除成功，但同步失败。请检查网络连接或SSH配置。'
-                })
+            return jsonify({
+                'success': True,
+                'message': '书签删除成功'
+            })
         else:
             return jsonify({
                 'success': False,

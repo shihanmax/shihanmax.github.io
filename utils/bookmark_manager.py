@@ -94,7 +94,7 @@ class BookmarkManager:
                 cwd=blog_root,
                 capture_output=True, 
                 text=True, 
-                timeout=60
+                timeout=30  # 减少超时时间以避免卡住
             )
             
             if result.returncode == 0:
