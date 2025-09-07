@@ -90,6 +90,11 @@ class MarkdownEditor {
                 return e.returnValue;
             }
         });
+        
+        // 监听预览区域的滚动事件，避免在特定情况下滚动到顶部
+        this.preview.addEventListener('scroll', (e) => {
+            // 可以在这里添加滚动位置的跟踪逻辑
+        });
     }
 
     bindFormatButtons() {
@@ -234,6 +239,9 @@ class MarkdownEditor {
         this.isPreviewLoading = true;
         this.lastPreviewContent = content;
         
+        // 保存当前预览的滚动位置
+        const currentPreviewScrollTop = this.preview.scrollTop;
+        
         try {
             // 显示加载状态
             this.preview.innerHTML = '<div class=\"preview-loading\">正在渲染预览...</div>';
@@ -251,9 +259,6 @@ class MarkdownEditor {
             const result = await response.json();
             
             if (result.success) {
-                // 保存当前预览的滚动位置
-                const currentPreviewScrollTop = this.preview.scrollTop;
-                
                 this.preview.innerHTML = result.html;
                 
                 // 重新初始化MathJax（如果有数学公式）
@@ -269,14 +274,10 @@ class MarkdownEditor {
                 }
                 
                 // 恢复预览的滚动位置（防止跳到顶部）
-                if (!force) {
-                    // 等待DOM更新完成后恢复位置
-                    requestAnimationFrame(() => {
-                        this.preview.scrollTop = currentPreviewScrollTop;
-                    });
-                } else {
-                    // 强制更新时保持当前位置
-                }
+                // 使用setTimeout确保DOM更新完成后再恢复滚动位置
+                setTimeout(() => {
+                    this.preview.scrollTop = currentPreviewScrollTop;
+                }, 0);
             } else {
                 this.preview.innerHTML = `<div class=\"preview-error\">预览失败: ${result.error}</div>`;
             }
