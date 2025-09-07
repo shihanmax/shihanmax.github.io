@@ -54,6 +54,17 @@ class MarkdownEditor {
             }
         });
         
+        // 防止鼠标滚轮在预览区域的特殊行为
+        this.preview.addEventListener('wheel', (e) => {
+            // 可以在这里添加特殊处理
+        }, { passive: true });
+        
+        // 防止焦点跳转到预览区域
+        this.preview.addEventListener('focus', (e) => {
+            e.preventDefault();
+            this.editor.focus();
+        });
+        
         // 防止鼠标右键菜单引起的意外交互
         this.preview.addEventListener('contextmenu', (e) => {
             // 允许右键菜单，但不允许其他交互
@@ -183,7 +194,7 @@ class MarkdownEditor {
             this.markAsDirty();
         }
         
-        // 延迟更新预览
+        // 延迟更新预览，但确保不会在用户输入时频繁触发
         this.schedulePreviewUpdate();
     }
 
@@ -217,7 +228,7 @@ class MarkdownEditor {
             clearTimeout(this.previewTimeout);
         }
         
-        // 延迟500ms更新预览
+        // 延迟500ms更新预览，避免在用户快速输入时频繁更新
         this.previewTimeout = setTimeout(() => {
             this.updatePreview();
         }, 500);
@@ -240,7 +251,7 @@ class MarkdownEditor {
         this.lastPreviewContent = content;
         
         // 保存当前预览的滚动位置
-        const currentPreviewScrollTop = this.preview.scrollTop;
+        const scrollPos = this.preview.scrollTop;
         
         try {
             // 显示加载状态
@@ -259,25 +270,27 @@ class MarkdownEditor {
             const result = await response.json();
             
             if (result.success) {
-                this.preview.innerHTML = result.html;
+                // 创建一个临时容器来处理内容
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = result.html;
                 
                 // 重新初始化MathJax（如果有数学公式）
                 if (window.MathJax && window.MathJax.typesetPromise) {
-                    await window.MathJax.typesetPromise([this.preview]);
+                    await window.MathJax.typesetPromise([tempContainer]);
                 }
                 
                 // 重新高亮代码块
                 if (window.hljs) {
-                    this.preview.querySelectorAll('pre code').forEach((block) => {
+                    tempContainer.querySelectorAll('pre code').forEach((block) => {
                         window.hljs.highlightBlock(block);
                     });
                 }
                 
-                // 恢复预览的滚动位置（防止跳到顶部）
-                // 使用setTimeout确保DOM更新完成后再恢复滚动位置
-                setTimeout(() => {
-                    this.preview.scrollTop = currentPreviewScrollTop;
-                }, 0);
+                // 将处理后的内容设置到预览区域
+                this.preview.innerHTML = tempContainer.innerHTML;
+                
+                // 恢复滚动位置
+                this.preview.scrollTop = scrollPos;
             } else {
                 this.preview.innerHTML = `<div class=\"preview-error\">预览失败: ${result.error}</div>`;
             }
@@ -340,7 +353,7 @@ class MarkdownEditor {
         
         // 只保留点击事件监听，用于居中滚动
         this.editor.addEventListener('click', () => {
-            if (this.cursorSyncEnabled) {
+            if (this.cursorSyncEnabled && !this.isPreviewLoading) {
                 // 延迟一点执行，确保光标位置已更新
                 setTimeout(() => {
                     this.scrollPreviewToCenter();
@@ -348,9 +361,11 @@ class MarkdownEditor {
             }
         });
         
-        // 监听键盘导航事件
+        // 监听键盘导航事件，但避免在输入时触发
         this.editor.addEventListener('keyup', (e) => {
-            if (this.cursorSyncEnabled && ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
+            // 只在特定导航键时触发，避免在输入字符时触发
+            if (this.cursorSyncEnabled && !this.isPreviewLoading && 
+                ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
                 setTimeout(() => {
                     this.scrollPreviewToCenter();
                 }, 50);
@@ -376,15 +391,8 @@ class MarkdownEditor {
         const lines = content.split('\n');
         const currentLineText = lines[currentLine] || '';
         
-        console.log('=== 滚动预览到中心 ===');
-        console.log('光标位置:', cursorPosition);
-        console.log('当前行号:', currentLine);
-        console.log('当前行内容:', currentLineText);
-        
         // 查找对应的预览元素
         const targetElement = this.findPreviewElementForLine(currentLine);
-        
-        console.log('目标元素:', targetElement);
         
         if (targetElement) {
             // 高亮目标元素
@@ -404,10 +412,7 @@ class MarkdownEditor {
                     targetElement.classList.remove('cursor-highlight');
                 }
             }, 1000);
-        } else {
-            console.log('未找到目标元素');
         }
-        console.log('=== 滚动预览到中心结束 ===');
     }
 
     // 将元素滚动到预览区域的居中位置
