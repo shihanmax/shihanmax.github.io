@@ -2,7 +2,7 @@
 title: "测试笔记文章"
 date: 2024-01-01
 display_type: note
-tag:
+tags:
     - note
     - sss
 ---
