@@ -12,3 +12,4 @@ display_type: note
 
 |-|-|-|
 |1|2|3
+|b|c|d|
