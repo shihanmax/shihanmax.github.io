@@ -231,6 +231,193 @@ html.dark-theme .logged-in-title::after {
 }
 
 /* ==========================================================================
+   文章页面布局
+   ========================================================================== */
+
+/* 文章容器 */
+.post-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* 左侧目录 */
+.post-toc {
+    display: none; /* 隐藏目录 */
+    flex: 0 0 180px; /* 减小宽度为180px，避免过宽 */
+    background: #f8f9fa;
+    border-radius: 5px;
+    padding: 1rem;
+    align-self: flex-start;
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto; /* 独立滚动 */
+    border: 1px solid #e1e4e8;
+}
+
+/* 深色主题下的目录 */
+html.dark-theme .post-toc {
+    background: #2d2d2d;
+    border: 1px solid #515862;
+}
+
+/* 目录头部 */
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+/* 深色主题下的目录头部 */
+html.dark-theme .toc-header {
+    border-bottom-color: #515862;
+}
+
+.toc-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录标题 */
+html.dark-theme .toc-header h3 {
+    color: #d8d8d8;
+}
+
+/* 目录切换按钮 */
+.toc-toggle {
+    background: none;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录切换按钮 */
+html.dark-theme .toc-toggle {
+    border-color: #30363d;
+    color: #d8d8d8;
+}
+
+.toc-toggle:hover {
+    background-color: #eaecef;
+}
+
+/* 深色主题下的目录切换按钮悬停 */
+html.dark-theme .toc-toggle:hover {
+    background-color: #30363d;
+}
+
+/* 目录列表 */
+.toc-list {
+    font-size: 1.2rem; /* 减小字体大小 */
+}
+
+/* 目录列表样式 */
+.toc-list ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.toc-list li {
+    margin: 0.1rem 0; /* 进一步减小行间距 */
+    padding: 0;
+}
+
+.toc-list a {
+    display: block;
+    padding: 0.1rem 0.3rem; /* 进一步减小内边距 */
+    color: var(--c-base-01);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2; /* 减小行高 */
+}
+
+/* 深色主题下的目录链接 */
+html.dark-theme .toc-list a {
+    color: #d8d8d8;
+}
+
+.toc-list a:hover {
+    background-color: #e1e4e8;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+/* 深色主题下的目录链接悬停 */
+html.dark-theme .toc-list a:hover {
+    background-color: #30363d;
+    color: #58a6ff;
+}
+
+/* 不同级别的目录项 */
+.toc-list li.level-1 > a {
+    font-weight: bold;
+    padding-left: 0.5rem;
+}
+
+.toc-list li.level-2 > a {
+    padding-left: 1rem;
+}
+
+.toc-list li.level-3 > a {
+    padding-left: 1.5rem;
+}
+
+.toc-list li.level-4 > a {
+    padding-left: 2rem;
+}
+
+.toc-list li.level-5 > a {
+    padding-left: 2.5rem;
+}
+
+.toc-list li.level-6 > a {
+    padding-left: 3rem;
+}
+
+/* 主文章内容 */
+.c-article {
+    flex: 1;
+    min-width: 0; /* 允许内容区域收缩 */
+}
+
+/* 响应式设计 - 小屏幕设备 */
+@media screen and (max-width: 768px) {
+    .post-container {
+        flex-direction: column;
+    }
+    
+    .post-toc {
+        display: none; /* 隐藏目录 */
+        flex: 0 0 auto;
+        position: relative;
+        top: 0;
+        max-height: none;
+        order: 2; /* 目录放在文章内容之后 */
+        width: 100%;
+    }
+    
+    .c-article {
+        order: 1; /* 文章内容放在前面 */
+    }
+}
+
+/* ==========================================================================
    编辑器样式
    ========================================================================== */
 
@@ -344,6 +531,178 @@ html.dark-theme .editor-container {
 .tool-btn:hover {
     background-color: var(--c-base-2);
     color: var(--c-base-00);
+}
+
+/* 编辑器区域（包含目录和编辑器） */
+.editor-with-toc {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 目录容器 */
+.toc-container {
+    display: none; /* 隐藏目录 */
+    width: 180px; /* 减小宽度为180px */
+    min-width: 150px;
+    max-width: 180px; /* 限制最大宽度 */
+    border-right: 1px solid #e1e4e8;
+    background-color: #f6f8fa;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    overflow-y: auto; /* 独立滚动 */
+}
+
+/* 深色主题下的目录容器 */
+html.dark-theme .toc-container {
+    background-color: #161b22;
+    border-right-color: #30363d;
+}
+
+/* 目录头部 */
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e1e4e8;
+    background-color: #f6f8fa;
+}
+
+/* 深色主题下的目录头部 */
+html.dark-theme .toc-header {
+    background-color: #161b22;
+    border-bottom-color: #30363d;
+}
+
+.toc-header h4 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录标题 */
+html.dark-theme .toc-header h4 {
+    color: #d8d8d8;
+}
+
+/* 目录切换按钮 */
+.toc-toggle {
+    background: none;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录切换按钮 */
+html.dark-theme .toc-toggle {
+    border-color: #30363d;
+    color: #d8d8d8;
+}
+
+.toc-toggle:hover {
+    background-color: #eaecef;
+}
+
+/* 深色主题下的目录切换按钮悬停 */
+html.dark-theme .toc-toggle:hover {
+    background-color: #30363d;
+}
+
+/* 目录列表 */
+.toc-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+    font-size: 1.2rem; /* 减小字体大小 */
+}
+
+/* 目录折叠状态 */
+.toc-list.collapsed {
+    display: none;
+}
+
+/* 目录列表样式 */
+.toc-list ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.toc-list li {
+    margin: 0.1rem 0; /* 进一步减小行间距 */
+    padding: 0;
+}
+
+.toc-list a {
+    display: block;
+    padding: 0.1rem 0.3rem; /* 进一步减小内边距 */
+    color: var(--c-base-01);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2; /* 减小行高 */
+}
+
+/* 深色主题下的目录链接 */
+html.dark-theme .toc-list a {
+    color: #d8d8d8;
+}
+
+.toc-list a:hover {
+    background-color: #e1e4e8;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+/* 深色主题下的目录链接悬停 */
+html.dark-theme .toc-list a:hover {
+    background-color: #30363d;
+    color: #58a6ff;
+}
+
+/* 不同级别的目录项 */
+.toc-list li.level-1 > a {
+    font-weight: bold;
+    padding-left: 0.5rem;
+}
+
+.toc-list li.level-2 > a {
+    padding-left: 1rem;
+}
+
+.toc-list li.level-3 > a {
+    padding-left: 1.5rem;
+}
+
+.toc-list li.level-4 > a {
+    padding-left: 2rem;
+}
+
+.toc-list li.level-5 > a {
+    padding-left: 2.5rem;
+}
+
+.toc-list li.level-6 > a {
+    padding-left: 3rem;
+}
+
+/* 编辑器分隔线 */
+.editor-separator {
+    width: 1px;
+    background-color: #e1e4e8;
+}
+
+/* 深色主题下的分隔线 */
+html.dark-theme .editor-separator {
+    background-color: #30363d;
 }
 
 /* Markdown编辑器 */
@@ -588,6 +947,20 @@ html.dark-theme .editor-container {
     .preview-content {
         padding: 1rem;
     }
+    
+    /* 移动端隐藏目录 */
+    .toc-container {
+        display: none;
+    }
+    
+    .editor-with-toc {
+        flex-direction: column;
+    }
+    
+    .editor-separator {
+        width: 100%;
+        height: 1px;
+    }
 }
 
 /* 暗色主题下的编辑器样式 */
@@ -628,7 +1001,6 @@ html.dark-theme .editor-container {
     color: var(--dark-theme-text);
 }
 
-[data-theme="dark"] .tool-btn:hover,
 [data-theme="dark"] .btn:hover:not(.btn-save):not(.btn-cancel):not(.btn-edit) {
     background-color: #555;
 }

@@ -111,61 +111,11 @@
     }
 
     /**
-     * 添加目录生成功能
+     * 添加目录生成功能（已禁用）
      */
     function generateTOC() {
-        const article = document.querySelector('.c-article__main');
-        if (!article) return;
-
-        const headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
-        if (headings.length < 3) return; // 少于3个标题不生成目录
-
-        const toc = document.createElement('div');
-        toc.className = 'table-of-contents';
-        toc.innerHTML = '<h3>目录</h3>';
-
-        const tocList = document.createElement('ul');
-        let currentLevel = 0;
-        let tocStack = [tocList];
-
-        headings.forEach(function(heading, index) {
-            const level = parseInt(heading.tagName.charAt(1));
-            const id = 'heading-' + index;
-            heading.id = id;
-
-            const listItem = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = '#' + id;
-            link.textContent = heading.textContent;
-            listItem.appendChild(link);
-
-            // 平滑滚动
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                heading.scrollIntoView({ behavior: 'smooth' });
-            });
-
-            if (level > currentLevel) {
-                const newList = document.createElement('ul');
-                newList.appendChild(listItem);
-                tocStack[tocStack.length - 1].lastElementChild.appendChild(newList);
-                tocStack.push(newList);
-            } else if (level < currentLevel) {
-                while (tocStack.length > level) {
-                    tocStack.pop();
-                }
-                tocStack[tocStack.length - 1].appendChild(listItem);
-            } else {
-                tocStack[tocStack.length - 1].appendChild(listItem);
-            }
-
-            currentLevel = level;
-        });
-
-        toc.appendChild(tocList);
-        
-        // 插入到文章开头
-        article.insertBefore(toc, article.firstChild);
+        // 目录功能已禁用，不执行任何操作
+        return;
     }
 
     /**
@@ -221,7 +171,8 @@
     function init() {
         addCodeCopyButtons();
         addImageZoom();
-        generateTOC();
+        // 目录功能已禁用
+        // generateTOC();
         addBackToTop();
     }
 

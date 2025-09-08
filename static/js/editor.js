@@ -10,6 +10,8 @@ class MarkdownEditor {
         this.saveStatus = document.getElementById('save-status');
         this.charCount = document.getElementById('char-count');
         this.wordCount = document.getElementById('word-count');
+        // 目录功能已禁用
+        // this.tocList = document.getElementById('toc-list');
         
         this.isDirty = false;
         this.isPreviewLoading = false;
@@ -32,6 +34,14 @@ class MarkdownEditor {
         this.setupScrollSync();
         this.setupCursorSync();
         this.preventPreviewInteraction();
+        // 目录功能已禁用
+        // this.generateTOC(); // 生成初始目录
+    }
+    
+    // 生成目录树（已禁用）
+    generateTOC() {
+        // 目录功能已禁用，不执行任何操作
+        return;
     }
     
     // 防止预览区域的交互引起跳转
@@ -106,6 +116,33 @@ class MarkdownEditor {
         this.preview.addEventListener('scroll', (e) => {
             // 可以在这里添加滚动位置的跟踪逻辑
         });
+        
+        // 目录项点击事件已禁用
+        /*
+        if (this.tocList) {
+            this.tocList.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    const lineNum = parseInt(e.target.dataset.line);
+                    if (!isNaN(lineNum)) {
+                        this.scrollToLine(lineNum);
+                    }
+                }
+            });
+        }
+        */
+    }
+    
+    // 滚动到指定行（已禁用）
+    scrollToLine(lineNum) {
+        // 目录功能已禁用，不执行任何操作
+        return;
+    }
+    
+    // 滚动预览区域到对应标题（已禁用）
+    scrollPreviewToHeading(lineNum) {
+        // 目录功能已禁用，不执行任何操作
+        return;
     }
 
     bindFormatButtons() {
@@ -196,6 +233,9 @@ class MarkdownEditor {
         
         // 延迟更新预览，但确保不会在用户输入时频繁触发
         this.schedulePreviewUpdate();
+        
+        // 更新目录树已禁用
+        // this.generateTOC();
     }
 
     markAsDirty() {
@@ -273,6 +313,30 @@ class MarkdownEditor {
                 // 创建一个临时容器来处理内容
                 const tempContainer = document.createElement('div');
                 tempContainer.innerHTML = result.html;
+                
+                // 为预览中的标题添加行号数据属性，用于目录定位
+                const headings = tempContainer.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                const lines = content.split('\n');
+                
+                // 为每个标题添加行号信息
+                headings.forEach((heading, index) => {
+                    // 查找标题在源内容中的行号
+                    const headingText = heading.textContent.trim();
+                    let headingLine = -1;
+                    
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        // 检查是否是标题行
+                        if (line.startsWith('#') && line.includes(headingText)) {
+                            headingLine = i;
+                            break;
+                        }
+                    }
+                    
+                    if (headingLine >= 0) {
+                        heading.dataset.lineNumber = headingLine;
+                    }
+                });
                 
                 // 重新初始化MathJax（如果有数学公式）
                 if (window.MathJax && window.MathJax.typesetPromise) {

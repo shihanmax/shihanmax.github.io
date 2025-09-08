@@ -36,7 +36,7 @@ title: Java通过JNI调用C库
 - 将一些程序升级变得简单。
 - 甚至可以真正做到链接载入完全由程序员在程序代码中控制（显示调用）。
 
-### 实验(linux上编译动态链接库lib*.so的过程)：
+### 实验(linux上编译动态链接库lib*.so)：
 ```c++
 1. //新建Demo.java
     public class Hello {
