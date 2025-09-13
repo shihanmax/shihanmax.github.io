@@ -591,6 +591,47 @@ def preview_post(year, month, slug):
             'error': str(e)
         }), 500
 
+@app.route('/api/posts/<int:year>/<int:month>/<slug>/toc', methods=['GET'])
+def get_post_toc(year, month, slug):
+    """获取文章目录 - 公开API"""
+    try:
+        # 获取文章数据
+        post = post_manager.get_post_by_slug(year, month, slug)
+        if not post:
+            return jsonify({
+                'success': False,
+                'error': '文章不存在'
+            }), 404
+        
+        # 检查文章的可见性
+        display_type = post.get('display_type', 'post')
+        is_logged_in = bool(session.get('admin_logged_in'))
+        
+        # 非登录状态下，隐藏display_type为'none'或'note'的文章
+        if not is_logged_in and display_type in ['none', 'note']:
+            return jsonify({
+                'success': False,
+                'error': '文章不存在'
+            }), 404
+        
+        # 解析目录
+        toc_data = markdown_parser.generate_toc_json(post['content'])
+        toc_summary = markdown_parser.get_toc_summary(post['content'])
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'toc': toc_data,
+                'summary': toc_summary
+            }
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.after_request
 def after_request(response):
     """添加安全头"""

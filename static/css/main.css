@@ -236,44 +236,222 @@ html.dark-theme .logged-in-title::after {
 
 /* 文章容器 */
 .post-container {
-    display: flex;
-    gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
     position: relative;
     min-height: calc(100vh - 4rem);
+    margin-top: 0; /* 与页面顶部对齐 */
 }
 
-/* 左侧目录 */
-.post-toc {
+/* 独立的悬浮目录面板 */
+.toc-panel {
     position: fixed;
-    left: 2rem;
-    top: 2rem;
-    width: 220px;
+    left: 1rem;
+    top: calc(60px + 31.2px + 15px + 27px + 60px); /* 与c-page__header底部对齐: u-container margin-top + h1 height + h1 margin-bottom + p height + header margin-bottom */
+    width: 240px;
     background: #f8f9fa;
-    border-radius: 5px;
-    padding: 1rem;
-    height: calc(100vh - 4rem);
-    overflow-y: auto;
     border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 0;
+    z-index: 100;
+    max-height: calc(100vh - 60px - 31.2px - 15px - 27px - 60px - 2rem);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    z-index: 10;
-    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
-/* 深色主题下的目录 */
-html.dark-theme .post-toc {
+/* 深色主题下的目录面板 */
+html.dark-theme .toc-panel {
     background: #2d2d2d;
     border: 1px solid #515862;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 目录面板折叠状态 */
+.toc-panel.collapsed {
+    width: 50px;
+}
+
+.toc-panel.collapsed .toc-content {
+    display: none;
+}
+
+/* 目录头部 */
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #e1e4e8;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+/* 深色主题下的目录头部 */
+html.dark-theme .toc-header {
+    background: #2d2d2d;
+    border-bottom-color: #515862;
+}
+
+.toc-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录标题 */
+html.dark-theme .toc-header h3 {
+    color: #d8d8d8;
+}
+
+/* 目录切换按钮 */
+.toc-toggle {
+    background: none;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 0.4rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--c-base-01);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+}
+
+/* 深色主题下的目录切换按钮 */
+html.dark-theme .toc-toggle {
+    border-color: #515862;
+    color: #d8d8d8;
+}
+
+.toc-toggle:hover {
+    background-color: #eaecef;
+    border-color: #8c959f;
+}
+
+/* 深色主题下的目录切换按钮悬停 */
+html.dark-theme .toc-toggle:hover {
+    background-color: #515862;
+    border-color: #8b949e;
+}
+
+.toc-icon {
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* 目录内容区域 */
+.toc-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.4rem;
+}
+
+/* 目录列表 */
+.toc-list {
+    margin: 0;
+    padding: 0;
+}
+
+.toc-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.toc-item {
+    margin: 0.2rem 0;
+    padding: 0;
+}
+
+.toc-link {
+    display: block;
+    padding: 0.3rem 0.6rem;
+    color: var(--c-base-01);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    transition: all 0.2s ease;
+    word-wrap: break-word;
+}
+
+/* 深色主题下的目录链接 */
+html.dark-theme .toc-link {
+    color: #d8d8d8;
+}
+
+.toc-link:hover {
+    background-color: #e1e4e8;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+/* 深色主题下的目录链接悬停 */
+html.dark-theme .toc-link:hover {
+    background-color: #515862;
+    color: #58a6ff;
+}
+
+/* 活动目录项 */
+.toc-link.active {
+    background-color: var(--c-accent-blue);
+    color: white;
+    font-weight: 500;
+}
+
+/* 深色主题下的活动目录项 */
+html.dark-theme .toc-link.active {
+    background-color: #58a6ff;
+    color: #1a1a1a;
+}
+
+/* 不同级别的目录项 */
+.toc-item.level-1 > .toc-link {
+    font-weight: 600;
+    padding-left: 0.6rem;
+    font-size: 1.2rem;
+}
+
+.toc-item.level-2 > .toc-link {
+    padding-left: 1.2rem;
+    font-weight: 500;
+    font-size: 1.15rem;
+}
+
+.toc-item.level-3 > .toc-link {
+    padding-left: 1.8rem;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.toc-item.level-4 > .toc-link {
+    padding-left: 2.4rem;
+    font-weight: 400;
+    font-size: 1.05rem;
+}
+
+.toc-item.level-5 > .toc-link {
+    padding-left: 3rem;
+    font-size: 1rem;
+}
+
+.toc-item.level-6 > .toc-link {
+    padding-left: 3.6rem;
+    font-size: 0.95rem;
 }
 
 /* 主文章内容 */
 .c-article {
-    flex: 1;
-    min-width: 0;
     overflow-y: auto;
-    margin-left: 0;
 }
 
 /* 响应式设计 - 小屏幕设备 */
@@ -281,15 +459,12 @@ html.dark-theme .post-toc {
     .post-container {
         flex-direction: column;
         min-height: auto;
+        margin-left: 0; /* 移动端移除左边距 */
+        margin-top: 0; /* 移动端与顶部对齐 */
     }
     
-    .post-toc {
-        position: relative;
-        flex: 0 0 auto;
-        max-height: 300px;
-        order: 2; /* 目录放在文章内容之后 */
-        width: 100%;
-        margin-right: 0;
+    .toc-panel {
+        display: none; /* 移动端隐藏目录面板 */
     }
     
     .c-article {
@@ -298,8 +473,106 @@ html.dark-theme .post-toc {
     }
 }
 
-/* ==========================================================================
-   编辑器样式
+/* 目录列表 */
+.toc-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+    font-size: 1.2rem; /* 减小字体大小 */
+    max-height: calc(100vh - 8rem); /* 确保目录列表不会超出容器 */
+}
+
+/* 目录折叠状态 */
+.toc-list.collapsed {
+    display: none;
+}
+
+/* 目录列表样式 */
+.toc-list ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.toc-list li {
+    margin: 0.1rem 0; /* 进一步减小行间距 */
+    padding: 0;
+}
+
+.toc-list a {
+    display: block;
+    padding: 0.3rem 0.5rem; /* 增加内边距 */
+    color: var(--c-base-01);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2; /* 减小行高 */
+}
+
+/* 深色主题下的目录链接 */
+html.dark-theme .toc-list a {
+    color: #d8d8d8;
+}
+
+.toc-list a:hover {
+    background-color: #e1e4e8;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+/* 深色主题下的目录链接悬停 */
+html.dark-theme .toc-list a:hover {
+    background-color: #30363d;
+    color: #58a6ff;
+}
+
+/* 活动目录项 */
+.toc-list a.active {
+    background-color: var(--c-accent-blue);
+    color: white;
+}
+
+/* 深色主题下的活动目录项 */
+html.dark-theme .toc-list a.active {
+    background-color: #58a6ff;
+    color: #1a1a1a;
+}
+
+/* 不同级别的目录项 */
+.toc-list li.level-1 > a {
+    font-weight: bold;
+    padding-left: 0.5rem;
+}
+
+.toc-list li.level-2 > a {
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+.toc-list li.level-3 > a {
+    padding-left: 1.5rem;
+    font-weight: 500;
+}
+
+.toc-list li.level-4 > a {
+    padding-left: 2rem;
+    font-weight: 400;
+}
+
+.toc-list li.level-5 > a {
+    padding-left: 2.5rem;
+    font-size: 0.95em;
+}
+
+.toc-list li.level-6 > a {
+    padding-left: 3rem;
+    font-size: 0.9em;
+}
+
+/* 编辑器样式
    ========================================================================== */
 
 /* 编辑器容器 */

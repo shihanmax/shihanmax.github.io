@@ -111,14 +111,6 @@
     }
 
     /**
-     * 添加目录生成功能（已禁用）
-     */
-    function generateTOC() {
-        // 目录功能已禁用，不执行任何操作
-        return;
-    }
-
-    /**
      * 添加返回顶部按钮
      */
     function addBackToTop() {
@@ -171,8 +163,6 @@
     function init() {
         addCodeCopyButtons();
         addImageZoom();
-        // 目录功能已禁用
-        // generateTOC();
         addBackToTop();
     }
 

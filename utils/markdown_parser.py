@@ -8,11 +8,16 @@ Markdown解析器 - 兼容Jekyll的markdown渲染
 import markdown
 from pygments.formatters import HtmlFormatter
 import re
+from .toc_parser import TOCParser
+
 
 class MarkdownParser:
     """Markdown解析器"""
     
     def __init__(self):
+        # 初始化目录解析器
+        self.toc_parser = TOCParser()
+        
         # 配置Markdown扩展
         self.extensions = [
             'markdown.extensions.extra',  # 包含tables, fenced_code等
@@ -90,11 +95,16 @@ class MarkdownParser:
             return f'INLINEMATH{len(self._inline_math_blocks)-1}ENDINLINE'
         
         # 用更高效的正则处理数学公式
-        content = re.sub(r'\$\$[^$]*?\$\$', preserve_display_math, content, flags=re.DOTALL)
-        content = re.sub(r'(?<!\\)\$([^$\n]+?)\$', preserve_inline_math, content)
+        content = re.sub(r'\$\$[^$]*?\$\$', preserve_display_math, 
+                        content, flags=re.DOTALL)
+        content = re.sub(r'(?<!\\)\$([^$\n]+?)\$', preserve_inline_math, 
+                        content)
         
         # 简化Jekyll标签处理
-        content = re.sub(r'{%\s*highlight\s+(\w+)\s*%}([\s\S]*?){%\s*endhighlight\s*%}', r'```\1\2```', content)
+        content = re.sub(
+            r'{%\s*highlight\s+(\w+)\s*%}([\s\S]*?){%\s*endhighlight\s*%}', 
+            r'```\1\2```', content
+        )
         content = re.sub(r'{[%{].*?[%}]}', '', content)  # 移除其他Jekyll标签
         
         return content
@@ -151,7 +161,9 @@ class MarkdownParser:
             code_block = match.group(0)
             if 'class="highlight"' in code_block:
                 # 提取代码内容
-                code_content = re.search(r'<code[^>]*>(.*?)</code>', code_block, re.DOTALL)
+                code_content = re.search(
+                    r'<code[^>]*>(.*?)</code>', code_block, re.DOTALL
+                )
                 if code_content:
                     lines = code_content.group(1).split('\n')
                     numbered_lines = []
@@ -170,7 +182,10 @@ class MarkdownParser:
                     )
             return code_block
         
-        return re.sub(r'<div class="highlight">.*?</div>', add_line_numbers, html, flags=re.DOTALL)
+        return re.sub(
+            r'<div class="highlight">.*?</div>', 
+            add_line_numbers, html, flags=re.DOTALL
+        )
     
     def get_toc(self, content: str) -> str:
         """获取目录"""
@@ -200,3 +215,55 @@ class MarkdownParser:
             truncated = truncated[:last_space]
         
         return truncated + '...'
+    
+    def parse_toc_from_markdown(self, content: str):
+        """
+        从Markdown内容解析目录
+        
+        Args:
+            content: Markdown原文内容
+            
+        Returns:
+            目录项列表
+        """
+        return self.toc_parser.parse_markdown_toc(content)
+    
+    def generate_toc_html(self, content: str, collapsed: bool = False) -> str:
+        """
+        生成目录HTML
+        
+        Args:
+            content: Markdown原文内容
+            collapsed: 是否默认折叠
+            
+        Returns:
+            目录HTML字符串
+        """
+        toc_items = self.parse_toc_from_markdown(content)
+        return self.toc_parser.generate_toc_html(toc_items, collapsed)
+    
+    def generate_toc_json(self, content: str) -> list:
+        """
+        生成目录JSON数据
+        
+        Args:
+            content: Markdown原文内容
+            
+        Returns:
+            目录JSON数据
+        """
+        toc_items = self.parse_toc_from_markdown(content)
+        return self.toc_parser.generate_toc_json(toc_items)
+    
+    def get_toc_summary(self, content: str) -> dict:
+        """
+        获取目录摘要信息
+        
+        Args:
+            content: Markdown原文内容
+            
+        Returns:
+            目录摘要信息
+        """
+        toc_items = self.parse_toc_from_markdown(content)
+        return self.toc_parser.get_toc_summary(toc_items)
