@@ -8,6 +8,8 @@
 import logging
 import os
 import subprocess
+import hashlib
+import hmac
 from flask import Flask, request, jsonify
 
 # 配置日志
@@ -25,6 +27,18 @@ app = Flask(__name__)
 # 博客根目录
 BLOG_ROOT = "."
 
+# webhook 密钥（从环境变量获取）
+WEBHOOK_SECRET = os.environ.get('WEBHOOK_SECRET', 'change-me-in-production')
+
+def verify_signature(payload_body, secret_token, signature_header):
+    """验证 GitHub webhook 签名"""
+    if not signature_header:
+        return False
+    
+    hash_object = hmac.new(secret_token.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
+    expected_signature = "sha256=" + hash_object.hexdigest()
+    
+    return hmac.compare_digest(expected_signature, signature_header)
 
 def git_pull():
     """执行git pull拉取最新代码"""
@@ -54,6 +68,15 @@ def git_pull():
 @app.route("/hook", methods=['POST'])
 def webhook():
     """处理webhook请求，直接执行git pull"""
+    # 验证 webhook 签名
+    signature = request.headers.get('X-Hub-Signature-256')
+    if not verify_signature(request.get_data(), WEBHOOK_SECRET, signature):
+        logger.warning("Webhook签名验证失败")
+        return jsonify({
+            "status": "error",
+            "message": "Unauthorized"
+        }), 401
+    
     try:
         logger.info("收到webhook请求")
         

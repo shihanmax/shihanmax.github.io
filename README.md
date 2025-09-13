@@ -125,6 +125,21 @@ description: 文章描述
 文章内容...
 ```
 
+### 图标处理
+
+项目包含一个用于将ICO图标转换为圆角PNG图标的脚本：
+
+```bash
+# 将ICO文件转换为圆角PNG
+python utils/round_corner_icon.py favicon.ico
+
+# 指定输出文件名
+python utils/round_corner_icon.py favicon.ico rounded_icon.png
+
+# 指定圆角半径比例（0-0.5）
+python utils/round_corner_icon.py favicon.ico rounded_icon.png 0.3
+```
+
 ### 添加新页面
 
 1. 在 `_pages/` 目录下创建Markdown文件

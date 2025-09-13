@@ -297,6 +297,9 @@ class MarkdownEditor {
             // 显示加载状态
             this.preview.innerHTML = '<div class=\"preview-loading\">正在渲染预览...</div>';
             
+            console.log('Sending preview request to:', window.postData.previewUrl);
+            console.log('Content length:', content.length);
+            
             const response = await fetch(window.postData.previewUrl, {
                 method: 'POST',
                 headers: {
@@ -307,7 +310,29 @@ class MarkdownEditor {
                 })
             });
             
+            console.log('Preview response status:', response.status);
+            console.log('Preview response headers:', [...response.headers.entries()]);
+            
+            // 检查响应状态
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            console.log('Response content type:', contentType);
+            
+            if (!contentType || !contentType.includes('application/json')) {
+                // 如果响应不是JSON格式，可能是重定向到登录页面
+                const text = await response.text();
+                console.log('Non-JSON response content:', text.substring(0, 200) + '...');
+                if (text.includes('<!DOCTYPE html') || text.includes('<html')) {
+                    throw new Error('Preview failed: Authentication required. Please refresh the page and login again.');
+                }
+                throw new Error('Preview failed: Invalid response format');
+            }
+            
             const result = await response.json();
+            console.log('Preview result:', result);
             
             if (result.success) {
                 // 创建一个临时容器来处理内容

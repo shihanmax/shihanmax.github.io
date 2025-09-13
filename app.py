@@ -5,28 +5,48 @@
 完全替代Jekyll，保持原有视觉效果
 """
 
-from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for, send_from_directory
 import os
 from datetime import datetime
 from functools import wraps
 from utils.post_manager import PostManager
 from utils.markdown_parser import MarkdownParser
 from utils.bookmark_manager import BookmarkManager
+from utils.security_logger import SecurityLogger
+import bcrypt
+from flask_wtf.csrf import CSRFProtect
+
+# 加载.env文件中的环境变量
+from dotenv import load_dotenv
+load_dotenv()
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Gs67Gty3fged672'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
 
-# 管理员认证配置
-ADMIN_USERNAME = 'max'  # 可以修改为您的用户名
-ADMIN_PASSWORD = 'sh123max'  # 请修改为您的密码
+# 添加CSRF保护
+csrf = CSRFProtect(app)
 
+# 初始化安全日志记录器
+security_logger = SecurityLogger()
+
+# 管员认证配置
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH')  # 应该存储哈希后的密码
+
+# 打印调试信息
+print(f"Loaded ADMIN_USERNAME: {ADMIN_USERNAME}")
+print(f"Loaded ADMIN_PASSWORD_HASH: {ADMIN_PASSWORD_HASH}")
+
+# 简单的登录尝试次数跟踪（生产环境应使用Redis等）
+login_attempts = {}
 
 # 认证装饰器
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get('admin_logged_in'):
-            return jsonify({'success': False, 'error': '需要管理员权限'}), 401
+            return jsonify({'success': False, 'error': 'Permission Denied 😭'}), 401
         return f(*args, **kwargs)
     return decorated_function
 
@@ -47,6 +67,25 @@ def inject_global_vars():
     return {
         'current_year': datetime.now().year
     }
+
+@app.before_request
+def check_file_access():
+    """检查文件访问权限，防止直接访问敏感文件"""
+    # 获取客户端IP
+    client_ip = request.remote_addr
+    user_agent = request.headers.get('User-Agent', 'Unknown')
+    
+    # 禁止直接访问敏感目录和文件
+    sensitive_paths = ['/data/', '/deploy/', '/utils/', '/venv/']
+    request_path = request.path
+    
+    for sensitive_path in sensitive_paths:
+        if request_path.startswith(sensitive_path):
+            # 只允许管理员访问
+            if not session.get('admin_logged_in'):
+                # 记录未授权访问尝试
+                security_logger.log_unauthorized_access(client_ip, request_path, user_agent)
+                abort(403)  # 禁止访问
 
 @app.route('/')
 def index():
@@ -185,16 +224,18 @@ def api_get_bookmarks():
 
 @app.route('/api/bookmarks', methods=['POST'])
 @admin_required
+@csrf.exempt  # API端点 exempt CSRF 保护
 def api_add_bookmark():
     """添加新书签 - 需要管理员权限"""
     try:
         data = request.get_json()
         
-        # 验证必需字段
-        if not data or not data.get('title') or not data.get('url'):
+        # 验证数据
+        is_valid, message = validate_bookmark_data(data)
+        if not is_valid:
             return jsonify({
                 'success': False,
-                'error': '标题和网址为必填项'
+                'error': message
             }), 400
         
         # 添加书签
@@ -224,6 +265,7 @@ def api_add_bookmark():
 
 @app.route('/api/bookmarks/<int:bookmark_id>', methods=['PUT'])
 @admin_required
+@csrf.exempt  # API端点 exempt CSRF 保护
 def api_update_bookmark(bookmark_id):
     """更新书签 - 需要管理员权限"""
     try:
@@ -266,6 +308,7 @@ def api_update_bookmark(bookmark_id):
 
 @app.route('/api/bookmarks/<int:bookmark_id>', methods=['DELETE'])
 @admin_required
+@csrf.exempt  # API端点 exempt CSRF 保护
 def api_delete_bookmark(bookmark_id):
     """删除书签 - 需要管理员权限"""
     try:
@@ -327,6 +370,7 @@ def page_not_found(e):
 
 # 管理员登录路由
 @app.route('/admin/login', methods=['GET', 'POST'])
+@csrf.exempt  # 登录路由 exempt CSRF 保护
 def admin_login():
     """管理员登录"""
     if request.method == 'GET':
@@ -336,21 +380,80 @@ def admin_login():
         return render_template('admin_login.html')
     
     elif request.method == 'POST':
+        # 获取客户端IP
+        client_ip = request.remote_addr
+        
+        # 检查登录尝试次数
+        if client_ip in login_attempts and login_attempts[client_ip]['count'] >= 5:
+            security_logger.log_login_attempt(
+                request.get_json().get('username', 'unknown'), 
+                client_ip, 
+                False
+            )
+            return jsonify({
+                'success': False,
+                'error': '登录尝试次数过多，请稍后再试'
+            }), 429
+        
         data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': '无效的请求数据'
+            }), 400
+            
         username = data.get('username')
         password = data.get('password')
         
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        # 验证用户名和密码
+        if username == ADMIN_USERNAME and ADMIN_PASSWORD_HASH:
+            try:
+                # 验证哈希密码
+                if bcrypt.checkpw(password.encode('utf-8'), ADMIN_PASSWORD_HASH.encode('utf-8')):
+                    session['admin_logged_in'] = True
+                    # 重置登录尝试次数
+                    if client_ip in login_attempts:
+                        del login_attempts[client_ip]
+                    
+                    # 记录成功登录
+                    security_logger.log_login_attempt(username, client_ip, True)
+                    
+                    return jsonify({
+                        'success': True,
+                        'message': '登录成功'
+                    })
+            except ValueError as e:
+                # 处理bcrypt错误，如无效的salt
+                print(f"bcrypt error: {e}")
+                pass  # 继续检查明文密码
+                
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD_HASH:
+            # 兼容明文密码（不推荐）
             session['admin_logged_in'] = True
+            if client_ip in login_attempts:
+                del login_attempts[client_ip]
+            
+            # 记录成功登录
+            security_logger.log_login_attempt(username, client_ip, True)
+            
             return jsonify({
                 'success': True,
                 'message': '登录成功'
             })
+        
+        # 登录失败，增加尝试次数
+        if client_ip not in login_attempts:
+            login_attempts[client_ip] = {'count': 1}
         else:
-            return jsonify({
-                'success': False,
-                'error': '用户名或密码错误'
-            }), 401
+            login_attempts[client_ip]['count'] += 1
+            
+        # 记录失败登录
+        security_logger.log_login_attempt(username, client_ip, False)
+            
+        return jsonify({
+            'success': False,
+            'error': '用户名或密码错误'
+        }), 401
 
 # 管理员登出路由
 @app.route('/admin/logout')
@@ -366,6 +469,12 @@ def admin_status():
     return jsonify({
         'logged_in': bool(session.get('admin_logged_in'))
     })
+
+# Favicon 路由
+@app.route('/favicon.ico')
+def favicon():
+    """返回 favicon 图标"""
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 # 编辑器路由
 @app.route('/<int:year>/<int:month>/<slug>/edit')
@@ -391,6 +500,7 @@ def edit_post(year, month, slug):
 
 @app.route('/api/posts/<int:year>/<int:month>/<slug>/save', methods=['POST'])
 @admin_required
+@csrf.exempt  # API端点 exempt CSRF 保护
 def save_post(year, month, slug):
     """保存文章内容 - 需要管理员权限"""
     try:
@@ -439,14 +549,33 @@ def save_post(year, month, slug):
 
 @app.route('/api/posts/<int:year>/<int:month>/<slug>/preview', methods=['POST'])
 @admin_required
+@csrf.exempt  # API端点 exempt CSRF 保护
 def preview_post(year, month, slug):
     """预览文章内容 - 需要管理员权限"""
     try:
+        print(f"Preview request received for {year}/{month}/{slug}")
+        
+        # 打印请求信息用于调试
+        print(f"Request Content-Type: {request.content_type}")
+        print(f"Request headers: {dict(request.headers)}")
+        
         data = request.get_json()
+        print(f"Request data: {data}")
+        
+        # 检查请求数据是否有效
+        if not data:
+            print("Invalid request data")
+            return jsonify({
+                'success': False,
+                'error': '无效的请求数据格式'
+            }), 400
+            
         content = data.get('content', '')
+        print(f"Content length: {len(content)}")
         
         # 渲染内容
         rendered_content = markdown_parser.render(content)
+        print("Content rendered successfully")
         
         return jsonify({
             'success': True,
@@ -454,10 +583,65 @@ def preview_post(year, month, slug):
         })
     
     except Exception as e:
+        print(f"Preview error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': str(e)
         }), 500
+
+@app.after_request
+def after_request(response):
+    """添加安全头"""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    return response
+
+
+def validate_bookmark_data(data):
+    """验证书签数据"""
+    if not data or not isinstance(data, dict):
+        return False, "无效的数据格式"
+    
+    # 验证必需字段
+    if not data.get('title') or not data.get('url'):
+        return False, "标题和网址为必填项"
+    
+    # 验证URL格式
+    import re
+    url_pattern = re.compile(
+        r'^https?://'  # http:// 或 https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'  # 域名
+        r'localhost|'  # localhost
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # IP地址
+        r'(?::\d+)?'  # 可选端口
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    
+    if not url_pattern.match(data['url']):
+        return False, "网址格式不正确"
+    
+    # 验证标题长度
+    if len(data['title']) > 200:
+        return False, "标题长度不能超过200个字符"
+    
+    # 验证描述长度
+    if data.get('description') and len(data['description']) > 1000:
+        return False, "描述长度不能超过1000个字符"
+    
+    # 验证标签
+    if data.get('tags'):
+        if not isinstance(data['tags'], list):
+            return False, "标签格式不正确"
+        if len(data['tags']) > 10:
+            return False, "标签数量不能超过10个"
+        for tag in data['tags']:
+            if len(tag) > 30:
+                return False, "单个标签长度不能超过30个字符"
+    
+    return True, "验证通过"
 
 
 if __name__ == '__main__':

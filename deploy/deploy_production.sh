@@ -74,6 +74,7 @@ cd "$(dirname "$0")/.."
 PROJECT_ROOT=$(pwd)
 log_info "项目根目录: $PROJECT_ROOT"
 
+
 # 检查Python环境
 if ! command -v python3 &> /dev/null; then
     log_error "未找到python3"
@@ -134,7 +135,7 @@ if ! $PIP_CMD install --upgrade pip --quiet; then
     exit 1
 fi
 
-if ! $PIP_CMD install -r requirements.txt --quiet; then
+if ! $PIP_CMD install -r requirements.txt; then
     log_error "依赖安装失败，查看详细错误:"
     $PIP_CMD install -r requirements.txt
     exit 1

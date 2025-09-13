@@ -239,7 +239,11 @@ class PostManager:
         tags = defaultdict(list)
         
         for post in posts:
-            for tag in post.get('tags', []):
+            # 确保tags字段存在且不为None
+            post_tags = post.get('tags', [])
+            if post_tags is None:
+                post_tags = []
+            for tag in post_tags:
                 tags[tag].append(post)
         
         # 按标签名排序
