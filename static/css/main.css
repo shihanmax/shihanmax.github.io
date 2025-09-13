@@ -242,21 +242,24 @@ html.dark-theme .logged-in-title::after {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+    position: relative;
 }
 
 /* 左侧目录 */
 .post-toc {
-    display: none; /* 隐藏目录 */
-    flex: 0 0 180px; /* 减小宽度为180px，避免过宽 */
+    position: absolute;
+    left: -250px; /* 将目录移到文章内容的左侧 */
+    top: 0;
+    width: 220px;
     background: #f8f9fa;
     border-radius: 5px;
     padding: 1rem;
     align-self: flex-start;
-    position: sticky;
-    top: 2rem;
     max-height: calc(100vh - 4rem);
     overflow-y: auto; /* 独立滚动 */
     border: 1px solid #e1e4e8;
+    transition: all 0.3s ease;
+    z-index: 10;
 }
 
 /* 深色主题下的目录 */
@@ -322,6 +325,11 @@ html.dark-theme .toc-toggle:hover {
     font-size: 1.2rem; /* 减小字体大小 */
 }
 
+/* 目录折叠状态 */
+.toc-list.collapsed {
+    display: none;
+}
+
 /* 目录列表样式 */
 .toc-list ul {
     list-style: none;
@@ -336,7 +344,7 @@ html.dark-theme .toc-toggle:hover {
 
 .toc-list a {
     display: block;
-    padding: 0.1rem 0.3rem; /* 进一步减小内边距 */
+    padding: 0.3rem 0.5rem; /* 增加内边距 */
     color: var(--c-base-01);
     text-decoration: none;
     border-radius: 4px;
@@ -364,6 +372,18 @@ html.dark-theme .toc-list a:hover {
     color: #58a6ff;
 }
 
+/* 活动目录项 */
+.toc-list a.active {
+    background-color: var(--c-accent-blue);
+    color: white;
+}
+
+/* 深色主题下的活动目录项 */
+html.dark-theme .toc-list a.active {
+    background-color: #58a6ff;
+    color: #1a1a1a;
+}
+
 /* 不同级别的目录项 */
 .toc-list li.level-1 > a {
     font-weight: bold;
@@ -372,28 +392,34 @@ html.dark-theme .toc-list a:hover {
 
 .toc-list li.level-2 > a {
     padding-left: 1rem;
+    font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
     padding-left: 1.5rem;
+    font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
     padding-left: 2rem;
+    font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
     padding-left: 2.5rem;
+    font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
     padding-left: 3rem;
+    font-size: 0.9em;
 }
 
 /* 主文章内容 */
 .c-article {
     flex: 1;
     min-width: 0; /* 允许内容区域收缩 */
+    margin-left: 0; /* 确保文章内容不会被目录影响 */
 }
 
 /* 响应式设计 - 小屏幕设备 */
@@ -403,9 +429,9 @@ html.dark-theme .toc-list a:hover {
     }
     
     .post-toc {
-        display: none; /* 隐藏目录 */
-        flex: 0 0 auto;
         position: relative;
+        left: 0;
+        flex: 0 0 auto;
         top: 0;
         max-height: none;
         order: 2; /* 目录放在文章内容之后 */
@@ -414,6 +440,7 @@ html.dark-theme .toc-list a:hover {
     
     .c-article {
         order: 1; /* 文章内容放在前面 */
+        margin-left: 0;
     }
 }
 
@@ -542,10 +569,9 @@ html.dark-theme .editor-container {
 
 /* 目录容器 */
 .toc-container {
-    display: none; /* 隐藏目录 */
-    width: 180px; /* 减小宽度为180px */
-    min-width: 150px;
-    max-width: 180px; /* 限制最大宽度 */
+    width: 220px; /* 增加宽度 */
+    min-width: 200px;
+    max-width: 250px; /* 增加最大宽度 */
     border-right: 1px solid #e1e4e8;
     background-color: #f6f8fa;
     display: flex;
@@ -621,6 +647,8 @@ html.dark-theme .toc-toggle:hover {
     font-size: 1.2rem; /* 减小字体大小 */
 }
 
+}
+
 /* 目录折叠状态 */
 .toc-list.collapsed {
     display: none;
@@ -640,7 +668,7 @@ html.dark-theme .toc-toggle:hover {
 
 .toc-list a {
     display: block;
-    padding: 0.1rem 0.3rem; /* 进一步减小内边距 */
+    padding: 0.3rem 0.5rem; /* 增加内边距 */
     color: var(--c-base-01);
     text-decoration: none;
     border-radius: 4px;
@@ -668,6 +696,18 @@ html.dark-theme .toc-list a:hover {
     color: #58a6ff;
 }
 
+/* 活动目录项 */
+.toc-list a.active {
+    background-color: var(--c-accent-blue);
+    color: white;
+}
+
+/* 深色主题下的活动目录项 */
+html.dark-theme .toc-list a.active {
+    background-color: #58a6ff;
+    color: #1a1a1a;
+}
+
 /* 不同级别的目录项 */
 .toc-list li.level-1 > a {
     font-weight: bold;
@@ -676,22 +716,27 @@ html.dark-theme .toc-list a:hover {
 
 .toc-list li.level-2 > a {
     padding-left: 1rem;
+    font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
     padding-left: 1.5rem;
+    font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
     padding-left: 2rem;
+    font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
     padding-left: 2.5rem;
+    font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
     padding-left: 3rem;
+    font-size: 0.9em;
 }
 
 /* 编辑器分隔线 */

@@ -52,7 +52,7 @@
             </div>
             <div class="editor-with-toc">
                 <!-- 目录树 -->
-                <div class="toc-container" style="display: none;">
+                <div class="toc-container">
                     <div class="toc-header">
                         <h4>目录</h4>
                         <button id="toggle-toc" class="toc-toggle" title="折叠/展开目录">≡</button>
@@ -161,58 +161,7 @@
             attributes: true,
             attributeFilter: ['data-theme']
         });
-        
-        // 初始化目录树功能
-        initTOC();
     });
-    
-    // 初始化目录树功能
-    function initTOC() {
-        const tocContainer = document.querySelector('.toc-container');
-        const tocToggle = document.getElementById('toggle-toc');
-        const tocList = document.getElementById('toc-list');
-        
-        // 切换目录显示/隐藏
-        tocToggle.addEventListener('click', function() {
-            tocList.classList.toggle('collapsed');
-            tocToggle.textContent = tocList.classList.contains('collapsed') ? '≡' : '×';
-        });
-        
-        // 目录项点击事件
-        tocList.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                e.preventDefault();
-                const lineNum = parseInt(e.target.dataset.line);
-                if (!isNaN(lineNum)) {
-                    scrollToLine(lineNum);
-                }
-            }
-        });
-    }
-    
-    // 滚动到指定行
-    function scrollToLine(lineNum) {
-        const editor = document.getElementById('markdown-editor');
-        const content = editor.value;
-        const lines = content.split('\n');
-        
-        // 计算指定行的字符位置
-        let position = 0;
-        for (let i = 0; i < lineNum; i++) {
-            position += lines[i].length + 1; // +1 for newline character
-        }
-        
-        // 设置光标位置并滚动到该位置
-        editor.focus();
-        editor.setSelectionRange(position, position);
-        
-        // 确保光标在视图中
-        const lineHeight = parseInt(window.getComputedStyle(editor).lineHeight);
-        const linesInView = editor.clientHeight / lineHeight;
-        const targetLine = lineNum; // 行号从0开始
-        const scrollTop = (targetLine - linesInView / 2) * lineHeight;
-        editor.scrollTop = Math.max(0, scrollTop);
-    }
 </script>
 {% endblock %}
 

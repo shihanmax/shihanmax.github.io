@@ -10,8 +10,8 @@ class MarkdownEditor {
         this.saveStatus = document.getElementById('save-status');
         this.charCount = document.getElementById('char-count');
         this.wordCount = document.getElementById('word-count');
-        // 目录功能已禁用
-        // this.tocList = document.getElementById('toc-list');
+        this.tocList = document.getElementById('toc-list');
+        this.tocContainer = document.querySelector('.toc-container');
         
         this.isDirty = false;
         this.isPreviewLoading = false;
@@ -34,14 +34,60 @@ class MarkdownEditor {
         this.setupScrollSync();
         this.setupCursorSync();
         this.preventPreviewInteraction();
-        // 目录功能已禁用
-        // this.generateTOC(); // 生成初始目录
+        this.generateTOC(); // 生成初始目录
     }
     
-    // 生成目录树（已禁用）
+    // 生成目录树
     generateTOC() {
-        // 目录功能已禁用，不执行任何操作
-        return;
+        if (!this.tocList) return;
+        
+        // 清空现有目录
+        this.tocList.innerHTML = '';
+        
+        const content = this.editor.value;
+        const lines = content.split('\n');
+        
+        // 创建目录列表
+        const tocUl = document.createElement('ul');
+        
+        // 用于跟踪标题层级和编号
+        const headingStack = [];
+        
+        lines.forEach((line, lineIndex) => {
+            // 匹配Markdown标题 (#, ##, ###, 等)
+            const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+            
+            if (headingMatch) {
+                const level = headingMatch[1].length;
+                const title = headingMatch[2].trim();
+                
+                // 创建目录项
+                const tocItem = document.createElement('li');
+                tocItem.className = `level-${level}`;
+                
+                // 创建链接
+                const tocLink = document.createElement('a');
+                tocLink.href = '#';
+                tocLink.textContent = title;
+                tocLink.dataset.line = lineIndex;
+                
+                tocItem.appendChild(tocLink);
+                tocUl.appendChild(tocItem);
+            }
+        });
+        
+        // 如果有目录项，显示目录容器
+        if (tocUl.children.length > 0) {
+            this.tocList.appendChild(tocUl);
+            if (this.tocContainer) {
+                this.tocContainer.style.display = 'flex';
+            }
+        } else {
+            // 如果没有目录项，隐藏目录容器
+            if (this.tocContainer) {
+                this.tocContainer.style.display = 'none';
+            }
+        }
     }
     
     // 防止预览区域的交互引起跳转
@@ -117,8 +163,7 @@ class MarkdownEditor {
             // 可以在这里添加滚动位置的跟踪逻辑
         });
         
-        // 目录项点击事件已禁用
-        /*
+        // 目录项点击事件
         if (this.tocList) {
             this.tocList.addEventListener('click', (e) => {
                 if (e.target.tagName === 'A') {
@@ -130,19 +175,69 @@ class MarkdownEditor {
                 }
             });
         }
-        */
+        
+        // 目录切换按钮
+        const tocToggle = document.getElementById('toggle-toc');
+        if (tocToggle && this.tocList) {
+            tocToggle.addEventListener('click', () => {
+                this.tocList.classList.toggle('collapsed');
+                tocToggle.textContent = this.tocList.classList.contains('collapsed') ? '≡' : '×';
+            });
+        }
     }
     
-    // 滚动到指定行（已禁用）
+    // 滚动到指定行
     scrollToLine(lineNum) {
-        // 目录功能已禁用，不执行任何操作
-        return;
+        const lines = this.editor.value.split('\n');
+        
+        // 计算指定行的字符位置
+        let position = 0;
+        for (let i = 0; i < lineNum; i++) {
+            position += lines[i].length + 1; // +1 for newline character
+        }
+        
+        // 设置光标位置并滚动到该位置
+        this.editor.focus();
+        this.editor.setSelectionRange(position, position);
+        
+        // 确保光标在视图中
+        const lineHeight = parseInt(window.getComputedStyle(this.editor).lineHeight);
+        const linesInView = this.editor.clientHeight / lineHeight;
+        const targetLine = lineNum; // 行号从0开始
+        const scrollTop = (targetLine - linesInView / 2) * lineHeight;
+        this.editor.scrollTop = Math.max(0, scrollTop);
     }
     
-    // 滚动预览区域到对应标题（已禁用）
+    // 滚动预览区域到对应标题
     scrollPreviewToHeading(lineNum) {
-        // 目录功能已禁用，不执行任何操作
-        return;
+        // 在预览中查找对应的标题元素
+        const previewHeadings = this.preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        let targetElement = null;
+        
+        // 查找与行号对应的标题
+        for (let i = 0; i < previewHeadings.length; i++) {
+            const heading = previewHeadings[i];
+            const headingLine = parseInt(heading.dataset.lineNumber || -1);
+            
+            if (headingLine === lineNum) {
+                targetElement = heading;
+                break;
+            }
+            
+            // 如果找不到精确匹配，找到最近的标题
+            if (headingLine > lineNum) {
+                targetElement = heading;
+                break;
+            }
+        }
+        
+        // 如果找到了目标元素，滚动到该位置
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
     }
 
     bindFormatButtons() {
@@ -234,8 +329,8 @@ class MarkdownEditor {
         // 延迟更新预览，但确保不会在用户输入时频繁触发
         this.schedulePreviewUpdate();
         
-        // 更新目录树已禁用
-        // this.generateTOC();
+        // 更新目录树
+        this.generateTOC();
     }
 
     markAsDirty() {
