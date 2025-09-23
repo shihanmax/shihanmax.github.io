@@ -531,6 +531,7 @@ class Cat : Animal // 子类
 终于旗开得胜了，花木兰告别了战争生活。有一天，遇到了自己心爱的男人，这时候爱情的力量将父类对象的引用（花弧这个名字）强制转换为子类对象本来的引用（花木兰这个名字），花木兰又从新成为了她自己，这时候她完全是她自己了。名字是花木兰，年龄是28，性别是女，打仗依然那样生猛女汉子，自我介绍则堂堂正正地告诉别人我叫花木兰。OMG！终于，终于可以使用自己特有的成员方法‘涂脂抹粉’了。从此，花木兰完全回到了替父从军前的那个花木兰了。并且和自己心爱的男人幸福的过完了一生。 -- 多态中的向上转型
 
 8. 重构
+```java
 class Animal
 {
     ......
@@ -592,18 +593,22 @@ class Sheep : Animal
         return "咩"
     }
 }
+```
 
 以上Cat、Dog、Sheep三个子类均继承自父类Animal，如果有需求：将自我介绍的格式修改成“我是...”，仅需要修改父类的Shout方法即可。
 上面用到了一个设计模式，叫“模板方法”。
 
 9. 抽象类
 上例中的Animal对象在现实中并无实体（没有一个名为Animal的实体），考虑把它改为抽象类，同时将getSound方法改为抽象方法：
+
+```java
 abstract class Animal
 {
     ......
     
     protect abstract string getSound(); // 抽象方法没有方法体
 }
+```
 
 抽象类要注意几点：
     - 抽象类不能实例化
@@ -617,6 +622,7 @@ abstract class Animal
 还有，实现接口的类必须要实现接口中的所有方法和属性。
 
 对猴子Monkey，猪Pig，叮当Ding三者所要求的变化技能，可以声明一个接口：
+```java
 interface IChange
 {
     string ChangeTing(string thing);
@@ -632,6 +638,7 @@ class MachineCat : Animal, IChange // 机器猫继承自猫，并实现了 IChan
         return base.Shout() + "我有万能口袋，我可变出：" + thing
     }
 }
+```
 
 接口和抽象类的区别：
     1. 类是对对象的抽象；抽象类是对类的抽象；接口是对行为的抽象
@@ -649,15 +656,19 @@ ArrayList的缺点：
 foreach(elementType item in someArrayList)
 此时指定了元素的类型，在多种类型元素组成的ArrayList中，这种遍历方式会报错，所以使用ArrayList需要将值类型装箱为Object对象，在使用集合元素时，还要进行拆箱操作，这两步会带来较大的性能损耗。
 
+```java
 int i = 123;
 object o = (object) i; // boxing
 
 o = 123;
 i = (int) 0; //unboxing
+```
 
 C#2.0后，使用泛型解决了这一问题。
 
 12. 泛型
+
+```java
 using System.Collections.Generic;
 public partial class Form1 : Form
 {
