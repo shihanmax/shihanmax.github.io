@@ -314,8 +314,12 @@ private void btnOk_Click(object sender, EventArgs e)
 ```
 
 简单工厂模式和策略模式的对比
+
+```java
 CashSuper csuper = CashFactory.createCashAccept(cbxType.SelectedItem.ToString()); //简单工厂模式
 CashContext csuper = new CashContext(cbxType.SelectedItem.ToString()); //策略模式
+```
+
 简单工厂模式需要让客户端认识两个类：CashSuper 和 CashFactory，而策略模式与简单工厂模式结合的方法，客户端只需要认识一个类 CashContext 就可以。
 
 策略模式解析
