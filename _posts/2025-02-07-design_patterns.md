@@ -464,8 +464,9 @@ class Cat : Animal // 子类
     a. 存在继承关系
     b. 子类要重写父类方法
     c. 父类数据类型的引用指向子类对象
-    
-JAVA多态示例：
+
+```java
+// JAVA多态示例：
     // 父类Animal
     class Animal {
         int num = 10;
@@ -521,7 +522,7 @@ JAVA多态示例：
     动物在奔跑
     10
     20
-    
+```   
     
 多态的理解
 
