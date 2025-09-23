@@ -676,6 +676,7 @@ public partial class Form1 : Form
     arrayAnimal = new List<Animal>();
     ......
 }
+```
 
 通常情况下，都建议使用泛型集合，因为这样可以获得类型安全的直接优点而不需要从基集合类型派生并实现类型特定的成员。此外，如果集合元素为值类型，泛型集合类型的性能通常优于对应的非泛型集合类型。
 
@@ -683,6 +684,7 @@ public partial class Form1 : Form
 委托是对函数的封装，可以当做给方法的特征指定一个名称。而事件则是委托的一种特殊形式，当发生有意义的事情是，事件对象处理通知过程。
 例子：
 需求：有两只老鼠Jarry和Jack，一只猫Tom，当猫叫一声“喵，我是Tom”时，两只老鼠就说“猫来了，快跑”。
+```java
 class Cat
 {
     private string name;
@@ -744,7 +746,11 @@ static void Main(string[] args)
     Console.Read();
 }
 
+```
+
 输出：
+```bash
 喵，我是Tom
 猫Tom来了，Jarry快跑
 猫Tom来了，Jack快跑
+```
