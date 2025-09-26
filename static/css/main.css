@@ -1428,6 +1428,78 @@ body.dark-theme .MathJax_Display {
     margin-left: 2.1rem;
 }
 
+/* ==========================================================================
+   代码格式 - GitHub风格
+   ========================================================================== */
+
+pre, code {
+    font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+    font-size: 1.4rem;
+    border-radius: 6px;
+}
+
+code {
+    padding: 2px 6px;
+    background-color: rgba(175, 184, 193, 0.2);
+    border: 1px solid rgba(175, 184, 193, 0.4);
+    font-size: 1.3rem;
+}
+
+pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 1.4rem;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border: 1px solid #d0d7de;
+    /* 修复：确保pre标签不会导致布局问题 */
+    margin-bottom: calc(var(--spacing-unit) / 2);
+    clear: both;
+}
+
+pre > code {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    font-size: inherit;
+    /* 修复：确保代码块内的代码不会影响布局 */
+    display: block;
+    line-height: inherit;
+}
+
+/* 语法高亮 - GitHub风格支持行号 */
+.highlight {
+    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
+    overflow-x: auto;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    position: relative;
+    /* 修复：确保.highlight不会导致布局问题 */
+    clear: both;
+}
+
+.highlight pre {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 16px;
+    font-size: 1.4rem;
+    line-height: 1.45;
+    overflow-x: visible; /* 允许行号区域可见 */
+    /* 修复：确保代码块内的pre标签不会导致布局问题 */
+    margin-bottom: 0;
+}
+
+.highlight code {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    /* 修复：确保代码块内的代码不会影响布局 */
+    display: block;
+    line-height: inherit;
+}
+
 /* 表格样式 */
 .table-responsive {
     overflow-x: auto;
@@ -1450,38 +1522,6 @@ body.dark-theme .MathJax_Display {
 .table th {
     background-color: #f8f9fa;
     font-weight: 350; /* 统一修改为350 */
-}
-
-/* 语法高亮 - GitHub风格支持行号 */
-.highlight {
-    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
-    overflow-x: auto;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    position: relative;
-}
-
-.highlight pre {
-    background-color: transparent;
-    border: none;
-    margin: 0;
-    padding: 16px;
-    font-size: 1.4rem;
-    line-height: 1.45;
-    overflow-x: visible; /* 允许行号区域可见 */
-}
-
-.highlight code {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-}
-
-/* 行号表格样式调整 */
-.highlight table {
-    margin: 0;
-    border: none;
 }
 
 /* ==========================================================================

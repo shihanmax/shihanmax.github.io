@@ -95,10 +95,17 @@ class MarkdownParser:
             return f'INLINEMATH{len(self._inline_math_blocks)-1}ENDINLINE'
         
         # 用更高效的正则处理数学公式
-        content = re.sub(r'\$\$[^$]*?\$\$', preserve_display_math, 
-                        content, flags=re.DOTALL)
-        content = re.sub(r'(?<!\\)\$([^$\n]+?)\$', preserve_inline_math, 
-                        content)
+        content = re.sub(
+            r'\$\$[^$]*?\$\$', 
+            preserve_display_math, 
+            content, 
+            flags=re.DOTALL
+        )
+        content = re.sub(
+            r'(?<!\\)\$([^$\n]+?)\$', 
+            preserve_inline_math, 
+            content
+        )
         
         # 简化Jekyll标签处理
         content = re.sub(
@@ -128,21 +135,43 @@ class MarkdownParser:
         
         return html
     
+    def _ensure_content_wrapped(self, html: str) -> str:
+        """确保HTML内容被正确包装"""
+        # 移除可能的首尾空白
+        html = html.strip()
+        
+        # 检查是否已经包装在适当的标签中
+        starts_with_valid_tag = (
+            html.startswith('<div') or 
+            html.startswith('<p') or 
+            html.startswith('<h')
+        )
+        
+        if not starts_with_valid_tag:
+            # 如果内容没有被适当的标签包装，添加一个包装器
+            html = f'<div class="markdown-content">{html}</div>'
+        
+        return html
+    
     def _postprocess_html(self, html: str) -> str:
         """后处理HTML内容"""
+        # 添加调试信息
+        original_length = len(html)
         
         # 恢复数学公式
         html = self._restore_math_formulas(html)
         
         # 为表格添加responsive wrapper
+        # 使用更精确的正则表达式，避免影响代码块中的表格
         html = re.sub(
-            r'<table>',
-            '<div class="table-responsive"><table class="table">',
+            r'(<table>)',
+            r'<div class="table-responsive"><table class="table">',
             html
         )
+        # Only replace </table> that is not followed by </div>
         html = re.sub(
-            r'</table>',
-            '</table></div>',
+            r'(</table>)(?!</div>)',
+            r'</table></div>',
             html
         )
         
@@ -152,6 +181,22 @@ class MarkdownParser:
             r'<img class="img-responsive"\1>',
             html
         )
+        
+        # 修复：确保代码块不会影响后续内容
+        # 移除可能存在的多余空白行
+        html = re.sub(r'</pre>\s*<pre>', '</pre>\n<pre>', html)
+        
+        # 确保HTML内容完整，移除首尾空白
+        html = html.strip()
+        
+        # 添加调试信息
+        processed_length = len(html)
+        if abs(original_length - processed_length) > 1000:
+            # 如果长度变化很大，可能是有问题
+            msg = ("Warning: HTML length changed significantly "
+                   "during postprocessing")
+            print(msg)
+            print(f"  {original_length} -> {processed_length}")
         
         return html
     
@@ -169,7 +214,10 @@ class MarkdownParser:
                     numbered_lines = []
                     for i, line in enumerate(lines, 1):
                         if line.strip():  # 只为非空行添加行号
-                            numbered_lines.append(f'<span class="line-number">{i:2d}</span>{line}')
+                            line_number = (
+                                f'<span class="line-number">{i:2d}</span>'
+                            )
+                            numbered_lines.append(f'{line_number}{line}')
                         else:
                             numbered_lines.append(line)
                     
@@ -189,9 +237,10 @@ class MarkdownParser:
     
     def get_toc(self, content: str) -> str:
         """获取目录"""
-        # 渲染内容以生成目录
-        self.render(content)
-        toc = self.md.toc
+        # 直接转换内容以生成目录，不调用render方法避免reset
+        self.md.convert(content)
+        # 使用hasattr检查toc属性是否存在
+        toc = getattr(self.md, 'toc', '') if hasattr(self.md, 'toc') else ''
         self.md.reset()
         return toc
     

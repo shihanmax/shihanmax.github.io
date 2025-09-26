@@ -6,7 +6,7 @@
 """
 
 import re
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 
 
@@ -16,7 +16,7 @@ class TOCItem:
     level: int
     title: str
     anchor: str
-    children: List['TOCItem'] = None
+    children: Optional[List['TOCItem']] = None
     
     def __post_init__(self):
         if self.children is None:
@@ -28,6 +28,7 @@ class TOCParser:
     
     def __init__(self):
         # 标题正则表达式，匹配 # 开头的标题
+        # 修复：确保正则表达式正确处理包含代码块的Markdown
         self.heading_pattern = re.compile(
             r'^(#{1,6})\s+(.+)$', re.MULTILINE
         )
@@ -55,17 +56,38 @@ class TOCParser:
         toc_items = []
         for i, (hashes, title) in enumerate(headings):
             level = len(hashes)
-            anchor = self._generate_anchor(title, i)
+            # 修复：清理标题文本，去除可能的代码块标记
+            clean_title = self._clean_title(title)
+            anchor = self._generate_anchor(clean_title, i)
             
             toc_item = TOCItem(
                 level=level,
-                title=title.strip(),
+                title=clean_title.strip(),
                 anchor=anchor
             )
             toc_items.append(toc_item)
         
         # 构建层级结构
         return self._build_hierarchy(toc_items)
+    
+    def _clean_title(self, title: str) -> str:
+        """
+        清理标题文本，去除多余的格式标记
+        
+        Args:
+            title: 原始标题文本
+            
+        Returns:
+            清理后的标题文本
+        """
+        # 去除行尾的多余空格
+        title = title.strip()
+        
+        # 去除可能的代码标记（如伪代码中的标记）
+        # 移除行内代码标记
+        title = re.sub(r'`([^`]+)`', r'\1', title)
+        
+        return title
     
     def _generate_anchor(self, title: str, index: int) -> str:
         """
@@ -123,7 +145,8 @@ class TOCParser:
         
         return result
     
-    def generate_toc_html(self, toc_items: List[TOCItem], collapsed: bool = False) -> str:
+    def generate_toc_html(self, toc_items: List[TOCItem], 
+                          collapsed: bool = False) -> str:
         """
         生成目录HTML
         
@@ -174,11 +197,17 @@ class TOCParser:
             JSON格式的目录数据
         """
         def item_to_dict(item: TOCItem) -> Dict:
+            children_data = []
+            if item.children:
+                children_data = [
+                    item_to_dict(child) for child in item.children
+                ]
+            
             return {
                 'level': item.level,
                 'title': item.title,
                 'anchor': item.anchor,
-                'children': [item_to_dict(child) for child in item.children]
+                'children': children_data
             }
         
         return [item_to_dict(item) for item in toc_items]

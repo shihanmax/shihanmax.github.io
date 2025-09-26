@@ -33,9 +33,9 @@
             </div>
         </header>
 
-        <main class="c-article__main" id="article-content">
+        <div class="c-article__main" id="article-content">
             {{ post.rendered_content | safe }}
-        </main>
+        </div>
 
         <footer class="c-article__footer">
             {% if post.tags %}
@@ -352,5 +352,13 @@ if (typeof MathJax !== 'undefined') {
         generateTOCWithDelay(100);
     });
 }
+
+// 修复：确保在所有资源加载完成后再次生成TOC
+// 这可以解决伪代码导致的目录截断问题
+setTimeout(function() {
+    console.log('Final TOC generation after 2 seconds');
+    generateTOCWithDelay(100);
+}, 2000);
+
 </script>
 {% endblock %}
