@@ -24,7 +24,8 @@ tags:
 这个表格非常长。这个表格非常长。这个表格非常长。
 
 ```Python
-这里有一段python代码
+import re
+for i in range(10
 ```
 
 这个表格非常长。
