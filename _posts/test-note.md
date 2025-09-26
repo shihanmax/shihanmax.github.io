@@ -25,7 +25,10 @@ tags:
 
 ```Python
 import re
-for i in range(10
+for i in range(10):
+    re.findall(r"a|b|c", "xyz")
+
+
 ```
 
 这个表格非常长。
