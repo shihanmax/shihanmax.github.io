@@ -21,6 +21,7 @@ class MarkdownEditor {
         this.cursorSyncEnabled = true;
         this.highlightTimeout = null;
         this.currentLineHighlight = null; // 当前行高亮元素
+        this.cursorEnhancements = []; // 光标增强效果元素数组
         
         // 删除未使用的滚动同步相关属性
         
@@ -137,6 +138,7 @@ class MarkdownEditor {
         // 编辑器滚动事件 - 清除高亮
         this.editor.addEventListener('scroll', () => {
             this.removeLineHighlight();
+            this.removeCursorEnhancements();
         });
 
         // 保存按钮点击事件
