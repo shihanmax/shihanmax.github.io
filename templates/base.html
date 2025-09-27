@@ -163,7 +163,7 @@
 </head>
 
 <body>
-    <main class="u-container" style="padding-top: 60px;">
+    <main class="u-container">
         <!-- 页面头部 -->
         <header class="c-page__header">
             <div class="header-container">
@@ -185,6 +185,16 @@
                             <a href="{{ url_for('index') }}">&lt; Back</a>
                         </nav>
                         {% endif %}
+                        {% if page_type != 'home' and title %}
+                        <div class="page-title-divider">&nbsp;</div>
+                        <h1 class="page-title"> {{ title }}</h1>
+                        {% endif %}
+                        {% if post_date %}
+                        <div class="header-date">
+                            <time datetime="{{ post_date.isoformat() }}">{{ post_date.strftime('%B %-d, %Y') }}</time>
+                        </div>
+                        {% endif %}
+
                     </div>
                 </div>
                 <!-- 切换明暗模式的按钮 -->

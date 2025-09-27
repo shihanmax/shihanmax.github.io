@@ -27,6 +27,9 @@
     --dark-theme-code-bg: #282c34;
     --dark-theme-header-footer-bg: #111;
     
+    /* Layout dimensions */
+    --header-height: 70px; /* Fixed header height including padding - 更新为实际高度 */
+    
     /* Breakpoints */
     --bp-sm: 45rem; /* 450px */
     
@@ -121,6 +124,8 @@ li > ol {
 /* 标题 */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 350; /* 统一修改为350 */
+    /* 为锚点跳转添加偏移，考虑固定header的高度 */
+    scroll-margin-top: var(--header-height);
 }
 
 /* 链接 */
@@ -238,7 +243,7 @@ html.dark-theme .logged-in-title::after {
 .post-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 0rem 1rem 2rem; /* 进一步减少顶部padding从1rem到0.5rem */
     position: relative;
     min-height: calc(100vh - 4rem);
     margin-top: 0; /* 与页面顶部对齐 */
@@ -248,14 +253,14 @@ html.dark-theme .logged-in-title::after {
 .toc-panel {
     position: fixed;
     left: 1rem;
-    top: calc(60px + 31.2px + 15px + 27px + 60px); /* 与c-page__header底部对齐: u-container margin-top + h1 height + h1 margin-bottom + p height + header margin-bottom */
+    top: calc(var(--header-height) + 1rem); /* 簡化定位：固定header高度 + 1rem间距 */
     width: 240px;
     background: #f8f9fa;
     border: 1px solid #e1e4e8;
     border-radius: 8px;
     padding: 0;
     z-index: 100;
-    max-height: calc(100vh - 60px - 31.2px - 15px - 27px - 60px - 2rem);
+    max-height: calc(100vh - var(--header-height) - 2rem); /* 底部留出相同的间距 */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -273,7 +278,7 @@ html.dark-theme .toc-panel {
 
 /* 目录面板折叠状态 */
 .toc-panel.collapsed {
-    width: 50px;
+    width: 72px;
 }
 
 .toc-panel.collapsed .toc-content {
@@ -1225,10 +1230,10 @@ body.dark-theme .MathJax_Display {
 
 /* 容器 */
 .u-container {
-    max-width: calc(800px - (var(--spacing-unit) * 2));
+    max-width: calc(866px - (var(--spacing-unit) * 2));
     margin-right: auto;
     margin-left: auto;
-    margin-top: calc(var(--spacing-unit)); /* 30px - 减小页面上边距 */
+    margin-top: calc(var(--header-height) + var(--spacing-unit)); /* 70px + 30px = 100px - 为固定header留出足够空间 */
     padding-right: var(--spacing-unit);
     padding-left: var(--spacing-unit);
     /* 移除额外的内边距，与Jekyll版本保持一致 */
@@ -1237,7 +1242,7 @@ body.dark-theme .MathJax_Display {
 @media screen and (max-width: 800px) {
     .u-container {
         max-width: calc(800px - var(--spacing-unit));
-        margin-top: calc(var(--spacing-unit) * 2); /* 60px - 响应式设计下保持相同的上边距 */
+        margin-top: calc(var(--header-height) + calc(var(--spacing-unit) * 1.5)); /* 70px + 45px = 115px - 移动端略加额外间距 */
         padding-right: calc(var(--spacing-unit) / 2);
         padding-left: calc(var(--spacing-unit) / 2);
     }
@@ -1740,20 +1745,23 @@ html.dark-theme .theme-switch input:checked + .switch {
     padding-right: 2rem; /* 添加右边距 */
     width: 100%;
     box-sizing: border-box;
+    height: 100%; /* 确保容器占满header的全部高度 */
 }
 
 .header-left {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center; /* 垂直居中所有元素 */
     flex: 1;
     text-align: left;
+    height: 100%; /* 确保占满父容器高度 */
 }
 
 /* 标题和导航的水平布局 */
 .title-nav-wrapper {
     display: flex;
-    align-items: baseline; /* 使用baseline对齐，让标题和导航在基线对齐 */
+    align-items: center; /* 改为center以实现垂直居中 */
     gap: 1.5rem; /* 减小标题和导航之间的间距，更紧凑美观 */
     flex-wrap: nowrap; /* 防止换行，确保在同一行 */
 }
@@ -1766,13 +1774,45 @@ html.dark-theme .theme-switch input:checked + .switch {
     line-height: 1.2; /* 稍微增加行高以更好对齐 */
 }
 
+/* 页面标题样式 */
+.page-title-divider {
+    color: var(--c-base-01);
+    font-size: 2.0rem;
+    font-weight: 300;
+    margin: 0 0.5rem;
+}
+
+.page-title {
+    margin: 0 !important; /* 强制移除上下边距，覆盖h1的默认样式 */
+    font-size: 2.0rem;
+    font-weight: 350;
+    color: var(--c-accent-blue);
+    flex-shrink: 0;
+    line-height: 1.2;
+}
+
+/* Header中的日期样式 */
+.header-date {
+    margin-left: 1.5rem;
+    font-size: 1.6rem;
+    color: var(--c-base-01);
+    line-height: 1.2;
+    white-space: nowrap;
+    font-weight: 300;
+    text-align: right;
+}
+
+html.dark-theme .header-date {
+    color: var(--dark-theme-text);
+}
+
 .header-nav {
     display: flex;
     align-items: center;
     font-size: 1.8rem; /* 稍微减小导航字体，与标题形成更好的层次感 */
     line-height: 1.2;
     white-space: nowrap; /* 防止导航栏换行 */
-    margin-top: 0.2rem; /* 轻微向下调整导航位置 */
+    /* 移除margin-top，由于现在使用垂直居中 */
 }
 
 .header-nav a {
@@ -1797,7 +1837,7 @@ html.dark-theme .theme-switch input:checked + .switch {
     
     .header-nav {
         font-size: 1.5rem; /* 调整导航字号 */
-        margin-top: 0.1rem;
+        /* 保持垂直居中，移除margin-top */
     }
     
     .header-nav a {
@@ -1813,7 +1853,7 @@ html.dark-theme .theme-switch input:checked + .switch {
     }
     
     .header-nav {
-        margin-top: 0; /* 竖直布局时移除上边距 */
+        /* 竖直布局时保持对齐，不需要margin-top */
     }
 }
 
@@ -1834,12 +1874,29 @@ html.dark-theme .theme-switch input:checked + .switch {
     z-index: 100;
     padding: 10px 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: var(--header-height); /* 确保header高度与CSS变量一致 */
+    box-sizing: border-box;
 }
 
 html.dark-theme .c-page__header {
     background-color: var(--dark-theme-background);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2); /* 增强暗色主题下的阴影效果 */
     border-bottom: 1px solid #333; /* 添加底部边框以增强分离感 */
+    height: var(--header-height); /* 确保header高度与CSS变量一致 */
+    box-sizing: border-box;
+}
+
+/* 暗色主题下的页面标题样式 */
+html.dark-theme .page-title-divider {
+    color: var(--dark-theme-text);
+}
+
+html.dark-theme .page-title {
+    color: var(--dark-theme-link);
+}
+
+html.dark-theme .c-page__header h1 {
+    color: var(--dark-theme-text);
 }
 
 .c-page__header h1 {

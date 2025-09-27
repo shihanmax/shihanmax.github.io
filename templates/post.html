@@ -18,10 +18,6 @@
     <!-- 主内容区域 -->
     <article class="c-article">
         <header class="c-article__header">
-            <h1 class="c-article__title">{{ post.title }}</h1>
-            <p class="c-article__time">
-                <time datetime="{{ post.date.isoformat() }}">{{ post.date.strftime('%B %-d, %Y') }}</time>
-            </p>
             <!-- 编辑按钮（仅对管理员显示） -->
             <div class="c-article__actions admin-only" style="display: none;">
                 <a href="{{ url_for('edit_post', year=post.year, month=post.month, slug=post.slug) }}" 
@@ -156,10 +152,17 @@ class TOCManager {
                 const targetElement = document.getElementById(targetId);
                 
                 if (targetElement) {
-                    // 平滑滚动到目标元素
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    // 获取header高度
+                    const headerHeight = parseInt(getComputedStyle(document.documentElement)
+                        .getPropertyValue('--header-height')) || 70;
+                    
+                    // 计算目标位置，减去header高度的偏移
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    
+                    // 平滑滚动到目标位置
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                     
                     // 更新活动状态
@@ -228,8 +231,12 @@ class TOCManager {
         });
         
         if (!activeId) {
-            // 自动检测当前可见的标题
-            const scrollPosition = window.pageYOffset + 100;
+            // 获取header高度
+            const headerHeight = parseInt(getComputedStyle(document.documentElement)
+                .getPropertyValue('--header-height')) || 70;
+            
+            // 自动检测当前可见的标题，考虑header高度
+            const scrollPosition = window.pageYOffset + headerHeight + 20; // 额外加一20px缓冲
             
             for (let i = this.headingPositions.length - 1; i >= 0; i--) {
                 if (scrollPosition >= this.headingPositions[i].top) {

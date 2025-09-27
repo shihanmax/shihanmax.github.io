@@ -5,7 +5,8 @@
 完全替代Jekyll，保持原有视觉效果
 """
 
-from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for, send_from_directory
+from flask import (Flask, render_template, abort, request, jsonify, session,
+                   redirect, url_for, send_from_directory)
 import os
 from datetime import datetime
 from functools import wraps
@@ -122,7 +123,8 @@ def post_detail(year, month, slug):
     return render_template('post.html', 
                          post=post, 
                          page_type='post',
-                         title=post['title'])
+                         title=post['title'],
+                         post_date=post['date'])
 
 @app.route('/tags')
 def tags():
@@ -377,7 +379,7 @@ def admin_login():
         # 如果已经登录，重定向到书签页面
         if session.get('admin_logged_in'):
             return redirect(url_for('bookmarks'))
-        return render_template('admin_login.html')
+        return render_template('admin_login.html', title='Login')
     
     elif request.method == 'POST':
         # 获取客户端IP

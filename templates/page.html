@@ -2,10 +2,6 @@
 
 {% block content %}
 <article class="c-article">
-    <header class="c-article__header">
-        <h1 class="c-article__title">{{ page.title if page else title }}</h1>
-    </header>
-
     <main class="c-article__main">
         {% if page and page.rendered_content %}
             {{ page.rendered_content | safe }}

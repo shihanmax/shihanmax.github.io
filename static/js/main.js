@@ -158,12 +158,60 @@
     }
 
     /**
+     * 处理锚点跳转，考虑固定header高度
+     */
+    function handleAnchorScrolling() {
+        // 处理页面加载时的锚点
+        if (window.location.hash) {
+            setTimeout(() => {
+                const target = document.querySelector(window.location.hash);
+                if (target) {
+                    scrollToElement(target);
+                }
+            }, 100);
+        }
+        
+        // 处理点击锚点链接
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href') && e.target.getAttribute('href').startsWith('#')) {
+                const targetId = e.target.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    scrollToElement(target);
+                    // 更新URL
+                    history.pushState(null, null, targetId);
+                }
+            }
+        });
+    }
+    
+    /**
+     * 滚动到指定元素，考虑header高度
+     */
+    function scrollToElement(element) {
+        // 获取header高度
+        const headerHeight = parseInt(getComputedStyle(document.documentElement)
+            .getPropertyValue('--header-height')) || 70;
+        
+        // 计算目标位置
+        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        
+        // 平滑滚动
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    /**
      * 初始化所有功能
      */
     function init() {
         addCodeCopyButtons();
         addImageZoom();
         addBackToTop();
+        handleAnchorScrolling();
     }
 
     // DOM加载完成后初始化
