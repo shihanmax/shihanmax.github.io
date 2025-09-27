@@ -1228,7 +1228,7 @@ body.dark-theme .MathJax_Display {
     max-width: calc(800px - (var(--spacing-unit) * 2));
     margin-right: auto;
     margin-left: auto;
-    margin-top: calc(var(--spacing-unit) * 2); /* 60px - 页面上边距设置为2倍 */
+    margin-top: calc(var(--spacing-unit)); /* 30px - 减小页面上边距 */
     padding-right: var(--spacing-unit);
     padding-left: var(--spacing-unit);
     /* 移除额外的内边距，与Jekyll版本保持一致 */
@@ -1688,27 +1688,136 @@ body.light-theme h6 {
 .theme-switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 30px;
-    border-radius: 15px;
+    width: 30px; /* 减小按钮宽度，与图标大小匹配 */
+    height: 30px; /* 保持高度与图标区域一致 */
+    border-radius: 50%; /* 改为圆形，更适合单个图标 */
     cursor: pointer;
     transition: background-color 0.5s;
+    flex-shrink: 0; /* 防止被压缩 */
+    align-self: center;
+}
+
+.theme-switch .switch {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; /* 与外容器保持一致 */
+    background-color: transparent; /* 移除背景色 */
+    transition: background-color 0.3s;
+}
+
+.theme-switch input:checked + .switch {
+    background-color: transparent; /* 移除背景色 */
 }
 
 .theme-switch .icon {
     position: absolute;
-    top: 15%;
+    top: 50%; /* 改为50%实现真正的垂直居中 */
     left: 50%;
     transform: translate(-50%, -50%);
     transition: left 0.5s;
-    font-size: 24px; /* 与原版一致 */
+    font-size: 20px; /* 稍微调大图标 */
+    line-height: 1; /* 确保图标本身没有额外的行高 */
 }
 
-.container1 {
+/* 深色主题下的主题切换按钮样式 */
+html.dark-theme .theme-switch .switch {
+    background-color: transparent; /* 移除背景色 */
+}
+
+html.dark-theme .theme-switch input:checked + .switch {
+    background-color: transparent; /* 移除背景色 */
+}
+
+.header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 100%;
+    margin: 0;
+    padding-left: 2rem; /* 添加左边距 */
+    padding-right: 2rem; /* 添加右边距 */
+    width: 100%;
+    box-sizing: border-box;
 }
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    text-align: left;
+}
+
+/* 标题和导航的水平布局 */
+.title-nav-wrapper {
+    display: flex;
+    align-items: baseline; /* 使用baseline对齐，让标题和导航在基线对齐 */
+    gap: 1.5rem; /* 减小标题和导航之间的间距，更紧凑美观 */
+    flex-wrap: nowrap; /* 防止换行，确保在同一行 */
+}
+
+.title-nav-wrapper h1 {
+    margin-bottom: 0; /* 移除标题的底部边距 */
+    margin-right: 0; /* 确保没有额外的右边距 */
+    flex-shrink: 0; /* 防止标题被压缩 */
+    font-size: 2.6rem; /* 保持标题大小 */
+    line-height: 1.2; /* 稍微增加行高以更好对齐 */
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem; /* 稍微减小导航字体，与标题形成更好的层次感 */
+    line-height: 1.2;
+    white-space: nowrap; /* 防止导航栏换行 */
+    margin-top: 0.2rem; /* 轻微向下调整导航位置 */
+}
+
+.header-nav a {
+    font-size: 1.8rem; /* 确保导航链接大小一致 */
+    font-weight: 400; /* 让导航链接稍微细一些，突出标题 */
+}
+
+.header-nav .u-separate {
+    color: var(--c-base-01); /* 分隔符颜色稍微淡一些 */
+    font-weight: 300;
+}
+
+/* 响应式设计 - 小屏幕下的处理 */
+@media screen and (max-width: 900px) {
+    .title-nav-wrapper {
+        gap: 1.2rem; /* 进一步减小间距 */
+    }
+    
+    .title-nav-wrapper h1 {
+        font-size: 2.2rem; /* 略微减小标题字号 */
+    }
+    
+    .header-nav {
+        font-size: 1.5rem; /* 调整导航字号 */
+        margin-top: 0.1rem;
+    }
+    
+    .header-nav a {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title-nav-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem; /* 竖直布局时的间距 */
+    }
+    
+    .header-nav {
+        margin-top: 0; /* 竖直布局时移除上边距 */
+    }
+}
+
+/* .nav-container removed */
 
 /* ==========================================================================
    导航和页眉页脚
@@ -1716,13 +1825,27 @@ body.light-theme h6 {
 
 /* 页面头部 - 主要导航区域 */
 .c-page__header {
-    margin-bottom: calc(var(--spacing-unit) * 2); /* 60px - 导航链接与下面元素的间距调整为2倍 */
+    margin-bottom: calc(var(--spacing-unit) / 4); /* 7.5px - 进一步减小导航链接与下面元素的间距 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    z-index: 100;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+html.dark-theme .c-page__header {
+    background-color: var(--dark-theme-background);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2); /* 增强暗色主题下的阴影效果 */
+    border-bottom: 1px solid #333; /* 添加底部边框以增强分离感 */
 }
 
 .c-page__header h1 {
     font-size: 2.6rem;
     line-height: 1.2;
-    margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 标题下方间距 */
+    margin-bottom: calc(var(--spacing-unit) / 4); /* 7.5px - 进一步减小标题下方间距 */
     color: var(--c-base-02);
     font-weight: 350; /* 统一修改为350 */
 }
@@ -1731,6 +1854,8 @@ body.light-theme h6 {
     line-height: 1.5;
     font-size: 1.8rem;
     margin-bottom: 0;
+    text-align: left;
+    margin-top: 10px;
 }
 
 .c-page__header a {

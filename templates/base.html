@@ -163,11 +163,30 @@
 </head>
 
 <body>
-    <main class="u-container">
+    <main class="u-container" style="padding-top: 60px;">
         <!-- 页面头部 -->
         <header class="c-page__header">
-            <div class="container1">
-                <h1>Shihanmax's blog</h1>
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="title-nav-wrapper">
+                        <h1>Shihanmax's blog</h1>
+                        <div>&nbsp;&nbsp;</div>
+                        {% if page_type == 'home' %}
+                        <nav class="header-nav">
+                            <a href="{{ url_for('index') }}">Home</a><span class="u-separate"> | </span>
+                            <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
+                            <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
+                            <a href="{{ url_for('bookmarks') }}">Bookmarks</a><span class="u-separate"> | </span>
+                            <a href="{{ url_for('about') }}">About</a><span class="u-separate"> | </span>
+                            <a href="{{ url_for('admin_login') }}" id="global-login-btn">Login</a>
+                        </nav>
+                        {% else %}
+                        <nav class="header-nav">
+                            <a href="{{ url_for('index') }}">&lt; Back</a>
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
                 <!-- 切换明暗模式的按钮 -->
                 <label class="theme-switch" for="theme-toggle">
                     <input type="checkbox" id="theme-toggle" style="display:none">
@@ -177,21 +196,6 @@
                     </span>
                 </label>
             </div>
-
-            {% if page_type == 'home' %}
-            <p>
-                <a href="{{ url_for('index') }}">Home</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('timeline') }}">Timeline</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('tags') }}">Tags</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('bookmarks') }}">Bookmarks</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('about') }}">About</a><span class="u-separate"> | </span>
-                <a href="{{ url_for('admin_login') }}" id="global-login-btn">Login</a>
-            </p>
-            {% else %}
-            <p>
-                <a href="{{ url_for('index') }}">&lt; Back</a>
-            </p>
-            {% endif %}
         </header>
 
         <!-- 页面内容 -->
