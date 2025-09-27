@@ -20,6 +20,7 @@ class MarkdownEditor {
         this.scrollSyncEnabled = true;
         this.cursorSyncEnabled = true;
         this.highlightTimeout = null;
+        this.currentLineHighlight = null; // 当前行高亮元素
         
         // 删除未使用的滚动同步相关属性
         
@@ -132,6 +133,11 @@ class MarkdownEditor {
         this.editor.addEventListener('input', () => {
             this.onContentChange();
         });
+        
+        // 编辑器滚动事件 - 清除高亮
+        this.editor.addEventListener('scroll', () => {
+            this.removeLineHighlight();
+        });
 
         // 保存按钮点击事件
         this.saveBtn.addEventListener('click', () => {
@@ -142,13 +148,21 @@ class MarkdownEditor {
         const backBtn = document.getElementById('back-btn');
         if (backBtn) {
             backBtn.addEventListener('click', async () => {
-                // 先保存再返回
-                if (this.isDirty) {
-                    await this.saveContent();
+                try {
+                    // 先保存再返回
+                    if (this.isDirty) {
+                        await this.saveContent();
+                    }
+                    // 返回阅读页面 - 修正URL格式
+                    const postUrl = `/${window.postData.year}/${String(window.postData.month).padStart(2, '0')}/${window.postData.slug}`;
+                    console.log('Navigating to:', postUrl);
+                    window.location.href = postUrl;
+                } catch (error) {
+                    console.error('Error in back button:', error);
+                    // 即使保存失败也允许返回
+                    const postUrl = `/${window.postData.year}/${String(window.postData.month).padStart(2, '0')}/${window.postData.slug}`;
+                    window.location.href = postUrl;
                 }
-                // 返回阅读页面
-                const postUrl = `/${window.postData.year}/${String(window.postData.month).padStart(2, '0')}/${window.postData.slug}/`;
-                window.location.href = postUrl;
             });
         }
 
@@ -212,6 +226,11 @@ class MarkdownEditor {
         
         // 设置光标位置并滚动到该位置
         this.editor.focus();
+        
+        // 先高亮对应内容区域
+        this.highlightLineContent(lineNum);
+        
+        // 然后设置光标位置
         this.editor.setSelectionRange(position, position);
         
         // 确保光标在视图中
@@ -253,6 +272,297 @@ class MarkdownEditor {
             });
         }
     }
+
+    // 高亮编辑器中对应行的内容
+    highlightLineContent(lineNum) {
+        const lines = this.editor.value.split('\n');
+        if (lineNum >= 0 && lineNum < lines.length) {
+            // 计算行的开始和结束位置
+            let startPos = 0;
+            for (let i = 0; i < lineNum; i++) {
+                startPos += lines[i].length + 1; // +1 for newline
+            }
+            const endPos = startPos + lines[lineNum].length;
+            
+            // 先设置光标位置并滚动
+            this.editor.setSelectionRange(startPos, endPos);
+            this.editor.focus();
+            
+            // 等待滚动结束后再高亮（延迟300ms）
+            setTimeout(() => {
+                this.createLineHighlight(lineNum);
+                this.createCursorEnhancements(startPos, endPos);
+                
+                // 1.5秒后移除高亮效果和选中状态
+                setTimeout(() => {
+                    this.removeLineHighlight();
+                    this.removeCursorEnhancements();
+                    // 将光标移动到行的开始位置，取消选中
+                    this.editor.setSelectionRange(startPos, startPos);
+                }, 1500);
+            }, 300);
+        }
+    }
+    
+    // 创建行高亮覆盖层
+    createLineHighlight(lineNum) {
+        // 移除之前的高亮
+        this.removeLineHighlight();
+        
+        // 获取编辑器的样式信息
+        const editorStyle = window.getComputedStyle(this.editor);
+        
+        // 更可靠的行高计算
+        let lineHeight = parseInt(editorStyle.lineHeight);
+        if (isNaN(lineHeight)) {
+            // 如果lineHeight是normal或其他非数值，使用fontSize * 1.2作为估算
+            const fontSize = parseInt(editorStyle.fontSize);
+            lineHeight = Math.floor(fontSize * 1.2);
+        }
+        
+        console.log('Line height:', lineHeight, 'Target line:', lineNum);
+        
+        const paddingTop = parseInt(editorStyle.paddingTop);
+        const paddingLeft = parseInt(editorStyle.paddingLeft);
+        const paddingRight = parseInt(editorStyle.paddingRight);
+        
+        // 使用更精确的方法计算行位置
+        // 方法：创建临时span测量实际的行位置
+        const lines = this.editor.value.split('\n');
+        let textBeforeTargetLine = '';
+        for (let i = 0; i < lineNum; i++) {
+            textBeforeTargetLine += lines[i] + '\n';
+        }
+        
+        // 创建临时测量元素
+        const measureDiv = document.createElement('div');
+        measureDiv.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: ${this.editor.clientWidth - paddingLeft - paddingRight}px;
+            font-family: ${editorStyle.fontFamily};
+            font-size: ${editorStyle.fontSize};
+            line-height: ${editorStyle.lineHeight};
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 0;
+            margin: 0;
+            border: none;
+        `;
+        measureDiv.textContent = textBeforeTargetLine;
+        document.body.appendChild(measureDiv);
+        
+        // 获取实际高度
+        const actualLineTop = measureDiv.offsetHeight;
+        document.body.removeChild(measureDiv);
+        
+        console.log('Calculated line top:', actualLineTop, 'Scroll top:', this.editor.scrollTop);
+        
+        // 计算相对于编辑器可视区域的位置
+        const lineTop = actualLineTop + paddingTop - this.editor.scrollTop;
+        
+        console.log('Final line top position:', lineTop);
+        
+        // 创建高亮覆盖层（只高亮编辑区域）
+        const highlight = document.createElement('div');
+        highlight.className = 'line-highlight-overlay';
+        highlight.style.cssText = `
+            position: absolute;
+            left: ${paddingLeft}px;
+            top: ${lineTop}px;
+            width: ${this.editor.clientWidth - paddingLeft - paddingRight}px;
+            height: ${lineHeight}px;
+            background: linear-gradient(90deg, rgba(0, 103, 251, 0.15) 0%, rgba(0, 103, 251, 0.05) 100%);
+            border-left: 3px solid #0067FB;
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 5;
+            animation: fadeOut 1.5s ease-out forwards;
+        `;
+        
+        // 添加到编辑器元素本身，而不是容器
+        this.editor.style.position = 'relative';
+        this.editor.appendChild(highlight);
+        this.currentLineHighlight = highlight;
+    }
+    
+    // 移除行高亮
+    removeLineHighlight() {
+        if (this.currentLineHighlight) {
+            this.currentLineHighlight.remove();
+            this.currentLineHighlight = null;
+        }
+    }
+    
+    // 创建光标增强效果
+    createCursorEnhancements(startPos, endPos) {
+        // 移除之前的效果
+        this.removeCursorEnhancements();
+        
+        // 1. 创建脉冲光标指示器
+        this.createPulseCursor(startPos);
+        
+        // 2. 创建箭头指示器
+        this.createArrowIndicator(startPos);
+        
+        // 3. 添加编辑器边框闪烁效果
+        this.addEditorFlash();
+    }
+    
+    // 创建脉冲光标
+    createPulseCursor(startPos) {
+        // 计算光标位置
+        const textBeforePosition = this.editor.value.substring(0, startPos);
+        const lines = textBeforePosition.split('\n');
+        const currentLineText = lines[lines.length - 1];
+        const lineNum = lines.length - 1;
+        
+        // 获取样式信息
+        const editorStyle = window.getComputedStyle(this.editor);
+        let lineHeight = parseInt(editorStyle.lineHeight);
+        if (isNaN(lineHeight)) {
+            lineHeight = Math.floor(parseInt(editorStyle.fontSize) * 1.2);
+        }
+        const paddingTop = parseInt(editorStyle.paddingTop);
+        const paddingLeft = parseInt(editorStyle.paddingLeft);
+        
+        // 计算字符宽度（粗略估算）
+        const charWidth = parseInt(editorStyle.fontSize) * 0.6; // 等宽字体的近似宽度
+        const cursorLeft = paddingLeft + (currentLineText.length * charWidth);
+        
+        // 使用测量方法计算精确的行高
+        let textBeforeTargetLine = '';
+        for (let i = 0; i < lineNum; i++) {
+            textBeforeTargetLine += this.editor.value.split('\n')[i] + '\n';
+        }
+        
+        const measureDiv = document.createElement('div');
+        measureDiv.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            width: ${this.editor.clientWidth - paddingLeft - parseInt(editorStyle.paddingRight)}px;
+            font-family: ${editorStyle.fontFamily};
+            font-size: ${editorStyle.fontSize};
+            line-height: ${editorStyle.lineHeight};
+            white-space: pre-wrap;
+        `;
+        measureDiv.textContent = textBeforeTargetLine;
+        document.body.appendChild(measureDiv);
+        const actualLineTop = measureDiv.offsetHeight;
+        document.body.removeChild(measureDiv);
+        
+        const cursorTop = actualLineTop + paddingTop - this.editor.scrollTop;
+        
+        // 创建脉冲光标
+        const pulseCursor = document.createElement('div');
+        pulseCursor.className = 'pulse-cursor';
+        pulseCursor.style.cssText = `
+            position: absolute;
+            left: ${cursorLeft}px;
+            top: ${cursorTop}px;
+            width: 2px;
+            height: ${lineHeight}px;
+            background: #0067FB;
+            pointer-events: none;
+            z-index: 10;
+            animation: cursorPulse 1s ease-in-out infinite;
+        `;
+        
+        this.editor.appendChild(pulseCursor);
+        this.cursorEnhancements = this.cursorEnhancements || [];
+        this.cursorEnhancements.push(pulseCursor);
+    }
+    
+    // 创建箭头指示器
+    createArrowIndicator(startPos) {
+        const textBeforePosition = this.editor.value.substring(0, startPos);
+        const lines = textBeforePosition.split('\n');
+        const lineNum = lines.length - 1;
+        
+        // 获取样式信息
+        const editorStyle = window.getComputedStyle(this.editor);
+        let lineHeight = parseInt(editorStyle.lineHeight);
+        if (isNaN(lineHeight)) {
+            lineHeight = Math.floor(parseInt(editorStyle.fontSize) * 1.2);
+        }
+        
+        // 使用相同的测量方法
+        let textBeforeTargetLine = '';
+        for (let i = 0; i < lineNum; i++) {
+            textBeforeTargetLine += this.editor.value.split('\n')[i] + '\n';
+        }
+        
+        const measureDiv = document.createElement('div');
+        measureDiv.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            width: ${this.editor.clientWidth - parseInt(editorStyle.paddingLeft) - parseInt(editorStyle.paddingRight)}px;
+            font-family: ${editorStyle.fontFamily};
+            font-size: ${editorStyle.fontSize};
+            line-height: ${editorStyle.lineHeight};
+            white-space: pre-wrap;
+        `;
+        measureDiv.textContent = textBeforeTargetLine;
+        document.body.appendChild(measureDiv);
+        const actualLineTop = measureDiv.offsetHeight;
+        document.body.removeChild(measureDiv);
+        
+        const arrowTop = actualLineTop + parseInt(editorStyle.paddingTop) - this.editor.scrollTop + (lineHeight / 2);
+        
+        // 创建箭头指示器
+        const arrow = document.createElement('div');
+        arrow.className = 'arrow-indicator';
+        arrow.innerHTML = '▶'; // 右箭头符号
+        arrow.style.cssText = `
+            position: absolute;
+            left: 5px;
+            top: ${arrowTop - 10}px;
+            width: 20px;
+            height: 20px;
+            color: #0067FB;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 10;
+            animation: arrowBounce 0.8s ease-in-out infinite alternate;
+        `;
+        
+        this.editor.appendChild(arrow);
+        this.cursorEnhancements = this.cursorEnhancements || [];
+        this.cursorEnhancements.push(arrow);
+    }
+    
+    // 添加编辑器边框闪烁效果
+    addEditorFlash() {
+        this.editor.style.boxShadow = '0 0 0 3px rgba(0, 103, 251, 0.3)';
+        this.editor.style.transition = 'box-shadow 0.3s ease';
+        
+        // 记录原始样式以便恢复
+        this.originalBoxShadow = this.editor.style.boxShadow;
+    }
+    
+    // 移除所有光标增强效果
+    removeCursorEnhancements() {
+        if (this.cursorEnhancements) {
+            this.cursorEnhancements.forEach(element => {
+                if (element.parentNode) {
+                    element.remove();
+                }
+            });
+            this.cursorEnhancements = [];
+        }
+        
+        // 恢复编辑器边框
+        if (this.originalBoxShadow !== undefined) {
+            this.editor.style.boxShadow = '';
+            this.editor.style.transition = '';
+        }
+    }
+
 
     bindFormatButtons() {
         // 粗体

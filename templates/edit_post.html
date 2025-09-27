@@ -10,22 +10,21 @@
      data-preview-url="{{ url_for('preview_post', year=post.year, month=post.month, slug=post.slug) }}">
     <!-- 编辑器工具栏 -->
     <div class="editor-toolbar">
-        <div class="toolbar-left">
+        
             <button id="back-btn" class="btn btn-back" title="保存并返回">
-                <span class="icon">←</span>
-                Back
+                
+                < Save & Back
             </button>
-            <h2 class="editor-title">编辑: {{ post.title }}</h2>
+            <div class="toolbar-left">
+            <h3 class="editor-title">编辑: {{ post.title }}</h3>
         </div>
         <div class="toolbar-right">
             <button id="save-btn" class="btn btn-save" disabled>
-                <span class="icon">💾</span>
-                保存
+                Save
             </button>
             <a href="{{ url_for('post_detail', year=post.year, month=post.month, slug=post.slug) }}" 
                class="btn btn-cancel">
-                <span class="icon">🔙</span>
-                返回
+                Back
             </a>
         </div>
     </div>

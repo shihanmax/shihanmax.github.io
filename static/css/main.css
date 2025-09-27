@@ -635,7 +635,7 @@ html.dark-theme .editor-container {
 
 /* 编辑窗格和预览窗格 */
 .editor-pane {
-    flex: 1; /* 各占半屏 */
+    flex: 1.2; /* 增加编辑区宽度 */
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -645,7 +645,7 @@ html.dark-theme .editor-container {
 }
 
 .preview-pane {
-    flex: 1; /* 各占半屏 */
+    flex: 0.8; /* 减少预览区宽度 */
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -701,27 +701,180 @@ html.dark-theme .editor-container {
 
 /* 目录容器 - 作为左侧侧边栏 */
 .toc-container {
-    width: 220px; /* 增加宽度 */
-    min-width: 200px;
-    max-width: 250px; /* 增加最大宽度 */
+    width: 200px;
+    min-width: 180px;
+    max-width: 220px;
     border-right: 1px solid #e1e4e8;
     background-color: #f6f8fa;
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
-    overflow-y: auto; /* 独立滚动 */
-    position: absolute; /* 变为浮动侧边栏 */
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 10;
+    overflow-y: auto;
+    /* 使用flex布局而不是绝对定位 */
+    flex-shrink: 0;
+}
+
+/* 深色主题下的目录容器 */
+html.dark-theme .toc-container {
+    background-color: #161b22;
+    border-right-color: #30363d;
+}
+
+/* 目录头部 */
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e1e4e8;
+    background-color: #f6f8fa;
+}
+
+/* 深色主题下的目录头部 */
+html.dark-theme .toc-header {
+    background-color: #161b22;
+    border-bottom-color: #30363d;
+}
+
+.toc-header h4 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录标题 */
+html.dark-theme .toc-header h4 {
+    color: #d8d8d8;
+}
+
+/* 目录切换按钮 */
+.toc-toggle {
+    background: none;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--c-base-01);
+}
+
+/* 深色主题下的目录切换按钮 */
+html.dark-theme .toc-toggle {
+    border-color: #30363d;
+    color: #d8d8d8;
+}
+
+.toc-toggle:hover {
+    background-color: #eaecef;
+}
+
+/* 深色主题下的目录切换按钮悬停 */
+html.dark-theme .toc-toggle:hover {
+    background-color: #30363d;
+}
+
+/* 目录列表 */
+.toc-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+    font-size: 1.2rem; /* 减小字体大小 */
+}
+
+/* 目录折叠状态 */
+.toc-list.collapsed {
+    display: none;
+}
+
+/* 目录列表样式 */
+.toc-list ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.toc-list li {
+    margin: 0.1rem 0; /* 进一步减小行间距 */
+    padding: 0;
+}
+
+.toc-list a {
+    display: block;
+    padding: 0.3rem 0.5rem; /* 增加内边距 */
+    color: var(--c-base-01);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2; /* 减小行高 */
+}
+
+/* 深色主题下的目录链接 */
+html.dark-theme .toc-list a {
+    color: #d8d8d8;
+}
+
+.toc-list a:hover {
+    background-color: #e1e4e8;
+    color: var(--c-accent-blue);
+    text-decoration: none;
+}
+
+/* 深色主题下的目录链接悬停 */
+html.dark-theme .toc-list a:hover {
+    background-color: #30363d;
+    color: #58a6ff;
+}
+
+/* 活动目录项 */
+.toc-list a.active {
+    background-color: var(--c-accent-blue);
+    color: white;
+}
+
+/* 深色主题下的活动目录项 */
+html.dark-theme .toc-list a.active {
+    background-color: #58a6ff;
+    color: #1a1a1a;
+}
+
+/* 不同级别的目录项 */
+.toc-list li.level-1 > a {
+    font-weight: bold;
+    padding-left: 0.5rem;
+}
+
+.toc-list li.level-2 > a {
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+.toc-list li.level-3 > a {
+    padding-left: 1.5rem;
+    font-weight: 500;
+}
+
+.toc-list li.level-4 > a {
+    padding-left: 2rem;
+    font-weight: 400;
+}
+
+.toc-list li.level-5 > a {
+    padding-left: 2.5rem;
+    font-size: 0.95em;
+}
+
+.toc-list li.level-6 > a {
+    padding-left: 3rem;
+    font-size: 0.9em;
 }
 
 /* Markdown编辑器 - 占满剩余空间 */
 .markdown-textarea {
     flex: 1;
     padding: 2rem;
-    padding-left: 240px; /* 给目录留出空间 */
     border: none;
     resize: none;
     font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
@@ -729,7 +882,6 @@ html.dark-theme .editor-container {
     line-height: 1.6;
     background-color: white;
     outline: none;
-    /* 恢复滚动条，只显示一屏 */
     overflow-y: auto;
 }
 
@@ -1061,10 +1213,59 @@ html.dark-theme .editor-container {
     }
 }
 
-/* 暗色主题下的高亮样式 */
+/* 行高亮覆盖层动画 */
+@keyframes lineHighlightFade {
+    0% {
+        background: linear-gradient(
+            to right,
+            rgba(0, 103, 251, 0.3) 0%,
+            rgba(0, 103, 251, 0.15) 100%
+        );
+        border-left-color: var(--c-accent-blue);
+        opacity: 1;
+    }
+    70% {
+        background: linear-gradient(
+            to right,
+            rgba(0, 103, 251, 0.15) 0%,
+            rgba(0, 103, 251, 0.08) 100%
+        );
+        border-left-color: rgba(0, 103, 251, 0.7);
+        opacity: 1;
+    }
+    100% {
+        background: transparent;
+        border-left-color: transparent;
+        opacity: 0;
+    }
+}
+
+/* 简单的淡出动画 */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        background: linear-gradient(90deg, rgba(0, 103, 251, 0.2) 0%, rgba(0, 103, 251, 0.08) 100%);
+    }
+    100% {
+        opacity: 0;
+        background: transparent;
+    }
+}
+
+/* 深色主题下的高亮样式 */
 [data-theme="dark"] .cursor-highlight {
     background-color: rgba(88, 166, 255, 0.15);
     border-left-color: var(--dark-theme-link);
+}
+
+/* 深色主题下的行高亮覆盖层 */
+[data-theme="dark"] .line-highlight-overlay {
+    background: linear-gradient(
+        to right,
+        rgba(88, 166, 255, 0.2) 0%,
+        rgba(88, 166, 255, 0.1) 100%
+    ) !important;
+    border-left-color: var(--dark-theme-link) !important;
 }
 
 /* 深色主题下的数学公式样式 */
