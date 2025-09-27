@@ -138,6 +138,20 @@ class MarkdownEditor {
             this.saveContent();
         });
 
+        // Back按钮点击事件
+        const backBtn = document.getElementById('back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', async () => {
+                // 先保存再返回
+                if (this.isDirty) {
+                    await this.saveContent();
+                }
+                // 返回阅读页面
+                const postUrl = `/${window.postData.year}/${String(window.postData.month).padStart(2, '0')}/${window.postData.slug}/`;
+                window.location.href = postUrl;
+            });
+        }
+
         // 刷新预览按钮
         document.getElementById('refresh-preview').addEventListener('click', () => {
             this.updatePreview(true);
