@@ -175,12 +175,15 @@
         document.addEventListener('click', function(e) {
             if (e.target.tagName === 'A' && e.target.getAttribute('href') && e.target.getAttribute('href').startsWith('#')) {
                 const targetId = e.target.getAttribute('href');
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    scrollToElement(target);
-                    // 更新URL
-                    history.pushState(null, null, targetId);
+                // 确保目标ID不是空的锚点
+                if (targetId && targetId.length > 1) {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        scrollToElement(target);
+                        // 更新URL
+                        history.pushState(null, null, targetId);
+                    }
                 }
             }
         });

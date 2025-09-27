@@ -21,6 +21,7 @@ class MarkdownEditor {
         this.cursorSyncEnabled = true;
         this.highlightTimeout = null;
         this.currentLineHighlight = null; // 当前行高亮元素
+        this.cursorLineHighlight = null; // 光标所在行高亮元素
         this.cursorEnhancements = []; // 光标增强效果元素数组
         
         // 删除未使用的滚动同步相关属性
@@ -35,6 +36,7 @@ class MarkdownEditor {
         this.setupAutoSave();
         this.setupScrollSync();
         this.setupCursorSync();
+        this.setupCursorLineHighlight();
         this.preventPreviewInteraction();
         this.generateTOC(); // 生成初始目录
     }
@@ -133,12 +135,17 @@ class MarkdownEditor {
         // 编辑器内容变化事件
         this.editor.addEventListener('input', () => {
             this.onContentChange();
+            // 延迟更新光标行高亮，避免频繁更新
+            setTimeout(() => {
+                this.updateCursorLineHighlight();
+            }, 100);
         });
         
-        // 编辑器滚动事件 - 清除高亮
+        // 编辑器滚动事件 - 更新光标行高亮
         this.editor.addEventListener('scroll', () => {
             this.removeLineHighlight();
             this.removeCursorEnhancements();
+            this.updateCursorLineHighlight();
         });
 
         // 保存按钮点击事件
@@ -218,6 +225,8 @@ class MarkdownEditor {
     
     // 滚动到指定行
     scrollToLine(lineNum) {
+        console.log('=== TOC Click: Scrolling to line', lineNum, '===');
+        
         const lines = this.editor.value.split('\n');
         
         // 计算指定行的字符位置
@@ -226,21 +235,227 @@ class MarkdownEditor {
             position += lines[i].length + 1; // +1 for newline character
         }
         
-        // 设置光标位置并滚动到该位置
+        // 设置光标位置
+        this.editor.setSelectionRange(position, position);
         this.editor.focus();
         
-        // 先高亮对应内容区域
-        this.highlightLineContent(lineNum);
+        // 使用简化的滚动方法
+        this.scrollEditorToCenter(lineNum);
         
-        // 然后设置光标位置
-        this.editor.setSelectionRange(position, position);
+        // 延迟执行高亮效果
+        setTimeout(() => {
+            this.highlightLineInEditor(lineNum);
+            this.syncPreviewHighlight(lineNum);
+        }, 100);
+    }
+    
+    // 将编辑器滚动到指定行并居中
+    scrollEditorToCenter(lineNum) {
+        console.log('Scrolling editor to center line:', lineNum);
         
-        // 确保光标在视图中
-        const lineHeight = parseInt(window.getComputedStyle(this.editor).lineHeight);
-        const linesInView = this.editor.clientHeight / lineHeight;
-        const targetLine = lineNum; // 行号从0开始
-        const scrollTop = (targetLine - linesInView / 2) * lineHeight;
-        this.editor.scrollTop = Math.max(0, scrollTop);
+        const lines = this.editor.value.split('\n');
+        if (lineNum < 0 || lineNum >= lines.length) {
+            console.log('Invalid line number:', lineNum);
+            return;
+        }
+        
+        // 使用更精确的方法：创建临时测量元素
+        const measureElement = this.createLineMeasureElement();
+        
+        // 测量到目标行的实际高度
+        const textBeforeTargetLine = lines.slice(0, lineNum).join('\n');
+        measureElement.textContent = textBeforeTargetLine;
+        
+        const actualLineTop = measureElement.offsetHeight;
+        const lineHeight = this.getActualLineHeight(measureElement);
+        
+        // 清理测量元素
+        document.body.removeChild(measureElement);
+        
+        // 计算居中滚动位置
+        const editorHeight = this.editor.clientHeight;
+        const centerOffset = editorHeight / 2;
+        const targetScrollTop = Math.max(0, actualLineTop - centerOffset + lineHeight / 2);
+        const maxScrollTop = this.editor.scrollHeight - editorHeight;
+        const finalScrollTop = Math.min(targetScrollTop, maxScrollTop);
+        
+        console.log('Precise scroll calculation:', {
+            lineNum: lineNum,
+            actualLineTop: actualLineTop,
+            lineHeight: lineHeight,
+            centerOffset: centerOffset,
+            targetScrollTop: targetScrollTop,
+            finalScrollTop: finalScrollTop
+        });
+        
+        // 执行滚动
+        this.editor.scrollTop = finalScrollTop;
+        
+        console.log('Scroll completed. Final scrollTop:', this.editor.scrollTop);
+    }
+    
+    // 创建用于测量的临时元素
+    createLineMeasureElement() {
+        const measureElement = document.createElement('div');
+        const editorStyle = window.getComputedStyle(this.editor);
+        
+        measureElement.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: ${this.editor.clientWidth - parseInt(editorStyle.paddingLeft) - parseInt(editorStyle.paddingRight)}px;
+            font-family: ${editorStyle.fontFamily};
+            font-size: ${editorStyle.fontSize};
+            line-height: ${editorStyle.lineHeight};
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 0;
+            margin: 0;
+            border: none;
+            visibility: hidden;
+        `;
+        
+        document.body.appendChild(measureElement);
+        return measureElement;
+    }
+    
+    // 获取实际行高
+    getActualLineHeight(measureElement) {
+        const originalContent = measureElement.textContent;
+        measureElement.textContent = 'A';
+        const singleLineHeight = measureElement.offsetHeight;
+        measureElement.textContent = originalContent;
+        return singleLineHeight;
+    }
+    
+    // 高亮编辑器中的指定行
+    highlightLineInEditor(lineNum) {
+        console.log('Highlighting line in editor:', lineNum);
+        
+        // 清除之前的高亮
+        this.removeLineHighlight();
+        
+        // 使用精确的行位置计算
+        const editorRect = this.editor.getBoundingClientRect();
+        const lines = this.editor.value.split('\n');
+        
+        // 创建测量元素计算精确位置
+        const measureElement = this.createLineMeasureElement();
+        
+        // 计算到目标行的实际高度
+        const textBeforeTargetLine = lines.slice(0, lineNum).join('\n');
+        measureElement.textContent = textBeforeTargetLine;
+        const actualLineTop = measureElement.offsetHeight;
+        
+        // 获取实际行高
+        const lineHeight = this.getActualLineHeight(measureElement);
+        
+        // 清理测量元素
+        document.body.removeChild(measureElement);
+        
+        // 计算行在编辑器中的相对位置
+        const lineTopInEditor = actualLineTop - this.editor.scrollTop + parseInt(window.getComputedStyle(this.editor).paddingTop);
+        
+        console.log('Precise highlight calculation:', {
+            lineNum: lineNum,
+            actualLineTop: actualLineTop,
+            lineHeight: lineHeight,
+            scrollTop: this.editor.scrollTop,
+            lineTopInEditor: lineTopInEditor
+        });
+        
+        // 检查是否在可见区域
+        if (lineTopInEditor < -lineHeight || lineTopInEditor > this.editor.clientHeight) {
+            console.log('Line not visible, skipping highlight');
+            return;
+        }
+        
+        // 创建高亮层
+        const highlight = document.createElement('div');
+        highlight.style.cssText = `
+            position: fixed;
+            left: ${editorRect.left}px;
+            top: ${editorRect.top + lineTopInEditor}px;
+            width: ${editorRect.width}px;
+            height: ${lineHeight}px;
+            background: linear-gradient(90deg, rgba(0, 103, 251, 0.2) 0%, rgba(0, 103, 251, 0.05) 100%);
+            border-left: 3px solid #0067FB;
+            pointer-events: none;
+            z-index: 999;
+            border-radius: 3px;
+            animation: fadeOut 2s ease-out forwards;
+        `;
+        
+        document.body.appendChild(highlight);
+        this.currentLineHighlight = highlight;
+        
+        console.log('Precise highlight created at position:', {
+            left: editorRect.left,
+            top: editorRect.top + lineTopInEditor,
+            width: editorRect.width,
+            height: lineHeight
+        });
+    }
+    
+    // 同步预览区高亮
+    syncPreviewHighlight(lineNum) {
+        try {
+            const lines = this.editor.value.split('\n');
+            const targetLine = lines[lineNum];
+            
+            // 检查是否是标题行
+            const headingMatch = targetLine.match(/^(#{1,6})\s+(.+)$/);
+            if (!headingMatch) {
+                console.log('Not a heading line, skipping preview sync');
+                return;
+            }
+            
+            const headingText = headingMatch[2].trim();
+            console.log('Syncing preview to heading:', headingText);
+            
+            // 在预览区查找对应标题
+            const headings = this.preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            let targetHeading = null;
+            
+            for (const heading of headings) {
+                const headingTextContent = heading.textContent.replace(/¶$/, '').trim();
+                if (headingTextContent === headingText) {
+                    targetHeading = heading;
+                    break;
+                }
+            }
+            
+            if (targetHeading) {
+                console.log('Found target heading in preview, highlighting');
+                
+                // 清除之前的预览高亮
+                this.clearPreviewHighlight();
+                
+                // 添加高亮类
+                targetHeading.classList.add('preview-highlight');
+                
+                // 滚动到视图中心
+                targetHeading.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                // 2秒后移除高亮
+                setTimeout(() => {
+                    targetHeading.classList.remove('preview-highlight');
+                }, 2000);
+            } else {
+                console.log('Target heading not found in preview');
+            }
+        } catch (error) {
+            console.error('Error syncing preview highlight:', error);
+        }
+    }
+    
+    // 清除预览区高亮
+    clearPreviewHighlight() {
+        const highlighted = this.preview.querySelectorAll('.preview-highlight');
+        highlighted.forEach(el => el.classList.remove('preview-highlight'));
     }
     
     // 滚动预览区域到对应标题
@@ -274,119 +489,100 @@ class MarkdownEditor {
             });
         }
     }
-
-    // 高亮编辑器中对应行的内容
-    highlightLineContent(lineNum) {
-        const lines = this.editor.value.split('\n');
-        if (lineNum >= 0 && lineNum < lines.length) {
-            // 计算行的开始和结束位置
-            let startPos = 0;
-            for (let i = 0; i < lineNum; i++) {
-                startPos += lines[i].length + 1; // +1 for newline
-            }
-            const endPos = startPos + lines[lineNum].length;
-            
-            // 先设置光标位置并滚动
-            this.editor.setSelectionRange(startPos, endPos);
-            this.editor.focus();
-            
-            // 等待滚动结束后再高亮（延迟300ms）
+    
+    // 设置光标行高亮功能
+    setupCursorLineHighlight() {
+        // 监听光标位置变化
+        this.editor.addEventListener('click', () => {
             setTimeout(() => {
-                this.createLineHighlight(lineNum);
-                this.createCursorEnhancements(startPos, endPos);
-                
-                // 1.5秒后移除高亮效果和选中状态
-                setTimeout(() => {
-                    this.removeLineHighlight();
-                    this.removeCursorEnhancements();
-                    // 将光标移动到行的开始位置，取消选中
-                    this.editor.setSelectionRange(startPos, startPos);
-                }, 1500);
-            }, 300);
-        }
+                this.updateCursorLineHighlight();
+            }, 10);
+        });
+        
+        this.editor.addEventListener('keyup', (e) => {
+            // 只在光标移动时更新，不在输入时更新
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
+                this.updateCursorLineHighlight();
+            }
+        });
+        
+        this.editor.addEventListener('focus', () => {
+            this.updateCursorLineHighlight();
+        });
+        
+        this.editor.addEventListener('blur', () => {
+            this.removeCursorLineHighlight();
+        });
     }
     
-    // 创建行高亮覆盖层
-    createLineHighlight(lineNum) {
-        // 移除之前的高亮
-        this.removeLineHighlight();
-        
-        // 获取编辑器的样式信息
-        const editorStyle = window.getComputedStyle(this.editor);
-        
-        // 更可靠的行高计算
-        let lineHeight = parseInt(editorStyle.lineHeight);
-        if (isNaN(lineHeight)) {
-            // 如果lineHeight是normal或其他非数值，使用fontSize * 1.2作为估算
-            const fontSize = parseInt(editorStyle.fontSize);
-            lineHeight = Math.floor(fontSize * 1.2);
+    // 更新光标所在行的高亮
+    updateCursorLineHighlight() {
+        if (!this.editor.matches(':focus')) {
+            return; // 只在编辑器获得焦点时显示高亮
         }
         
-        console.log('Line height:', lineHeight, 'Target line:', lineNum);
+        // 获取当前光标行号
+        const cursorPosition = this.editor.selectionStart;
+        const lines = this.editor.value.substring(0, cursorPosition).split('\n');
+        const currentLineNum = lines.length - 1;
         
-        const paddingTop = parseInt(editorStyle.paddingTop);
-        const paddingLeft = parseInt(editorStyle.paddingLeft);
-        const paddingRight = parseInt(editorStyle.paddingRight);
+        this.highlightCursorLine(currentLineNum);
+    }
+    
+    // 高亮光标所在行
+    highlightCursorLine(lineNum) {
+        // 清除之前的光标行高亮
+        this.removeCursorLineHighlight();
         
-        // 使用更精确的方法计算行位置
-        // 方法：创建临时span测量实际的行位置
+        const editorRect = this.editor.getBoundingClientRect();
         const lines = this.editor.value.split('\n');
-        let textBeforeTargetLine = '';
-        for (let i = 0; i < lineNum; i++) {
-            textBeforeTargetLine += lines[i] + '\n';
+        
+        if (lineNum < 0 || lineNum >= lines.length) {
+            return;
         }
         
-        // 创建临时测量元素
-        const measureDiv = document.createElement('div');
-        measureDiv.style.cssText = `
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            width: ${this.editor.clientWidth - paddingLeft - paddingRight}px;
-            font-family: ${editorStyle.fontFamily};
-            font-size: ${editorStyle.fontSize};
-            line-height: ${editorStyle.lineHeight};
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            padding: 0;
-            margin: 0;
-            border: none;
-        `;
-        measureDiv.textContent = textBeforeTargetLine;
-        document.body.appendChild(measureDiv);
+        // 使用精确的行位置计算
+        const measureElement = this.createLineMeasureElement();
+        const textBeforeTargetLine = lines.slice(0, lineNum).join('\n');
+        measureElement.textContent = textBeforeTargetLine;
+        const actualLineTop = measureElement.offsetHeight;
+        const lineHeight = this.getActualLineHeight(measureElement);
+        document.body.removeChild(measureElement);
         
-        // 获取实际高度
-        const actualLineTop = measureDiv.offsetHeight;
-        document.body.removeChild(measureDiv);
+        // 计算行在编辑器中的相对位置
+        const lineTopInEditor = actualLineTop - this.editor.scrollTop + parseInt(window.getComputedStyle(this.editor).paddingTop);
         
-        console.log('Calculated line top:', actualLineTop, 'Scroll top:', this.editor.scrollTop);
+        // 检查是否在可见区域
+        if (lineTopInEditor < -lineHeight || lineTopInEditor > this.editor.clientHeight) {
+            return;
+        }
         
-        // 计算相对于编辑器可视区域的位置
-        const lineTop = actualLineTop + paddingTop - this.editor.scrollTop;
-        
-        console.log('Final line top position:', lineTop);
-        
-        // 创建高亮覆盖层（只高亮编辑区域）
+        // 创建光标行高亮层（使用与预览区相似的样式）
         const highlight = document.createElement('div');
-        highlight.className = 'line-highlight-overlay';
         highlight.style.cssText = `
-            position: absolute;
-            left: ${paddingLeft}px;
-            top: ${lineTop}px;
-            width: ${this.editor.clientWidth - paddingLeft - paddingRight}px;
+            position: fixed;
+            left: ${editorRect.left}px;
+            top: ${editorRect.top + lineTopInEditor}px;
+            width: ${editorRect.width}px;
             height: ${lineHeight}px;
-            background: linear-gradient(90deg, rgba(0, 103, 251, 0.15) 0%, rgba(0, 103, 251, 0.05) 100%);
-            border-left: 3px solid #0067FB;
-            border-radius: 3px;
+            background: linear-gradient(90deg, rgba(0, 103, 251, 0.08) 0%, rgba(0, 103, 251, 0.02) 100%);
+            border-left: 2px solid rgba(0, 103, 251, 0.3);
             pointer-events: none;
-            z-index: 5;
-            animation: fadeOut 1.5s ease-out forwards;
+            z-index: 99;
+            border-radius: 2px;
+            transition: all 0.2s ease;
         `;
         
-        // 添加到编辑器元素本身，而不是容器
-        this.editor.style.position = 'relative';
-        this.editor.appendChild(highlight);
-        this.currentLineHighlight = highlight;
+        document.body.appendChild(highlight);
+        this.cursorLineHighlight = highlight;
+    }
+    
+    // 移除光标行高亮
+    removeCursorLineHighlight() {
+        if (this.cursorLineHighlight) {
+            this.cursorLineHighlight.remove();
+            this.cursorLineHighlight = null;
+        }
     }
     
     // 移除行高亮
@@ -563,6 +759,9 @@ class MarkdownEditor {
             this.editor.style.boxShadow = '';
             this.editor.style.transition = '';
         }
+        
+        // 同时清除光标行高亮
+        this.removeCursorLineHighlight();
     }
 
 

@@ -200,6 +200,26 @@ pre > code {
     margin: 1em 0 !important;
 }
 
+/* TOC 高亮效果 */
+.preview-highlight {
+    background: linear-gradient(90deg, rgba(0, 103, 251, 0.15) 0%, rgba(0, 103, 251, 0.05) 100%) !important;
+    border-left: 3px solid #0067FB !important;
+    padding-left: 10px !important;
+    border-radius: 3px !important;
+    animation: previewFadeOut 2s ease-out forwards;
+}
+
+@keyframes previewFadeOut {
+    0% { 
+        background: rgba(0, 103, 251, 0.25);
+        border-left-color: #0067FB;
+    }
+    100% { 
+        background: transparent;
+        border-left-color: transparent;
+    }
+}
+
 /* 确保数学公式不会被截断 */
 .MathJax_Display,
 .MathJax {
@@ -1256,18 +1276,21 @@ html.dark-theme .toc-list a.active {
 @keyframes cursorPulse {
     0% {
         opacity: 1;
-        transform: scaleX(1);
-        background: #0067FB;
+        transform: scaleY(1);
+        background: #ff4444;
+        box-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
     }
     50% {
         opacity: 0.3;
-        transform: scaleX(2);
-        background: rgba(0, 103, 251, 0.6);
+        transform: scaleY(1.5);
+        background: rgba(255, 68, 68, 0.6);
+        box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
     }
     100% {
         opacity: 1;
-        transform: scaleX(1);
-        background: #0067FB;
+        transform: scaleY(1);
+        background: #ff4444;
+        box-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
     }
 }
 
@@ -1276,10 +1299,12 @@ html.dark-theme .toc-list a.active {
     0% {
         transform: translateX(0px);
         opacity: 1;
+        color: #ff4444;
     }
     100% {
-        transform: translateX(8px);
-        opacity: 0.7;
+        transform: translateX(10px);
+        opacity: 0.6;
+        color: #ff6666;
     }
 }
 
