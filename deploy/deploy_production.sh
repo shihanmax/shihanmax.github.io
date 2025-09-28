@@ -31,8 +31,19 @@ mkdir -p logs
 # 停止端口占用进程
 stop_port() {
     local port=$1
-    lsof -ti:$port 2>/dev/null | xargs kill -9 2>/dev/null || true
-    sleep 1
+    echo "清理端口 $port..."
+    # 找到所有占用该端口的进程并杀死
+    if lsof -ti:$port >/dev/null 2>&1; then
+        echo "发现端口 $port 被占用，正在清理..."
+        lsof -ti:$port | xargs kill -9 2>/dev/null || true
+        sleep 2
+        # 再次检查
+        if lsof -ti:$port >/dev/null 2>&1; then
+            echo "警告: 端口 $port 仍被占用"
+        else
+            echo "端口 $port 已清理"
+        fi
+    fi
 }
 
 # 启动博客应用
@@ -63,41 +74,78 @@ stop_services() {
     echo "停止服务..."
     cd "$PROJECT_ROOT"
     
-    # 停止博客应用
+    # 先清理端口，再清理PID文件
+    stop_port 8081
+    stop_port 8082
+    
+    # 清理PID文件
     if [ -f logs/blog_app.pid ]; then
-        kill $(cat logs/blog_app.pid) 2>/dev/null || true
+        local pid=$(cat logs/blog_app.pid)
+        if kill -0 $pid 2>/dev/null; then
+            echo "停止博客应用 (PID: $pid)"
+            kill $pid 2>/dev/null || true
+            sleep 1
+        fi
         rm -f logs/blog_app.pid
     fi
     
-    # 停止webhook服务
     if [ -f logs/webhook.pid ]; then
-        kill $(cat logs/webhook.pid) 2>/dev/null || true
+        local pid=$(cat logs/webhook.pid)
+        if kill -0 $pid 2>/dev/null; then
+            echo "停止Webhook服务 (PID: $pid)"
+            kill $pid 2>/dev/null || true
+            sleep 1
+        fi
         rm -f logs/webhook.pid
     fi
     
-    stop_port 8081
-    stop_port 8082
     echo "服务已停止"
 }
 
 # 检查状态
 check_status() {
     echo "=== 服务状态 ==="
+    cd "$PROJECT_ROOT"
     
     # 检查博客应用
     if [ -f logs/blog_app.pid ] && kill -0 $(cat logs/blog_app.pid) 2>/dev/null; then
-        echo "博客应用: 运行中 (PID: $(cat logs/blog_app.pid))"
-        echo "  访问地址: http://localhost:8081"
+        local pid=$(cat logs/blog_app.pid)
+        if lsof -i:8081 >/dev/null 2>&1; then
+            echo "博客应用: 运行中 (PID: $pid, 端口:8081)"
+            echo "  访问地址: http://localhost:8081"
+        else
+            echo "博客应用: 进程存在但端口未监听 (PID: $pid)"
+        fi
     else
         echo "博客应用: 未运行"
     fi
     
     # 检查Webhook服务
     if [ -f logs/webhook.pid ] && kill -0 $(cat logs/webhook.pid) 2>/dev/null; then
-        echo "Webhook服务: 运行中 (PID: $(cat logs/webhook.pid))"
-        echo "  Webhook地址: http://localhost:8082/hook"
+        local pid=$(cat logs/webhook.pid)
+        if lsof -i:8082 >/dev/null 2>&1; then
+            echo "Webhook服务: 运行中 (PID: $pid, 端口:8082)"
+            echo "  Webhook地址: http://localhost:8082/hook"
+        else
+            echo "Webhook服务: 进程存在但端口未监听 (PID: $pid)"
+        fi
     else
         echo "Webhook服务: 未运行"
+    fi
+    
+    # 显示端口占用情况
+    echo ""
+    echo "端口占用情况:"
+    if lsof -i:8081 >/dev/null 2>&1; then
+        echo "  8081: 已占用"
+    else
+        echo "  8081: 空闲"
+    fi
+    
+    if lsof -i:8082 >/dev/null 2>&1; then
+        echo "  8082: 已占用"
+    else
+        echo "  8082: 空闲"
     fi
 }
 
