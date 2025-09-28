@@ -120,7 +120,7 @@ function generateTOC() {
                 // 平滑滚动到目标元素
                 targetElement.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'center'
+                    block: 'start'
                 });
                 
                 // 更新活动状态
@@ -173,7 +173,7 @@ function initScrollSpy() {
         }
         
         // 获取当前滚动位置
-        const scrollPosition = window.pageYOffset + 100; // 添加偏移量以提前激活
+        const scrollPosition = window.pageYOffset + 50; // 减少偏移量以更准确地激活
         
         // 查找当前可见的标题
         let activeHeading = null;
@@ -206,11 +206,21 @@ function updateActiveTOCItem(activeId) {
     if (activeLink) {
         activeLink.classList.add('active');
         
-        // 确保活动项在视图中
-        activeLink.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest'
-        });
+        // 确保活动项在视图中，自动滚动目录以显示活动项
+        const tocContainer = document.querySelector('.post-toc');
+        if (tocContainer) {
+            const containerRect = tocContainer.getBoundingClientRect();
+            const linkRect = activeLink.getBoundingClientRect();
+            
+            // 检查链接是否在容器视图中
+            if (linkRect.bottom > containerRect.bottom) {
+                // 如果链接在容器下方，向上滚动
+                tocContainer.scrollTop += linkRect.bottom - containerRect.bottom;
+            } else if (linkRect.top < containerRect.top) {
+                // 如果链接在容器上方，向下滚动
+                tocContainer.scrollTop -= containerRect.top - linkRect.top;
+            }
+        }
     }
 }
 </script>
