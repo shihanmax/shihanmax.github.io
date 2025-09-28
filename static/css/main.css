@@ -215,56 +215,6 @@ pre > code {
     position: relative;
 }
 
-.c-article__main h1:hover .title-edit-btn,
-.c-article__main h2:hover .title-edit-btn,
-.c-article__main h3:hover .title-edit-btn,
-.c-article__main h4:hover .title-edit-btn,
-.c-article__main h5:hover .title-edit-btn,
-.c-article__main h6:hover .title-edit-btn {
-    opacity: 1;
-    visibility: visible;
-}
-
-.title-edit-btn {
-    position: absolute;
-    left: -45px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #0067FB;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 12px;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease;
-    z-index: 100;
-    white-space: nowrap;
-}
-
-/* 强制显示编辑按钮以便测试 */
-.title-edit-btn.force-visible {
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-.title-edit-btn:hover {
-    background: #0056d6;
-    transform: translateY(-50%) scale(1.05);
-}
-
-/* 深色主题下的编辑按钮 */
-html.dark-theme .title-edit-btn {
-    background: #58a6ff;
-    color: #1a1a1a;
-}
-
-html.dark-theme .title-edit-btn:hover {
-    background: #4493e8;
-}
-
 /* TOC 高亮效果 */
 .preview-highlight {
     background: linear-gradient(90deg, rgba(0, 103, 251, 0.15) 0%, rgba(0, 103, 251, 0.05) 100%) !important;
