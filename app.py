@@ -689,4 +689,5 @@ def validate_bookmark_data(data):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8081))
-    app.run(port=port, debug=True)
+    # 生产环境绑定到所有接口，便于访问和监控
+    app.run(host='0.0.0.0', port=port, debug=True)
