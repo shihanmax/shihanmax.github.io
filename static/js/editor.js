@@ -39,6 +39,7 @@ class MarkdownEditor {
         this.setupCursorLineHighlight();
         this.preventPreviewInteraction();
         this.generateTOC(); // 生成初始目录
+        this.handleInitialAnchor(); // 处理初始锚点
     }
     
     // 生成目录树
@@ -1383,6 +1384,155 @@ class MarkdownEditor {
                 this.saveContent();
             }
         }, 30000);
+    }
+    
+    // 处理初始锚点，从阅读页面跳转过来时滚动到指定标题
+    handleInitialAnchor() {
+        // 检查URL中是否有锚点
+        const hash = window.location.hash;
+        if (!hash || hash.length <= 1) {
+            return;
+        }
+        
+        const targetId = hash.substring(1); // 移除#号
+        console.log('检测到锚点:', targetId);
+        
+        // 延迟执行，等待编辑器和目录初始化完成
+        setTimeout(() => {
+            this.scrollToHeadingById(targetId);
+        }, 1000);
+    }
+    
+    // 根据ID滚动到指定标题
+    scrollToHeadingById(headingId) {
+        try {
+            console.log('搜索标题ID:', headingId);
+            
+            const content = this.editor.value;
+            const lines = content.split('\n');
+            
+            // 查找匹配的标题行
+            let targetLineNum = -1;
+            let foundHeading = null;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+                
+                if (headingMatch) {
+                    const headingText = headingMatch[2].trim();
+                    
+                    // 生成与页面相同的ID（简化版本）
+                    const generatedId = this.generateAnchor(headingText, i);
+                    
+                    console.log('比较标题:', {
+                        line: i,
+                        text: headingText,
+                        generatedId: generatedId,
+                        targetId: headingId
+                    });
+                    
+                    if (generatedId === headingId) {
+                        targetLineNum = i;
+                        foundHeading = headingText;
+                        break;
+                    }
+                }
+            }
+            
+            if (targetLineNum >= 0) {
+                console.log(`找到目标标题：第${targetLineNum}行 - ${foundHeading}`);
+                
+                // 滚动到指定行
+                this.scrollToLine(targetLineNum);
+                
+                // 同时滚动目录到对应项
+                this.scrollTOCToLine(targetLineNum);
+                
+                // 同时滚动预览区域到对应标题
+                setTimeout(() => {
+                    this.scrollPreviewToHeadingId(headingId);
+                }, 500);
+                
+            } else {
+                console.log('未找到匹配的标题');
+            }
+            
+        } catch (error) {
+            console.error('滚动到标题失败:', error);
+        }
+    }
+    
+    // 生成锚点ID（与页面目录生成逻辑保持一致）
+    generateAnchor(title, index) {
+        let anchor = title.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[-\s]+/g, '-')
+            .trim('-');
+        
+        if (!anchor) {
+            anchor = `heading-${index}`;
+        }
+        
+        return anchor;
+    }
+    
+    // 滚动目录到指定行
+    scrollTOCToLine(lineNum) {
+        if (!this.tocList) return;
+        
+        const tocLinks = this.tocList.querySelectorAll('a');
+        for (const link of tocLinks) {
+            const linkLineNum = parseInt(link.dataset.line);
+            if (linkLineNum === lineNum) {
+                // 高亮对应的目录项
+                tocLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // 滚动目录区域使其可见
+                link.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                break;
+            }
+        }
+    }
+    
+    // 滚动预览区域到指定标题ID
+    scrollPreviewToHeadingId(headingId) {
+        try {
+            // 在预览区域中查找对应的标题元素
+            const targetHeading = this.preview.querySelector(`#${headingId}`);
+            
+            if (targetHeading) {
+                console.log('在预览区域找到目标标题:', targetHeading);
+                
+                // 清除之前的高亮
+                this.clearPreviewHighlight();
+                
+                // 添加高亮效果
+                targetHeading.classList.add('preview-highlight');
+                
+                // 滚动到视图中心
+                targetHeading.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                // 3秒后移除高亮
+                setTimeout(() => {
+                    targetHeading.classList.remove('preview-highlight');
+                }, 3000);
+                
+            } else {
+                console.log('在预览区域未找到标题:', headingId);
+            }
+            
+        } catch (error) {
+            console.error('滚动预览区域失败:', error);
+        }
     }
     
     // 简化的更新后处理（只做必要的清理）

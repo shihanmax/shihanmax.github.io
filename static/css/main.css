@@ -200,6 +200,71 @@ pre > code {
     margin: 1em 0 !important;
 }
 
+/* 隐藏markdown生成的permalink符号¶ */
+.headerlink {
+    display: none !important;
+}
+
+/* 标题悬停编辑功能 */
+.c-article__main h1,
+.c-article__main h2,
+.c-article__main h3,
+.c-article__main h4,
+.c-article__main h5,
+.c-article__main h6 {
+    position: relative;
+}
+
+.c-article__main h1:hover .title-edit-btn,
+.c-article__main h2:hover .title-edit-btn,
+.c-article__main h3:hover .title-edit-btn,
+.c-article__main h4:hover .title-edit-btn,
+.c-article__main h5:hover .title-edit-btn,
+.c-article__main h6:hover .title-edit-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+.title-edit-btn {
+    position: absolute;
+    left: -45px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #0067FB;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 100;
+    white-space: nowrap;
+}
+
+/* 强制显示编辑按钮以便测试 */
+.title-edit-btn.force-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.title-edit-btn:hover {
+    background: #0056d6;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* 深色主题下的编辑按钮 */
+html.dark-theme .title-edit-btn {
+    background: #58a6ff;
+    color: #1a1a1a;
+}
+
+html.dark-theme .title-edit-btn:hover {
+    background: #4493e8;
+}
+
 /* TOC 高亮效果 */
 .preview-highlight {
     background: linear-gradient(90deg, rgba(0, 103, 251, 0.15) 0%, rgba(0, 103, 251, 0.05) 100%) !important;
@@ -207,17 +272,6 @@ pre > code {
     padding-left: 10px !important;
     border-radius: 3px !important;
     animation: previewFadeOut 2s ease-out forwards;
-}
-
-@keyframes previewFadeOut {
-    0% { 
-        background: rgba(0, 103, 251, 0.25);
-        border-left-color: #0067FB;
-    }
-    100% { 
-        background: transparent;
-        border-left-color: transparent;
-    }
 }
 
 /* 确保数学公式不会被截断 */
@@ -253,6 +307,38 @@ pre > code {
 /* 深色主题下的登录标题样式 */
 html.dark-theme .logged-in-title::after {
     background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700); /* 深色主题下也使用金色 */
+}
+
+/* TOC 高亮效果和编辑器动画 */
+@keyframes previewFadeOut {
+    0% { 
+        background: rgba(0, 103, 251, 0.25);
+        border-left-color: #0067FB;
+    }
+    100% { 
+        background: transparent;
+        border-left-color: transparent;
+    }
+}
+
+@keyframes cursorPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scaleX(1.5);
+    }
+}
+
+@keyframes arrowBounce {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(5px);
+    }
 }
 
 /* ==========================================================================
