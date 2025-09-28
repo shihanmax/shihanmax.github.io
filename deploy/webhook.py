@@ -133,4 +133,4 @@ if __name__ == "__main__":
     logger.info("监听端口: 8082")
     logger.info("无需鉴权，收到POST请求直接执行git pull")
     
-    app.run(host="0.0.0.0", port=8082, debug=False)
+    app.run(port=8082, debug=False)
