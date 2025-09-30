@@ -1955,6 +1955,7 @@ html.dark-theme .theme-switch input:checked + .switch {
     flex-shrink: 0; /* 防止标题被压缩 */
     font-size: 2.6rem; /* 保持标题大小 */
     line-height: 1.2; /* 稍微增加行高以更好对齐 */
+    letter-spacing: normal; /* 重置字符间距为正常 */
 }
 
 /* 页面标题样式 */
@@ -2016,6 +2017,7 @@ html.dark-theme .header-date {
     
     .title-nav-wrapper h1 {
         font-size: 2.2rem; /* 略微减小标题字号 */
+        letter-spacing: normal; /* 保持正常字符间距 */
     }
     
     .header-nav {
@@ -2092,6 +2094,7 @@ html.dark-theme .c-page__header h1 {
     margin-bottom: calc(var(--spacing-unit) / 4); /* 7.5px - 进一步减小标题下方间距 */
     color: var(--c-base-02);
     font-weight: 350; /* 统一修改为350 */
+    letter-spacing: normal; /* 重置字符间距为正常 */
 }
 
 .c-page__header p {
