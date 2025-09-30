@@ -14,18 +14,34 @@
     --c-base-2: #EDE7D6;
     --c-base-3: #FCF5E4;
     
-    --c-accent-blue: #0067FB;
-    --c-accent-green: #8BE367;
+    /* 优化的明亮主题配色 */
+    --light-theme-background: #FAFAFA;
+    --light-theme-text: #2C3E50;
+    --light-theme-heading: #1A202C;
+    --light-theme-link: #2563EB;
+    --light-theme-link-hover: #1D4ED8;
+    --light-theme-border: #E2E8F0;
+    --light-theme-code-bg: #F7FAFC;
+    --light-theme-code-border: #CBD5E0;
+    --light-theme-header-bg: #FFFFFF;
+    --light-theme-shadow: rgba(0, 0, 0, 0.05);
     
-    /* Theme colors */
-    --dark-theme-background: #1a1a1a;
-    --dark-theme-text: #d8d8d8;
-    --dark-theme-link: #58a6ff;
-    --dark-theme-link-hover: #81a2ff;
-    --dark-theme-button-bg: #4a4a4a;
-    --dark-theme-button-border: #333;
-    --dark-theme-code-bg: #282c34;
-    --dark-theme-header-footer-bg: #111;
+    --c-accent-blue: #2563EB;
+    --c-accent-green: #10B981;
+    
+    /* 优化的暗黑主题配色 */
+    --dark-theme-background: #0F172A;
+    --dark-theme-text: #E2E8F0;
+    --dark-theme-heading: #F1F5F9;
+    --dark-theme-link: #60A5FA;
+    --dark-theme-link-hover: #93C5FD;
+    --dark-theme-button-bg: #1E293B;
+    --dark-theme-button-border: #334155;
+    --dark-theme-code-bg: #1E293B;
+    --dark-theme-code-border: #334155;
+    --dark-theme-header-bg: #1E293B;
+    --dark-theme-border: #334155;
+    --dark-theme-shadow: rgba(0, 0, 0, 0.3);
     
     /* Layout dimensions */
     --header-height: 70px; /* Fixed header height including padding - 更新为实际高度 */
@@ -69,8 +85,8 @@ body {
     font-size: 1.8rem; /* 18px */
     line-height: 1.55;
     font-weight: 350; /* 统一修改为350 */
-    color: #333333;
-    background-color: #f5f5f5;
+    color: var(--light-theme-text);
+    background-color: var(--light-theme-background);
     -webkit-text-size-adjust: 100%;
     transition: background-color 0.3s linear, color 0.3s linear;
     -webkit-font-smoothing: antialiased;
@@ -130,16 +146,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 链接 */
 a {
-    color: var(--c-accent-blue);
+    color: var(--light-theme-link);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 a:visited {
-    color: var(--c-accent-blue); /* 访问过的链接保持与普通链接相同的颜色 */
+    color: var(--light-theme-link); /* 访问过的链接保持与普通链接相同的颜色 */
 }
 
 a:hover {
-    color: #333333;
+    color: var(--light-theme-link-hover);
     text-decoration: underline;
 }
 
@@ -168,8 +185,8 @@ pre, code {
 
 code {
     padding: 2px 6px;
-    background-color: rgba(175, 184, 193, 0.2);
-    border: 1px solid rgba(175, 184, 193, 0.4);
+    background-color: var(--light-theme-code-bg);
+    border: 1px solid var(--light-theme-code-border);
     font-size: 1.3rem;
 }
 
@@ -178,8 +195,8 @@ pre {
     overflow-x: auto;
     font-size: 1.4rem;
     line-height: 1.45;
-    background-color: #f6f8fa;
-    border: 1px solid #d0d7de;
+    background-color: var(--light-theme-code-bg);
+    border: 1px solid var(--light-theme-code-border);
 }
 
 pre > code {
@@ -1692,8 +1709,8 @@ html {
 
 html.dark-theme .c-article__main,
 body.dark-theme .c-article__main {
-    color: #999999;
-    opacity: 0.9;
+    color: var(--dark-theme-text);
+    opacity: 0.95;
 }
 
 html.dark-theme h1,
@@ -1708,8 +1725,7 @@ body.dark-theme h3,
 body.dark-theme h4,
 body.dark-theme h5,
 body.dark-theme h6 {
-    color: #fff;
-    opacity: 0.9;
+    color: var(--dark-theme-heading);
 }
 
 body.dark-theme .c-archives__list .c-archives__item {
@@ -1730,14 +1746,14 @@ body.dark-theme a:hover {
 
 body.dark-theme code,
 body.dark-theme pre {
-    background-color: #161b22;
-    border-color: #30363d;
-    color: #e6edf3;
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
+    color: var(--dark-theme-text);
 }
 
 body.dark-theme code {
-    background-color: rgba(110, 118, 129, 0.4); /* 文章正文中的行内代码保持背景色 */
-    border-color: rgba(110, 118, 129, 0.4);
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
 }
 
 /* 代码块内的代码元素应该是透明背景 */
@@ -1749,8 +1765,8 @@ body.dark-theme pre code {
 }
 
 body.dark-theme .highlight {
-    background-color: #161b22;
-    border-color: #30363d;
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
 }
 
 body.dark-theme .table th {
@@ -1812,8 +1828,8 @@ body.dark-theme .c-article__title a:visited {
 /* 浅色主题 */
 html.light-theme,
 body.light-theme {
-    background-color: #f5f5f5;
-    color: #333333;
+    background-color: var(--light-theme-background);
+    color: var(--light-theme-text);
 }
 
 html.light-theme h1,
@@ -1828,7 +1844,29 @@ body.light-theme h3,
 body.light-theme h4,
 body.light-theme h5,
 body.light-theme h6 {
-    color: #333333;
+    color: var(--light-theme-heading);
+}
+
+html.light-theme a,
+body.light-theme a {
+    color: var(--light-theme-link);
+}
+
+html.light-theme a:hover,
+body.light-theme a:hover {
+    color: var(--light-theme-link-hover);
+}
+
+html.light-theme code,
+body.light-theme code {
+    background-color: var(--light-theme-code-bg);
+    border-color: var(--light-theme-code-border);
+}
+
+html.light-theme pre,
+body.light-theme pre {
+    background-color: var(--light-theme-code-bg);
+    border-color: var(--light-theme-code-border);
 }
 
 /* ==========================================================================
@@ -2015,20 +2053,24 @@ html.dark-theme .header-date {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #f5f5f5;
+    background-color: var(--light-theme-header-bg);
     z-index: 100;
     padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px var(--light-theme-shadow);
     height: var(--header-height); /* 确保header高度与CSS变量一致 */
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 html.dark-theme .c-page__header {
-    background-color: var(--dark-theme-background);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2); /* 增强暗色主题下的阴影效果 */
-    border-bottom: 1px solid #333; /* 添加底部边框以增强分离感 */
+    background-color: var(--dark-theme-header-bg);
+    box-shadow: 0 2px 8px var(--dark-theme-shadow);
+    border-bottom: 1px solid var(--dark-theme-border);
     height: var(--header-height); /* 确保header高度与CSS变量一致 */
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 /* 暗色主题下的页面标题样式 */

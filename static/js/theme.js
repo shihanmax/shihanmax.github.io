@@ -44,7 +44,7 @@
         
         // 设置data属性方便调试
         html.setAttribute('data-theme', 'dark');
-        body.style.backgroundColor = '#1a1a1a';
+        body.style.backgroundColor = '#0F172A';
         
         // 更新图标
         if (moonIcon) moonIcon.style.display = 'none';
@@ -70,7 +70,7 @@
         
         // 设置data属性方便调试
         html.setAttribute('data-theme', 'light');
-        body.style.backgroundColor = '#f5f5f5';
+        body.style.backgroundColor = '#FAFAFA';
         
         // 更新图标
         if (moonIcon) moonIcon.style.display = 'block';

@@ -44,12 +44,12 @@
     <!-- 立即生效的主题样式 -->
     <style id="theme-flash-fix">
         html.dark-theme, html.dark-theme body {
-            background-color: #1a1a1a !important;
-            color: #d8d8d8 !important;
+            background-color: #0F172A !important;
+            color: #E2E8F0 !important;
         }
         html.light-theme, html.light-theme body {
-            background-color: #f5f5f5 !important;
-            color: #333333 !important;
+            background-color: #FAFAFA !important;
+            color: #2C3E50 !important;
         }
         
         /* 书签页面元素的暗色主题防闪烁样式 */
@@ -66,7 +66,7 @@
         }
         
         html.dark-theme .bookmark-title a {
-            color: #58a6ff !important;
+            color: #60A5FA !important;
         }
         
         /* 书签标题样式 */
@@ -135,8 +135,8 @@
     <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese" rel="stylesheet">
     
     <!-- 样式 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=1.0.1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}?v=1.0.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=1.0.2">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.css') }}?v=1.0.2">
     
     <!-- MathJax 优化配置 -->
     <script>
@@ -224,9 +224,10 @@
     </main>
 
     <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/theme.js') }}?v=1.0.1"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0.1"></script>
-    <script src="{{ url_for('static', filename='js/fortune.js') }}?v=1.0.1"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}?v=1.0.2"></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}?v=1.0.2"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0.2"></script>
+    <script src="{{ url_for('static', filename='js/fortune.js') }}?v=1.0.2"></script>
     
     <!-- 额外的JavaScript文件 -->
     {% block extra_js %}{% endblock %}
