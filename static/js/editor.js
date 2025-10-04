@@ -55,9 +55,6 @@ class MarkdownEditor {
         // 创建目录列表
         const tocUl = document.createElement('ul');
         
-        // 用于跟踪标题层级和编号
-        const headingStack = [];
-        
         lines.forEach((line, lineIndex) => {
             // 匹配Markdown标题 (#, ##, ###, 等)
             const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
@@ -68,13 +65,14 @@ class MarkdownEditor {
                 
                 // 创建目录项
                 const tocItem = document.createElement('li');
-                tocItem.className = `level-${level}`;
+                tocItem.className = `toc-item level-${level}`;
                 
                 // 创建链接
                 const tocLink = document.createElement('a');
                 tocLink.href = '#';
                 tocLink.textContent = title;
                 tocLink.dataset.line = lineIndex;
+                tocLink.className = 'toc-link';
                 
                 tocItem.appendChild(tocLink);
                 tocUl.appendChild(tocItem);
@@ -94,8 +92,6 @@ class MarkdownEditor {
             }
         }
     }
-    
-    // 防止预览区域的交互引起跳转
     preventPreviewInteraction() {
         // 移除预览区域中所有链接的点击事件
         this.preview.addEventListener('click', (e) => {
@@ -209,6 +205,8 @@ class MarkdownEditor {
                     const lineNum = parseInt(e.target.dataset.line);
                     if (!isNaN(lineNum)) {
                         this.scrollToLine(lineNum);
+                        // 更新当前章节的树状显示
+                        this.updateEditorCurrentChapterTree(lineNum);
                     }
                 }
             });

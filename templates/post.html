@@ -143,7 +143,7 @@ class TOCManager {
         
         this.tocList.appendChild(tocUl);
         
-        // 更新标题位置
+        // Update heading positions
         this.updateHeadingPositions();
     }
     
@@ -277,16 +277,83 @@ class TOCManager {
             link.classList.remove('active');
         });
         
+        // 清除所有树状标记
+        const tocItems = this.tocList.querySelectorAll('.toc-item');
+        tocItems.forEach(item => {
+            item.classList.remove('current-chapter-tree');
+        });
+        
         if (activeId) {
             // 添加活动状态到当前项
             const activeLink = this.tocList.querySelector(`.toc-link[data-target="${activeId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
                 
+                // 为当前章节添加树状结构
+                this.addTreeToCurrentChapter(activeLink);
+                
                 // 确保活动项在TOC视图中可见
                 this.scrollToActiveItem(activeLink);
             }
         }
+    }
+    
+    addTreeToCurrentChapter(activeLink) {
+        const activeItem = activeLink.closest('.toc-item');
+        
+        // 找到当前章节的顶级标题（level-1）
+        const topLevelItem = this.findTopLevelParent(activeItem);
+        
+        if (topLevelItem) {
+            // 标记当前章节的所有项目，用于显示树状结构
+            this.markCurrentChapterItems(topLevelItem);
+        }
+    }
+    
+    findTopLevelParent(currentItem) {
+        // 获取所有TOC项
+        const allItems = Array.from(this.tocList.querySelectorAll('.toc-item'));
+        const currentIndex = allItems.indexOf(currentItem);
+        
+        // 向上查找，找到最近的level-1项
+        for (let i = currentIndex; i >= 0; i--) {
+            if (allItems[i].classList.contains('level-1')) {
+                return allItems[i];
+            }
+        }
+        
+        return null;
+    }
+    
+    markCurrentChapterItems(topLevelItem) {
+        const allItems = Array.from(this.tocList.querySelectorAll('.toc-item'));
+        const topIndex = allItems.indexOf(topLevelItem);
+        
+        // 标记顶级项
+        topLevelItem.classList.add('current-chapter-tree');
+        
+        // 标记该章节下的所有子项
+        for (let i = topIndex + 1; i < allItems.length; i++) {
+            const item = allItems[i];
+            const itemLevel = this.getCurrentLevel(item);
+            
+            // 如果遇到新的顶级标题，停止
+            if (itemLevel === 1) {
+                break;
+            }
+            
+            // 标记为当前章节的一部分
+            item.classList.add('current-chapter-tree');
+        }
+    }
+    
+    getCurrentLevel(item) {
+        for (let i = 1; i <= 6; i++) {
+            if (item.classList.contains(`level-${i}`)) {
+                return i;
+            }
+        }
+        return 1;
     }
     
     scrollToActiveItem(activeLink) {

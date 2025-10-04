@@ -493,7 +493,87 @@ html.dark-theme .toc-link.active {
     color: #1a1a1a;
 }
 
-/* 不同级别的目录项 */
+/* TOC item base styles */
+.toc-item {
+    position: relative;
+}
+
+/* 树状连接线基础样式 - 只在当前章节上显示 */
+.toc-item.current-chapter-tree::before,
+.toc-item.current-chapter-tree::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    border-left: 1px solid #d0d7de;
+    z-index: 1;
+}
+
+/* 深色主题下的连接线颜色 */
+html.dark-theme .toc-item.current-chapter-tree::before,
+html.dark-theme .toc-item.current-chapter-tree::after {
+    border-left-color: #515862;
+}
+
+/* 垂直连接线 - 连接到子级 */
+.toc-item.current-chapter-tree::before {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--indent-level, 0) * 16px + 8px);
+    border-left-width: 1px;
+}
+
+/* 水平连接线 - 连接到文本 */
+.toc-item.current-chapter-tree::after {
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    left: calc(var(--indent-level, 0) * 16px + 8px);
+    border-top: 1px solid #d0d7de;
+    border-left: none;
+}
+
+/* 深色主题下的水平连接线 */
+html.dark-theme .toc-item.current-chapter-tree::after {
+    border-top-color: #515862;
+}
+
+/* 当前章节中最后一个子项不显示下半部分的垂直线 */
+.toc-item.current-chapter-tree:not(:has(~ .toc-item.current-chapter-tree))::before {
+    bottom: 50%;
+}
+
+/* 顶级项目不显示连接线 */
+.toc-item.level-1.current-chapter-tree::before,
+.toc-item.level-1.current-chapter-tree::after {
+    display: none;
+}
+
+/* 不同级别的目录项 - 重新设计缩进 */
+.toc-item.level-1 {
+    --indent-level: 0;
+}
+
+.toc-item.level-2 {
+    --indent-level: 1;
+}
+
+.toc-item.level-3 {
+    --indent-level: 2;
+}
+
+.toc-item.level-4 {
+    --indent-level: 3;
+}
+
+.toc-item.level-5 {
+    --indent-level: 4;
+}
+
+.toc-item.level-6 {
+    --indent-level: 5;
+}
+
+/* 目录链接样式 - 根据层级调整缩进 */
 .toc-item.level-1 > .toc-link {
     font-weight: 600;
     padding-left: 0.6rem;
@@ -501,30 +581,30 @@ html.dark-theme .toc-link.active {
 }
 
 .toc-item.level-2 > .toc-link {
-    padding-left: 1.2rem;
+    padding-left: calc(1 * 16px + 16px + 0.6rem); /* 树线宽度 + 间距 */
     font-weight: 500;
     font-size: 1.15rem;
 }
 
 .toc-item.level-3 > .toc-link {
-    padding-left: 1.8rem;
+    padding-left: calc(2 * 16px + 16px + 0.6rem);
     font-weight: 400;
     font-size: 1.1rem;
 }
 
 .toc-item.level-4 > .toc-link {
-    padding-left: 2.4rem;
+    padding-left: calc(3 * 16px + 16px + 0.6rem);
     font-weight: 400;
     font-size: 1.05rem;
 }
 
 .toc-item.level-5 > .toc-link {
-    padding-left: 3rem;
+    padding-left: calc(4 * 16px + 16px + 0.6rem);
     font-size: 1rem;
 }
 
 .toc-item.level-6 > .toc-link {
-    padding-left: 3.6rem;
+    padding-left: calc(5 * 16px + 16px + 0.6rem);
     font-size: 0.95rem;
 }
 
@@ -639,27 +719,27 @@ html.dark-theme .toc-list a.active {
 }
 
 .toc-list li.level-2 > a {
-    padding-left: 1rem;
+    padding-left: calc(1 * 16px + 16px + 0.5rem); /* 树线宽度 + 间距 */
     font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
-    padding-left: 1.5rem;
+    padding-left: calc(2 * 16px + 16px + 0.5rem);
     font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
-    padding-left: 2rem;
+    padding-left: calc(3 * 16px + 16px + 0.5rem);
     font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
-    padding-left: 2.5rem;
+    padding-left: calc(4 * 16px + 16px + 0.5rem);
     font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
-    padding-left: 3rem;
+    padding-left: calc(5 * 16px + 16px + 0.5rem);
     font-size: 0.9em;
 }
 
@@ -879,22 +959,86 @@ html.dark-theme .toc-toggle:hover {
     padding-left: 0;
 }
 
+/* 编辑器中的树状连接线 */
 .toc-list li {
     margin: 0.1rem 0; /* 进一步减小行间距 */
     padding: 0;
+    position: relative; /* 为树状结构添加定位 */
 }
 
-.toc-list a {
-    display: block;
-    padding: 0.3rem 0.5rem; /* 增加内边距 */
-    color: var(--c-base-01);
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2; /* 减小行高 */
+/* 编辑器中的树状连接线 - 只在当前章节上显示 */
+.toc-list li.current-chapter-tree::before,
+.toc-list li.current-chapter-tree::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    border-left: 1px solid #d0d7de;
+    z-index: 1;
+}
+
+/* 深色主题下的连接线颜色 */
+html.dark-theme .toc-list li.current-chapter-tree::before,
+html.dark-theme .toc-list li.current-chapter-tree::after {
+    border-left-color: #515862;
+}
+
+/* 垂直连接线 - 连接到子级 */
+.toc-list li.current-chapter-tree::before {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--editor-indent-level, 0) * 16px + 8px);
+    border-left-width: 1px;
+}
+
+/* 水平连接线 - 连接到文本 */
+.toc-list li.current-chapter-tree::after {
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    left: calc(var(--editor-indent-level, 0) * 16px + 8px);
+    border-top: 1px solid #d0d7de;
+    border-left: none;
+}
+
+/* 深色主题下的水平连接线 */
+html.dark-theme .toc-list li.current-chapter-tree::after {
+    border-top-color: #515862;
+}
+
+/* 编辑器中最后一个当前章节子项不显示下半部分的垂直线 */
+.toc-list li.current-chapter-tree:not(:has(~ li.current-chapter-tree))::before {
+    bottom: 50%;
+}
+
+/* 编辑器中顶级项目不显示连接线 */
+.toc-list li.level-1.current-chapter-tree::before,
+.toc-list li.level-1.current-chapter-tree::after {
+    display: none;
+}
+
+/* 设置编辑器中不同级别的缩进变量 */
+.toc-list li.level-1 {
+    --editor-indent-level: 0;
+}
+
+.toc-list li.level-2 {
+    --editor-indent-level: 1;
+}
+
+.toc-list li.level-3 {
+    --editor-indent-level: 2;
+}
+
+.toc-list li.level-4 {
+    --editor-indent-level: 3;
+}
+
+.toc-list li.level-5 {
+    --editor-indent-level: 4;
+}
+
+.toc-list li.level-6 {
+    --editor-indent-level: 5;
 }
 
 /* 深色主题下的目录链接 */
@@ -933,27 +1077,27 @@ html.dark-theme .toc-list a.active {
 }
 
 .toc-list li.level-2 > a {
-    padding-left: 1rem;
+    padding-left: calc(1 * 16px + 16px + 0.5rem); /* 树线宽度 + 间距 */
     font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
-    padding-left: 1.5rem;
+    padding-left: calc(2 * 16px + 16px + 0.5rem);
     font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
-    padding-left: 2rem;
+    padding-left: calc(3 * 16px + 16px + 0.5rem);
     font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
-    padding-left: 2.5rem;
+    padding-left: calc(4 * 16px + 16px + 0.5rem);
     font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
-    padding-left: 3rem;
+    padding-left: calc(5 * 16px + 16px + 0.5rem);
     font-size: 0.9em;
 }
 
