@@ -61,8 +61,26 @@ class TOCManager {
         this.isCollapsed = false;
         this.headings = [];
         this.headingPositions = [];
+        this.lastActiveId = null;
+        
+        // 添加节流函数
+        this.throttle = this.createThrottle();
         
         this.init();
+    }
+    
+    // 创建节流函数
+    createThrottle() {
+        let lastTime = 0;
+        const delay = 16; // 约60fps
+        
+        return (callback) => {
+            const now = Date.now();
+            if (now - lastTime >= delay) {
+                lastTime = now;
+                callback();
+            }
+        };
     }
     
     init() {
@@ -194,23 +212,27 @@ class TOCManager {
     }
     
     initScrollSpy() {
-        // 监听滚动事件
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            
-            scrollTimeout = setTimeout(() => {
+        // 使用优化的滚动监听
+        const handleScroll = () => {
+            this.throttle(() => {
                 this.updateHeadingPositions();
                 this.updateActiveTOCItem();
-            }, 100);
-        });
+            });
+        };
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', handleScroll, { passive: true });
         
         // 监听窗口大小变化
         window.addEventListener('resize', () => {
             this.updateHeadingPositions();
         });
+        
+        // 初始化时更新一次位置
+        setTimeout(() => {
+            this.updateHeadingPositions();
+            this.updateActiveTOCItem();
+        }, 100);
     }
     
     updateHeadingPositions() {
@@ -224,27 +246,36 @@ class TOCManager {
     }
     
     updateActiveTOCItem(activeId = null) {
-        // 移除所有活动状态
-        const tocLinks = this.tocList.querySelectorAll('.toc-link');
-        tocLinks.forEach(link => {
-            link.classList.remove('active');
-        });
-        
         if (!activeId) {
-            // 获取header高度
+            // 获取header高度和viewport位置
             const headerHeight = parseInt(getComputedStyle(document.documentElement)
                 .getPropertyValue('--header-height')) || 70;
             
-            // 自动检测当前可见的标题，考虑header高度
-            const scrollPosition = window.pageYOffset + headerHeight + 20; // 额外加一20px缓冲
+            // 使用viewport的1/4位置作为激活点，这样更符合阅读习惯
+            const viewportHeight = window.innerHeight;
+            const activationPoint = window.pageYOffset + headerHeight + viewportHeight * 0.25;
             
+            // 找到最适合的标题
             for (let i = this.headingPositions.length - 1; i >= 0; i--) {
-                if (scrollPosition >= this.headingPositions[i].top) {
+                if (this.headingPositions[i].top <= activationPoint) {
                     activeId = this.headingPositions[i].element.id;
                     break;
                 }
             }
         }
+        
+        // 如果活动ID没有变化，则不需要更新
+        if (activeId === this.lastActiveId) {
+            return;
+        }
+        
+        this.lastActiveId = activeId;
+        
+        // 移除所有活动状态
+        const tocLinks = this.tocList.querySelectorAll('.toc-link');
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+        });
         
         if (activeId) {
             // 添加活动状态到当前项
@@ -252,25 +283,21 @@ class TOCManager {
             if (activeLink) {
                 activeLink.classList.add('active');
                 
-                // 确保活动项在视图中
+                // 确保活动项在TOC视图中可见
                 this.scrollToActiveItem(activeLink);
             }
         }
     }
     
     scrollToActiveItem(activeLink) {
-        const tocContent = this.tocContent;
-        const containerRect = tocContent.getBoundingClientRect();
-        const linkRect = activeLink.getBoundingClientRect();
+        if (!this.tocContent || !activeLink) return;
         
-        // 检查链接是否在容器视图中
-        if (linkRect.bottom > containerRect.bottom) {
-            // 如果链接在容器下方，向上滚动
-            tocContent.scrollTop += linkRect.bottom - containerRect.bottom + 10;
-        } else if (linkRect.top < containerRect.top) {
-            // 如果链接在容器上方，向下滚动
-            tocContent.scrollTop -= containerRect.top - linkRect.top + 10;
-        }
+        // 恢复scrollIntoView方法
+        activeLink.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
     }
 }
 
