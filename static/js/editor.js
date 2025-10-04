@@ -21,6 +21,10 @@ class MarkdownEditor {
         this.cursorSyncEnabled = true;
         this.highlightTimeout = null;
         this.currentLineHighlight = null; // 当前行高亮元素
+        
+        // TOC跟随相关
+        this.tocUpdateTimeout = null;
+        this.lastTOCUpdateLine = -1;
         this.cursorLineHighlight = null; // 光标所在行高亮元素
         this.cursorEnhancements = []; // 光标增强效果元素数组
         
@@ -96,6 +100,126 @@ class MarkdownEditor {
             }
         }
     }
+    
+    // 节流处理TOC更新
+    throttleTOCUpdate() {
+        if (this.tocUpdateTimeout) {
+            clearTimeout(this.tocUpdateTimeout);
+        }
+        
+        this.tocUpdateTimeout = setTimeout(() => {
+            this.updateTOCBasedOnScroll();
+        }, 100); // 100ms节流
+    }
+    
+    // 根据编辑器滚动位置更新TOC
+    updateTOCBasedOnScroll() {
+        if (!this.tocList || !this.editor) {
+            return;
+        }
+        
+        const currentLine = this.getCurrentVisibleLine();
+        
+        // 只有当行号变化较大时才更新
+        if (Math.abs(currentLine - this.lastTOCUpdateLine) > 3) {
+            this.lastTOCUpdateLine = currentLine;
+            this.updateTOCActiveItem(currentLine);
+        }
+    }
+    
+    // 获取当前可见区域的主要行号
+    getCurrentVisibleLine() {
+        const scrollTop = this.editor.scrollTop;
+        const editorHeight = this.editor.clientHeight;
+        const centerPoint = scrollTop + editorHeight / 3; // 使用上1/3位置作为参考点
+        
+        // 估算当前行号
+        const editorStyle = window.getComputedStyle(this.editor);
+        let lineHeight = parseInt(editorStyle.lineHeight);
+        if (isNaN(lineHeight)) {
+            lineHeight = Math.floor(parseInt(editorStyle.fontSize) * 1.2);
+        }
+        
+        const approximateLine = Math.floor(centerPoint / lineHeight);
+        
+        // 确保行号在有效范围内
+        const totalLines = this.editor.value.split('\n').length;
+        return Math.max(0, Math.min(approximateLine, totalLines - 1));
+    }
+    
+    // 更新TOC中的活动项
+    updateTOCActiveItem(currentLine) {
+        const lines = this.editor.value.split('\n');
+        
+        // 找到当前行所在的标题
+        let activeHeadingLine = -1;
+        let activeHeadingLevel = 7; // 初始值设为大于所有标题级别
+        
+        // 向上搜索最近的标题
+        for (let i = currentLine; i >= 0; i--) {
+            const line = lines[i].trim();
+            const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+            
+            if (headingMatch) {
+                activeHeadingLine = i;
+                activeHeadingLevel = headingMatch[1].length;
+                break;
+            }
+        }
+        
+        // 如果没找到，向下搜索
+        if (activeHeadingLine === -1) {
+            for (let i = currentLine + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+                
+                if (headingMatch) {
+                    activeHeadingLine = i;
+                    activeHeadingLevel = headingMatch[1].length;
+                    break;
+                }
+            }
+        }
+        
+        if (activeHeadingLine >= 0) {
+            this.highlightTOCItem(activeHeadingLine);
+        }
+    }
+    
+    // 高亮TOC中的对应项
+    highlightTOCItem(lineNum) {
+        if (!this.tocList) return;
+        
+        const tocLinks = this.tocList.querySelectorAll('a');
+        
+        // 清除所有活动状态
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // 找到对应的TOC项
+        let targetLink = null;
+        for (const link of tocLinks) {
+            const linkLineNum = parseInt(link.dataset.line);
+            if (linkLineNum === lineNum) {
+                targetLink = link;
+                break;
+            }
+        }
+        
+        if (targetLink) {
+            // 高亮当前项
+            targetLink.classList.add('active');
+            
+            // 滚动TOC使当前项可见
+            targetLink.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+            });
+        }
+    }
+
     preventPreviewInteraction() {
         // 移除预览区域中所有链接的点击事件
         this.preview.addEventListener('click', (e) => {
@@ -139,14 +263,19 @@ class MarkdownEditor {
             // 延迟更新光标行高亮，避免频繁更新
             setTimeout(() => {
                 this.updateCursorLineHighlight();
+                // 内容变化时也更新TOC
+                this.throttleTOCUpdate();
             }, 100);
         });
         
-        // 编辑器滚动事件 - 更新光标行高亮
+        // 编辑器滚动事件 - 更新光标行高亮和TOC跟随
         this.editor.addEventListener('scroll', () => {
             this.removeLineHighlight();
             this.removeCursorEnhancements();
             this.updateCursorLineHighlight();
+            
+            // 节流处理TOC跟随
+            this.throttleTOCUpdate();
         });
 
         // 保存按钮点击事件
@@ -499,6 +628,8 @@ class MarkdownEditor {
         this.editor.addEventListener('click', () => {
             setTimeout(() => {
                 this.updateCursorLineHighlight();
+                // 点击时也更新TOC
+                this.throttleTOCUpdate();
             }, 10);
         });
         
@@ -506,6 +637,8 @@ class MarkdownEditor {
             // 只在光标移动时更新，不在输入时更新
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
                 this.updateCursorLineHighlight();
+                // 光标移动时也更新TOC
+                this.throttleTOCUpdate();
             }
         });
         
@@ -530,6 +663,9 @@ class MarkdownEditor {
         const currentLineNum = lines.length - 1;
         
         this.highlightCursorLine(currentLineNum);
+        
+        // 同时更新TOC
+        this.throttleTOCUpdate();
     }
     
     // 高亮光标所在行
