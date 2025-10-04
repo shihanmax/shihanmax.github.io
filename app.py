@@ -500,6 +500,13 @@ def edit_post(year, month, slug):
                          page_type='editor',
                          title=f'Edit: {post["title"]}')
 
+# 新的编辑器路由 - 支持从阅读页面直接跳转
+@app.route('/edit/<int:year>/<int:month>/<slug>')
+@admin_required
+def edit_post_direct(year, month, slug):
+    """直接编辑路由 - 支持锚点跳转"""
+    return edit_post(year, month, slug)
+
 @app.route('/api/posts/<int:year>/<int:month>/<slug>/save', methods=['POST'])
 @admin_required
 @csrf.exempt  # API端点 exempt CSRF 保护

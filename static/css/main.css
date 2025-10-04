@@ -457,6 +457,7 @@ html.dark-theme .toc-toggle:hover {
     padding: 0;
 }
 
+/* TOC链接样式 */
 .toc-link {
     display: block;
     padding: 0.3rem 0.6rem;
@@ -467,6 +468,59 @@ html.dark-theme .toc-toggle:hover {
     line-height: 1.3;
     transition: all 0.2s ease;
     word-wrap: break-word;
+    position: relative; /* 为编辑按钮定位 */
+}
+
+/* TOC项目容器 - 为悬停编辑按钮做准备 */
+.toc-item {
+    position: relative;
+}
+
+/* 悬停编辑按钮 */
+.toc-edit-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--c-accent-blue);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 深色主题下的编辑按钮 */
+html.dark-theme .toc-edit-btn {
+    background: #58a6ff;
+    color: #1a1a1a;
+}
+
+/* 悬停时显示编辑按钮 */
+.toc-item:hover .toc-edit-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 编辑按钮悬停效果 */
+.toc-edit-btn:hover {
+    background: var(--c-accent-green);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 深色主题下编辑按钮悬停 */
+html.dark-theme .toc-edit-btn:hover {
+    background: #3fb950;
 }
 
 /* 深色主题下的目录链接 */

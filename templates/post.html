@@ -62,6 +62,8 @@ class TOCManager {
         this.headings = [];
         this.headingPositions = [];
         this.lastActiveId = null;
+        this.isLoggedIn = false; // 登录状态
+        this.hoverTimeout = null; // 悬停定时器
         
         // 添加节流函数
         this.throttle = this.createThrottle();
@@ -93,6 +95,7 @@ class TOCManager {
         this.bindEvents();
         this.initScrollSpy();
         // 编辑按钮将在管理员状态确认后初始化
+        this.checkLoginStatus();
     }
     
     generateTOC() {
@@ -138,6 +141,12 @@ class TOCManager {
             tocLink.className = 'toc-link';
             
             tocItem.appendChild(tocLink);
+            
+            // 如果已登录，为目录项添加悬停编辑功能
+            if (this.isLoggedIn) {
+                this.addHoverEditButton(tocItem, heading.id, index);
+            }
+            
             tocUl.appendChild(tocItem);
         });
         
@@ -354,6 +363,87 @@ class TOCManager {
             }
         }
         return 1;
+    }
+    
+    // 检查登录状态
+    async checkLoginStatus() {
+        try {
+            const response = await fetch('/admin/status');
+            const result = await response.json();
+            this.isLoggedIn = result.logged_in;
+            
+            if (this.isLoggedIn) {
+                // 如果已登录，重新生成TOC以添加编辑按钮
+                this.generateTOC();
+            }
+        } catch (error) {
+            console.error('Error checking login status:', error);
+        }
+    }
+    
+    // 为目录项添加悬停编辑按钮
+    addHoverEditButton(tocItem, headingId, headingIndex) {
+        let editBtn = null;
+        
+        // 鼠标进入事件
+        tocItem.addEventListener('mouseenter', () => {
+            this.hoverTimeout = setTimeout(() => {
+                if (!editBtn) {
+                    editBtn = this.createEditButton(headingId, headingIndex);
+                    tocItem.appendChild(editBtn);
+                }
+            }, 500); // 0.5秒延迟
+        });
+        
+        // 鼠标离开事件
+        tocItem.addEventListener('mouseleave', () => {
+            if (this.hoverTimeout) {
+                clearTimeout(this.hoverTimeout);
+                this.hoverTimeout = null;
+            }
+            
+            // 延迟移除按钮，给用户时间点击
+            setTimeout(() => {
+                if (editBtn && !editBtn.matches(':hover')) {
+                    editBtn.remove();
+                    editBtn = null;
+                }
+            }, 200);
+        });
+    }
+    
+    // 创建编辑按钮
+    createEditButton(headingId, headingIndex) {
+        const editBtn = document.createElement('button');
+        editBtn.className = 'toc-edit-btn';
+        editBtn.innerHTML = '✏️'; // 铅笔图标
+        editBtn.title = '编辑此章节';
+        
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.jumpToEdit(headingId);
+        });
+        
+        return editBtn;
+    }
+    
+    // 跳转到编辑页面对应章节
+    jumpToEdit(headingId) {
+        // 获取当前文章信息
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/');
+        
+        if (pathParts.length >= 4) {
+            const year = pathParts[1];
+            const month = pathParts[2];
+            const slug = pathParts[3];
+            
+            // 构建编辑页面URL，带上锚点参数
+            const editUrl = `/edit/${year}/${month}/${slug}#${headingId}`;
+            console.log('Jumping to edit URL:', editUrl);
+            window.location.href = editUrl;
+        }
     }
     
     scrollToActiveItem(activeLink) {

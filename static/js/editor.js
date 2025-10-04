@@ -39,7 +39,11 @@ class MarkdownEditor {
         this.setupCursorLineHighlight();
         this.preventPreviewInteraction();
         this.generateTOC(); // 生成初始目录
-        this.handleInitialAnchor(); // 处理初始锚点
+        
+        // 等待一个短暂的时间再处理锚点，确保所有初始化完成
+        setTimeout(() => {
+            this.handleInitialAnchor(); // 处理初始锚点
+        }, 100);
     }
     
     // 生成目录树
@@ -1396,9 +1400,19 @@ class MarkdownEditor {
         console.log('检测到锚点:', targetId);
         
         // 延迟执行，等待编辑器和目录初始化完成
+        // 增加延迟时间，确保内容完全加载
         setTimeout(() => {
             this.scrollToHeadingById(targetId);
-        }, 1000);
+        }, 2000); // 增加延迟到2秒
+        
+        // 如果2秒后还没找到，再尝试一次
+        setTimeout(() => {
+            // 检查是否已经成功跳转（通过检查编辑器的滚动位置）
+            if (this.editor.scrollTop === 0) {
+                console.log('第一次跳转可能失败，重新尝试');
+                this.scrollToHeadingById(targetId);
+            }
+        }, 4000);
     }
     
     // 根据ID滚动到指定标题
@@ -1413,6 +1427,7 @@ class MarkdownEditor {
             let targetLineNum = -1;
             let foundHeading = null;
             
+            // 第一轮搜索：精确匹配
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
@@ -1420,7 +1435,7 @@ class MarkdownEditor {
                 if (headingMatch) {
                     const headingText = headingMatch[2].trim();
                     
-                    // 生成与页面相同的ID（简化版本）
+                    // 生成与页面相同的ID
                     const generatedId = this.generateAnchor(headingText, i);
                     
                     console.log('比较标题:', {
@@ -1434,6 +1449,32 @@ class MarkdownEditor {
                         targetLineNum = i;
                         foundHeading = headingText;
                         break;
+                    }
+                }
+            }
+            
+            // 第二轮搜索：模糊匹配（防止索引不一致）
+            if (targetLineNum === -1) {
+                console.log('精确匹配失败，尝试模糊匹配');
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+                    
+                    if (headingMatch) {
+                        const headingText = headingMatch[2].trim();
+                        const simpleId = headingText.toLowerCase()
+                            .replace(/[^\w]/g, '')
+                            .substring(0, 20); // 取前20个字符
+                        const targetSimple = headingId.toLowerCase()
+                            .replace(/[^\w]/g, '')
+                            .substring(0, 20);
+                        
+                        if (simpleId === targetSimple) {
+                            targetLineNum = i;
+                            foundHeading = headingText;
+                            console.log('模糊匹配成功');
+                            break;
+                        }
                     }
                 }
             }
@@ -1454,10 +1495,45 @@ class MarkdownEditor {
                 
             } else {
                 console.log('未找到匹配的标题');
+                // 如果找不到，尝试直接根据标题文本查找
+                this.fallbackSearchByText(headingId);
             }
             
         } catch (error) {
             console.error('滚动到标题失败:', error);
+        }
+    }
+    
+    // 备用搜索：根据文本内容直接查找
+    fallbackSearchByText(headingId) {
+        console.log('使用备用搜索方法');
+        const content = this.editor.value;
+        const lines = content.split('\n');
+        
+        // 将ID转换为可能的标题文本
+        const possibleTexts = [
+            headingId.replace(/-/g, ' '), // 把横线换成空格
+            headingId.replace(/-/g, ''), // 去掉横线
+            decodeURIComponent(headingId) // URL解码
+        ];
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+            
+            if (headingMatch) {
+                const headingText = headingMatch[2].trim().toLowerCase();
+                
+                for (const possibleText of possibleTexts) {
+                    if (headingText.includes(possibleText.toLowerCase()) ||
+                        possibleText.toLowerCase().includes(headingText)) {
+                        console.log(`备用搜索找到匹配: ${headingText}`);
+                        this.scrollToLine(i);
+                        this.scrollTOCToLine(i);
+                        return;
+                    }
+                }
+            }
         }
     }
     
