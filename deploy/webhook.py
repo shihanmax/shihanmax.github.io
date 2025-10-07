@@ -11,6 +11,10 @@ import subprocess
 import hashlib
 import hmac
 from flask import Flask, request, jsonify
+# 加载.env文件中的环境变量
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # 配置日志
 logging.basicConfig(
@@ -131,6 +135,5 @@ if __name__ == "__main__":
     logger.info("启动简化版博客Webhook服务...")
     logger.info(f"博客根目录: {BLOG_ROOT}")
     logger.info("监听端口: 8082")
-    logger.info("无需鉴权，收到POST请求直接执行git pull")
     
     app.run(port=8082, debug=False)
