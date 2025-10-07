@@ -21,15 +21,18 @@ from flask_wtf.csrf import CSRFProtect
 
 from dotenv import load_dotenv
 
+logging.basicConfig(level=logging.INFO)
+
 
 logger = logging.getLogger(__name__)
+
 # 显式指定.env文件路径
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), './deploy/.env')
 
 # 加载.env文件，显式指定路径并启用详细输出
 load_result = load_dotenv(env_path, verbose=True)
 
-logger.info(f"load env from {env_path}, succeed: {load_result}")
+logger.info(f"[ENV] load env from {env_path}, succeed: {load_result}")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')

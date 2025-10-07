@@ -15,6 +15,12 @@ from flask import Flask, request, jsonify
 # 加载.env文件中的环境变量
 from dotenv import load_dotenv
 
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+)
+
 logger = logging.getLogger(__name__)
 
 # 显式指定.env文件路径
@@ -24,16 +30,6 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
 load_result = load_dotenv(env_path, verbose=True)
 
 logger.info(f"load env from {env_path}, succeed: {load_result}")
-
-# 配置日志
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
