@@ -4,7 +4,7 @@
 博客Flask应用主文件
 完全替代Jekyll，保持原有视觉效果
 """
-
+import logging
 from flask import (Flask, render_template, abort, request, jsonify, session,
                    redirect, url_for, send_from_directory)
 import os
@@ -20,13 +20,16 @@ from flask_wtf.csrf import CSRFProtect
 # 加载.env文件中的环境变量
 
 from dotenv import load_dotenv
-import os
 
+
+logger = logging.getLogger(__name__)
 # 显式指定.env文件路径
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), './deploy/.env')
 
 # 加载.env文件，显式指定路径并启用详细输出
 load_result = load_dotenv(env_path, verbose=True)
+
+logger.info(f"load env from {env_path}, succeed: {load_result}")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
@@ -41,12 +44,9 @@ security_logger = SecurityLogger()
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
 ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH')  # 应该存储哈希后的密码
 
-# 打印调试信息
-print(f"Loaded ADMIN_USERNAME: {ADMIN_USERNAME}")
-print(f"Loaded ADMIN_PASSWORD_HASH: {ADMIN_PASSWORD_HASH}")
-
 # 简单的登录尝试次数跟踪（生产环境应使用Redis等）
 login_attempts = {}
+
 
 # 认证装饰器
 def admin_required(f):

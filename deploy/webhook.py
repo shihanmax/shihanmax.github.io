@@ -9,16 +9,21 @@ import logging
 import os
 import subprocess
 import hashlib
+import logging
 import hmac
 from flask import Flask, request, jsonify
 # 加载.env文件中的环境变量
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 # 显式指定.env文件路径
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
 
 # 加载.env文件，显式指定路径并启用详细输出
 load_result = load_dotenv(env_path, verbose=True)
+
+logger.info(f"load env from {env_path}, succeed: {load_result}")
 
 # 配置日志
 logging.basicConfig(
