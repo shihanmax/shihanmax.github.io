@@ -61,8 +61,28 @@ class TOCManager {
         this.isCollapsed = false;
         this.headings = [];
         this.headingPositions = [];
+        this.lastActiveId = null;
+        this.isLoggedIn = false; // 登录状态
+        this.hoverTimeout = null; // 悬停定时器
+        
+        // 添加节流函数
+        this.throttle = this.createThrottle();
         
         this.init();
+    }
+    
+    // 创建节流函数
+    createThrottle() {
+        let lastTime = 0;
+        const delay = 16; // 约60fps
+        
+        return (callback) => {
+            const now = Date.now();
+            if (now - lastTime >= delay) {
+                lastTime = now;
+                callback();
+            }
+        };
     }
     
     init() {
@@ -75,6 +95,7 @@ class TOCManager {
         this.bindEvents();
         this.initScrollSpy();
         // 编辑按钮将在管理员状态确认后初始化
+        this.checkLoginStatus();
     }
     
     generateTOC() {
@@ -120,12 +141,18 @@ class TOCManager {
             tocLink.className = 'toc-link';
             
             tocItem.appendChild(tocLink);
+            
+            // 如果已登录，为目录项添加悬停编辑功能
+            if (this.isLoggedIn) {
+                this.addHoverEditButton(tocItem, heading.id, index);
+            }
+            
             tocUl.appendChild(tocItem);
         });
         
         this.tocList.appendChild(tocUl);
         
-        // 更新标题位置
+        // Update heading positions
         this.updateHeadingPositions();
     }
     
@@ -194,23 +221,27 @@ class TOCManager {
     }
     
     initScrollSpy() {
-        // 监听滚动事件
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            
-            scrollTimeout = setTimeout(() => {
+        // 使用优化的滚动监听
+        const handleScroll = () => {
+            this.throttle(() => {
                 this.updateHeadingPositions();
                 this.updateActiveTOCItem();
-            }, 100);
-        });
+            });
+        };
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', handleScroll, { passive: true });
         
         // 监听窗口大小变化
         window.addEventListener('resize', () => {
             this.updateHeadingPositions();
         });
+        
+        // 初始化时更新一次位置
+        setTimeout(() => {
+            this.updateHeadingPositions();
+            this.updateActiveTOCItem();
+        }, 100);
     }
     
     updateHeadingPositions() {
@@ -224,27 +255,42 @@ class TOCManager {
     }
     
     updateActiveTOCItem(activeId = null) {
+        if (!activeId) {
+            // 获取header高度和viewport位置
+            const headerHeight = parseInt(getComputedStyle(document.documentElement)
+                .getPropertyValue('--header-height')) || 70;
+            
+            // 使用viewport的1/4位置作为激活点，这样更符合阅读习惯
+            const viewportHeight = window.innerHeight;
+            const activationPoint = window.pageYOffset + headerHeight + viewportHeight * 0.25;
+            
+            // 找到最适合的标题
+            for (let i = this.headingPositions.length - 1; i >= 0; i--) {
+                if (this.headingPositions[i].top <= activationPoint) {
+                    activeId = this.headingPositions[i].element.id;
+                    break;
+                }
+            }
+        }
+        
+        // 如果活动ID没有变化，则不需要更新
+        if (activeId === this.lastActiveId) {
+            return;
+        }
+        
+        this.lastActiveId = activeId;
+        
         // 移除所有活动状态
         const tocLinks = this.tocList.querySelectorAll('.toc-link');
         tocLinks.forEach(link => {
             link.classList.remove('active');
         });
         
-        if (!activeId) {
-            // 获取header高度
-            const headerHeight = parseInt(getComputedStyle(document.documentElement)
-                .getPropertyValue('--header-height')) || 70;
-            
-            // 自动检测当前可见的标题，考虑header高度
-            const scrollPosition = window.pageYOffset + headerHeight + 20; // 额外加一20px缓冲
-            
-            for (let i = this.headingPositions.length - 1; i >= 0; i--) {
-                if (scrollPosition >= this.headingPositions[i].top) {
-                    activeId = this.headingPositions[i].element.id;
-                    break;
-                }
-            }
-        }
+        // 清除所有树状标记
+        const tocItems = this.tocList.querySelectorAll('.toc-item');
+        tocItems.forEach(item => {
+            item.classList.remove('current-chapter-tree');
+        });
         
         if (activeId) {
             // 添加活动状态到当前项
@@ -252,25 +298,163 @@ class TOCManager {
             if (activeLink) {
                 activeLink.classList.add('active');
                 
-                // 确保活动项在视图中
+                // 为当前章节添加树状结构
+                this.addTreeToCurrentChapter(activeLink);
+                
+                // 确保活动项在TOC视图中可见
                 this.scrollToActiveItem(activeLink);
             }
         }
     }
     
-    scrollToActiveItem(activeLink) {
-        const tocContent = this.tocContent;
-        const containerRect = tocContent.getBoundingClientRect();
-        const linkRect = activeLink.getBoundingClientRect();
+    addTreeToCurrentChapter(activeLink) {
+        const activeItem = activeLink.closest('.toc-item');
         
-        // 检查链接是否在容器视图中
-        if (linkRect.bottom > containerRect.bottom) {
-            // 如果链接在容器下方，向上滚动
-            tocContent.scrollTop += linkRect.bottom - containerRect.bottom + 10;
-        } else if (linkRect.top < containerRect.top) {
-            // 如果链接在容器上方，向下滚动
-            tocContent.scrollTop -= containerRect.top - linkRect.top + 10;
+        // 找到当前章节的顶级标题（level-1）
+        const topLevelItem = this.findTopLevelParent(activeItem);
+        
+        if (topLevelItem) {
+            // 标记当前章节的所有项目，用于显示树状结构
+            this.markCurrentChapterItems(topLevelItem);
         }
+    }
+    
+    findTopLevelParent(currentItem) {
+        // 获取所有TOC项
+        const allItems = Array.from(this.tocList.querySelectorAll('.toc-item'));
+        const currentIndex = allItems.indexOf(currentItem);
+        
+        // 向上查找，找到最近的level-1项
+        for (let i = currentIndex; i >= 0; i--) {
+            if (allItems[i].classList.contains('level-1')) {
+                return allItems[i];
+            }
+        }
+        
+        return null;
+    }
+    
+    markCurrentChapterItems(topLevelItem) {
+        const allItems = Array.from(this.tocList.querySelectorAll('.toc-item'));
+        const topIndex = allItems.indexOf(topLevelItem);
+        
+        // 标记顶级项
+        topLevelItem.classList.add('current-chapter-tree');
+        
+        // 标记该章节下的所有子项
+        for (let i = topIndex + 1; i < allItems.length; i++) {
+            const item = allItems[i];
+            const itemLevel = this.getCurrentLevel(item);
+            
+            // 如果遇到新的顶级标题，停止
+            if (itemLevel === 1) {
+                break;
+            }
+            
+            // 标记为当前章节的一部分
+            item.classList.add('current-chapter-tree');
+        }
+    }
+    
+    getCurrentLevel(item) {
+        for (let i = 1; i <= 6; i++) {
+            if (item.classList.contains(`level-${i}`)) {
+                return i;
+            }
+        }
+        return 1;
+    }
+    
+    // 检查登录状态
+    async checkLoginStatus() {
+        try {
+            const response = await fetch('/admin/status');
+            const result = await response.json();
+            this.isLoggedIn = result.logged_in;
+            
+            if (this.isLoggedIn) {
+                // 如果已登录，重新生成TOC以添加编辑按钮
+                this.generateTOC();
+            }
+        } catch (error) {
+            console.error('Error checking login status:', error);
+        }
+    }
+    
+    // 为目录项添加悬停编辑按钮
+    addHoverEditButton(tocItem, headingId, headingIndex) {
+        let editBtn = null;
+        
+        // 鼠标进入事件
+        tocItem.addEventListener('mouseenter', () => {
+            this.hoverTimeout = setTimeout(() => {
+                if (!editBtn) {
+                    editBtn = this.createEditButton(headingId, headingIndex);
+                    tocItem.appendChild(editBtn);
+                }
+            }, 500); // 0.5秒延迟
+        });
+        
+        // 鼠标离开事件
+        tocItem.addEventListener('mouseleave', () => {
+            if (this.hoverTimeout) {
+                clearTimeout(this.hoverTimeout);
+                this.hoverTimeout = null;
+            }
+            
+            // 延迟移除按钮，给用户时间点击
+            setTimeout(() => {
+                if (editBtn && !editBtn.matches(':hover')) {
+                    editBtn.remove();
+                    editBtn = null;
+                }
+            }, 200);
+        });
+    }
+    
+    // 创建编辑按钮
+    createEditButton(headingId, headingIndex) {
+        const editBtn = document.createElement('button');
+        editBtn.className = 'toc-edit-btn';
+        editBtn.innerHTML = '✏️'; // 铅笔图标
+        editBtn.title = '编辑此章节';
+        
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.jumpToEdit(headingId);
+        });
+        
+        return editBtn;
+    }
+    
+    // 跳转到编辑页面对应章节
+    jumpToEdit(headingId) {
+        // 获取当前文章信息
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/');
+        
+        if (pathParts.length >= 4) {
+            const year = pathParts[1];
+            const month = pathParts[2];
+            const slug = pathParts[3];
+            
+            // 构建编辑页面URL，带上锚点参数
+            const editUrl = `/edit/${year}/${month}/${slug}#${headingId}`;
+            console.log('Jumping to edit URL:', editUrl);
+            window.location.href = editUrl;
+        }
+    }
+    
+    scrollToActiveItem(activeLink) {
+        if (!this.tocContent || !activeLink) return;
+        
+        // 恢复scrollIntoView方法
+        activeLink.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
     }
 }
 

@@ -14,21 +14,37 @@
     --c-base-2: #EDE7D6;
     --c-base-3: #FCF5E4;
     
-    --c-accent-blue: #0067FB;
-    --c-accent-green: #8BE367;
+    /* 优化的明亮主题配色 */
+    --light-theme-background: #FAFAFA;
+    --light-theme-text: #2C3E50;
+    --light-theme-heading: #1A202C;
+    --light-theme-link: #2563EB;
+    --light-theme-link-hover: #1D4ED8;
+    --light-theme-border: #E2E8F0;
+    --light-theme-code-bg: #F7FAFC;
+    --light-theme-code-border: #CBD5E0;
+    --light-theme-header-bg: #FFFFFF;
+    --light-theme-shadow: rgba(0, 0, 0, 0.05);
     
-    /* Theme colors */
-    --dark-theme-background: #1a1a1a;
-    --dark-theme-text: #d8d8d8;
-    --dark-theme-link: #58a6ff;
-    --dark-theme-link-hover: #81a2ff;
-    --dark-theme-button-bg: #4a4a4a;
-    --dark-theme-button-border: #333;
-    --dark-theme-code-bg: #282c34;
-    --dark-theme-header-footer-bg: #111;
+    --c-accent-blue: #2563EB;
+    --c-accent-green: #10B981;
+    
+    /* 优化的暗黑主题配色 */
+    --dark-theme-background: #0F172A;
+    --dark-theme-text: #E2E8F0;
+    --dark-theme-heading: #F1F5F9;
+    --dark-theme-link: #60A5FA;
+    --dark-theme-link-hover: #93C5FD;
+    --dark-theme-button-bg: #1E293B;
+    --dark-theme-button-border: #334155;
+    --dark-theme-code-bg: #1E293B;
+    --dark-theme-code-border: #334155;
+    --dark-theme-header-bg: #1E293B;
+    --dark-theme-border: #334155;
+    --dark-theme-shadow: rgba(0, 0, 0, 0.3);
     
     /* Layout dimensions */
-    --header-height: 70px; /* Fixed header height including padding - 更新为实际高度 */
+    --header-height: 56px; /* Optimized height: 80% of original 70px - 更新为实际高度 */
     
     /* Breakpoints */
     --bp-sm: 45rem; /* 450px */
@@ -69,8 +85,8 @@ body {
     font-size: 1.8rem; /* 18px */
     line-height: 1.55;
     font-weight: 350; /* 统一修改为350 */
-    color: #333333;
-    background-color: #f5f5f5;
+    color: var(--light-theme-text);
+    background-color: var(--light-theme-background);
     -webkit-text-size-adjust: 100%;
     transition: background-color 0.3s linear, color 0.3s linear;
     -webkit-font-smoothing: antialiased;
@@ -130,16 +146,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 链接 */
 a {
-    color: var(--c-accent-blue);
+    color: var(--light-theme-link);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 a:visited {
-    color: var(--c-accent-blue); /* 访问过的链接保持与普通链接相同的颜色 */
+    color: var(--light-theme-link); /* 访问过的链接保持与普通链接相同的颜色 */
 }
 
 a:hover {
-    color: #333333;
+    color: var(--light-theme-link-hover);
     text-decoration: underline;
 }
 
@@ -168,8 +185,8 @@ pre, code {
 
 code {
     padding: 2px 6px;
-    background-color: rgba(175, 184, 193, 0.2);
-    border: 1px solid rgba(175, 184, 193, 0.4);
+    background-color: var(--light-theme-code-bg);
+    border: 1px solid var(--light-theme-code-border);
     font-size: 1.3rem;
 }
 
@@ -178,8 +195,8 @@ pre {
     overflow-x: auto;
     font-size: 1.4rem;
     line-height: 1.45;
-    background-color: #f6f8fa;
-    border: 1px solid #d0d7de;
+    background-color: var(--light-theme-code-bg);
+    border: 1px solid var(--light-theme-code-border);
 }
 
 pre > code {
@@ -350,6 +367,10 @@ html.dark-theme .toc-panel {
     border-bottom: 1px solid #e1e4e8;
     background: #f8f9fa;
     border-radius: 8px 8px 0 0;
+    flex-shrink: 0; /* 防止头部被压缩 */
+    position: sticky; /* 保持头部固定在顶部 */
+    top: 0;
+    z-index: 10;
 }
 
 /* 深色主题下的目录头部 */
@@ -414,6 +435,9 @@ html.dark-theme .toc-toggle:hover {
     flex: 1;
     overflow-y: auto;
     padding: 0.4rem;
+    scroll-behavior: smooth;
+    /* 确保滚动区域高度正确 */
+    max-height: calc(100vh - var(--header-height) - 6rem); /* 减去头部和边距 */
 }
 
 /* 目录列表 */
@@ -433,6 +457,7 @@ html.dark-theme .toc-toggle:hover {
     padding: 0;
 }
 
+/* TOC链接样式 */
 .toc-link {
     display: block;
     padding: 0.3rem 0.6rem;
@@ -443,6 +468,59 @@ html.dark-theme .toc-toggle:hover {
     line-height: 1.3;
     transition: all 0.2s ease;
     word-wrap: break-word;
+    position: relative; /* 为编辑按钮定位 */
+}
+
+/* TOC项目容器 - 为悬停编辑按钮做准备 */
+.toc-item {
+    position: relative;
+}
+
+/* 悬停编辑按钮 */
+.toc-edit-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--c-accent-blue);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 深色主题下的编辑按钮 */
+html.dark-theme .toc-edit-btn {
+    background: #58a6ff;
+    color: #1a1a1a;
+}
+
+/* 悬停时显示编辑按钮 */
+.toc-item:hover .toc-edit-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 编辑按钮悬停效果 */
+.toc-edit-btn:hover {
+    background: var(--c-accent-green);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 深色主题下编辑按钮悬停 */
+html.dark-theme .toc-edit-btn:hover {
+    background: #3fb950;
 }
 
 /* 深色主题下的目录链接 */
@@ -475,7 +553,87 @@ html.dark-theme .toc-link.active {
     color: #1a1a1a;
 }
 
-/* 不同级别的目录项 */
+/* TOC item base styles */
+.toc-item {
+    position: relative;
+}
+
+/* 树状连接线基础样式 - 只在当前章节上显示 */
+.toc-item.current-chapter-tree::before,
+.toc-item.current-chapter-tree::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    border-left: 1px solid #d0d7de;
+    z-index: 1;
+}
+
+/* 深色主题下的连接线颜色 */
+html.dark-theme .toc-item.current-chapter-tree::before,
+html.dark-theme .toc-item.current-chapter-tree::after {
+    border-left-color: #515862;
+}
+
+/* 垂直连接线 - 连接到子级 */
+.toc-item.current-chapter-tree::before {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--indent-level, 0) * 16px + 8px);
+    border-left-width: 1px;
+}
+
+/* 水平连接线 - 连接到文本 */
+.toc-item.current-chapter-tree::after {
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    left: calc(var(--indent-level, 0) * 16px + 8px);
+    border-top: 1px solid #d0d7de;
+    border-left: none;
+}
+
+/* 深色主题下的水平连接线 */
+html.dark-theme .toc-item.current-chapter-tree::after {
+    border-top-color: #515862;
+}
+
+/* 当前章节中最后一个子项不显示下半部分的垂直线 */
+.toc-item.current-chapter-tree:not(:has(~ .toc-item.current-chapter-tree))::before {
+    bottom: 50%;
+}
+
+/* 顶级项目不显示连接线 */
+.toc-item.level-1.current-chapter-tree::before,
+.toc-item.level-1.current-chapter-tree::after {
+    display: none;
+}
+
+/* 不同级别的目录项 - 重新设计缩进 */
+.toc-item.level-1 {
+    --indent-level: 0;
+}
+
+.toc-item.level-2 {
+    --indent-level: 1;
+}
+
+.toc-item.level-3 {
+    --indent-level: 2;
+}
+
+.toc-item.level-4 {
+    --indent-level: 3;
+}
+
+.toc-item.level-5 {
+    --indent-level: 4;
+}
+
+.toc-item.level-6 {
+    --indent-level: 5;
+}
+
+/* 目录链接样式 - 根据层级调整缩进 */
 .toc-item.level-1 > .toc-link {
     font-weight: 600;
     padding-left: 0.6rem;
@@ -483,30 +641,30 @@ html.dark-theme .toc-link.active {
 }
 
 .toc-item.level-2 > .toc-link {
-    padding-left: 1.2rem;
+    padding-left: calc(1 * 16px + 16px + 0.6rem); /* 树线宽度 + 间距 */
     font-weight: 500;
     font-size: 1.15rem;
 }
 
 .toc-item.level-3 > .toc-link {
-    padding-left: 1.8rem;
+    padding-left: calc(2 * 16px + 16px + 0.6rem);
     font-weight: 400;
     font-size: 1.1rem;
 }
 
 .toc-item.level-4 > .toc-link {
-    padding-left: 2.4rem;
+    padding-left: calc(3 * 16px + 16px + 0.6rem);
     font-weight: 400;
     font-size: 1.05rem;
 }
 
 .toc-item.level-5 > .toc-link {
-    padding-left: 3rem;
+    padding-left: calc(4 * 16px + 16px + 0.6rem);
     font-size: 1rem;
 }
 
 .toc-item.level-6 > .toc-link {
-    padding-left: 3.6rem;
+    padding-left: calc(5 * 16px + 16px + 0.6rem);
     font-size: 0.95rem;
 }
 
@@ -540,7 +698,8 @@ html.dark-theme .toc-link.active {
     overflow-y: auto;
     padding: 0.5rem;
     font-size: 1.2rem; /* 减小字体大小 */
-    max-height: calc(100vh - 8rem); /* 确保目录列表不会超出容器 */
+    /* 调整最大高度，留出头部空间 */
+    max-height: calc(100% - 60px); /* 约等于头部高度 */
 }
 
 /* 目录折叠状态 */
@@ -562,15 +721,17 @@ html.dark-theme .toc-link.active {
 
 .toc-list a {
     display: block;
-    padding: 0.3rem 0.5rem; /* 增加内边距 */
+    padding: 0.3rem 0.5rem;
     color: var(--c-base-01);
     text-decoration: none;
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2; /* 减小行高 */
+    line-height: 1.2;
+    position: relative;
+    border-left: 3px solid transparent;
 }
 
 /* 深色主题下的目录链接 */
@@ -582,24 +743,34 @@ html.dark-theme .toc-list a {
     background-color: #e1e4e8;
     color: var(--c-accent-blue);
     text-decoration: none;
+    transform: translateX(2px);
+    border-left-color: var(--c-accent-blue);
 }
 
 /* 深色主题下的目录链接悬停 */
 html.dark-theme .toc-list a:hover {
     background-color: #30363d;
     color: #58a6ff;
+    transform: translateX(2px);
+    border-left-color: #58a6ff;
 }
 
 /* 活动目录项 */
 .toc-list a.active {
-    background-color: var(--c-accent-blue);
+    background: linear-gradient(135deg, var(--c-accent-blue), #0056d3);
     color: white;
+    font-weight: 600;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 103, 251, 0.3);
+    border-left-color: #ffffff;
 }
 
 /* 深色主题下的活动目录项 */
 html.dark-theme .toc-list a.active {
-    background-color: #58a6ff;
-    color: #1a1a1a;
+    background: linear-gradient(135deg, #58a6ff, #316dca);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(88, 166, 255, 0.3);
+    border-left-color: #ffffff;
 }
 
 /* 不同级别的目录项 */
@@ -609,27 +780,27 @@ html.dark-theme .toc-list a.active {
 }
 
 .toc-list li.level-2 > a {
-    padding-left: 1rem;
+    padding-left: calc(1 * 16px + 16px + 0.5rem); /* 树线宽度 + 间距 */
     font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
-    padding-left: 1.5rem;
+    padding-left: calc(2 * 16px + 16px + 0.5rem);
     font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
-    padding-left: 2rem;
+    padding-left: calc(3 * 16px + 16px + 0.5rem);
     font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
-    padding-left: 2.5rem;
+    padding-left: calc(4 * 16px + 16px + 0.5rem);
     font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
-    padding-left: 3rem;
+    padding-left: calc(5 * 16px + 16px + 0.5rem);
     font-size: 0.9em;
 }
 
@@ -784,6 +955,10 @@ html.dark-theme .toc-container {
     padding: 0.5rem 1rem;
     border-bottom: 1px solid #e1e4e8;
     background-color: #f6f8fa;
+    flex-shrink: 0; /* 防止被压缩 */
+    position: sticky; /* 固定在顶部 */
+    top: 0;
+    z-index: 10;
 }
 
 /* 深色主题下的目录头部 */
@@ -849,22 +1024,86 @@ html.dark-theme .toc-toggle:hover {
     padding-left: 0;
 }
 
+/* 编辑器中的树状连接线 */
 .toc-list li {
     margin: 0.1rem 0; /* 进一步减小行间距 */
     padding: 0;
+    position: relative; /* 为树状结构添加定位 */
 }
 
-.toc-list a {
-    display: block;
-    padding: 0.3rem 0.5rem; /* 增加内边距 */
-    color: var(--c-base-01);
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2; /* 减小行高 */
+/* 编辑器中的树状连接线 - 只在当前章节上显示 */
+.toc-list li.current-chapter-tree::before,
+.toc-list li.current-chapter-tree::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    border-left: 1px solid #d0d7de;
+    z-index: 1;
+}
+
+/* 深色主题下的连接线颜色 */
+html.dark-theme .toc-list li.current-chapter-tree::before,
+html.dark-theme .toc-list li.current-chapter-tree::after {
+    border-left-color: #515862;
+}
+
+/* 垂直连接线 - 连接到子级 */
+.toc-list li.current-chapter-tree::before {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--editor-indent-level, 0) * 16px + 8px);
+    border-left-width: 1px;
+}
+
+/* 水平连接线 - 连接到文本 */
+.toc-list li.current-chapter-tree::after {
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    left: calc(var(--editor-indent-level, 0) * 16px + 8px);
+    border-top: 1px solid #d0d7de;
+    border-left: none;
+}
+
+/* 深色主题下的水平连接线 */
+html.dark-theme .toc-list li.current-chapter-tree::after {
+    border-top-color: #515862;
+}
+
+/* 编辑器中最后一个当前章节子项不显示下半部分的垂直线 */
+.toc-list li.current-chapter-tree:not(:has(~ li.current-chapter-tree))::before {
+    bottom: 50%;
+}
+
+/* 编辑器中顶级项目不显示连接线 */
+.toc-list li.level-1.current-chapter-tree::before,
+.toc-list li.level-1.current-chapter-tree::after {
+    display: none;
+}
+
+/* 设置编辑器中不同级别的缩进变量 */
+.toc-list li.level-1 {
+    --editor-indent-level: 0;
+}
+
+.toc-list li.level-2 {
+    --editor-indent-level: 1;
+}
+
+.toc-list li.level-3 {
+    --editor-indent-level: 2;
+}
+
+.toc-list li.level-4 {
+    --editor-indent-level: 3;
+}
+
+.toc-list li.level-5 {
+    --editor-indent-level: 4;
+}
+
+.toc-list li.level-6 {
+    --editor-indent-level: 5;
 }
 
 /* 深色主题下的目录链接 */
@@ -903,27 +1142,27 @@ html.dark-theme .toc-list a.active {
 }
 
 .toc-list li.level-2 > a {
-    padding-left: 1rem;
+    padding-left: calc(1 * 16px + 16px + 0.5rem); /* 树线宽度 + 间距 */
     font-weight: 600;
 }
 
 .toc-list li.level-3 > a {
-    padding-left: 1.5rem;
+    padding-left: calc(2 * 16px + 16px + 0.5rem);
     font-weight: 500;
 }
 
 .toc-list li.level-4 > a {
-    padding-left: 2rem;
+    padding-left: calc(3 * 16px + 16px + 0.5rem);
     font-weight: 400;
 }
 
 .toc-list li.level-5 > a {
-    padding-left: 2.5rem;
+    padding-left: calc(4 * 16px + 16px + 0.5rem);
     font-size: 0.95em;
 }
 
 .toc-list li.level-6 > a {
-    padding-left: 3rem;
+    padding-left: calc(5 * 16px + 16px + 0.5rem);
     font-size: 0.9em;
 }
 
@@ -1692,8 +1931,8 @@ html {
 
 html.dark-theme .c-article__main,
 body.dark-theme .c-article__main {
-    color: #999999;
-    opacity: 0.9;
+    color: var(--dark-theme-text);
+    opacity: 0.95;
 }
 
 html.dark-theme h1,
@@ -1708,8 +1947,7 @@ body.dark-theme h3,
 body.dark-theme h4,
 body.dark-theme h5,
 body.dark-theme h6 {
-    color: #fff;
-    opacity: 0.9;
+    color: var(--dark-theme-heading);
 }
 
 body.dark-theme .c-archives__list .c-archives__item {
@@ -1730,14 +1968,14 @@ body.dark-theme a:hover {
 
 body.dark-theme code,
 body.dark-theme pre {
-    background-color: #161b22;
-    border-color: #30363d;
-    color: #e6edf3;
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
+    color: var(--dark-theme-text);
 }
 
 body.dark-theme code {
-    background-color: rgba(110, 118, 129, 0.4); /* 文章正文中的行内代码保持背景色 */
-    border-color: rgba(110, 118, 129, 0.4);
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
 }
 
 /* 代码块内的代码元素应该是透明背景 */
@@ -1749,8 +1987,8 @@ body.dark-theme pre code {
 }
 
 body.dark-theme .highlight {
-    background-color: #161b22;
-    border-color: #30363d;
+    background-color: var(--dark-theme-code-bg);
+    border-color: var(--dark-theme-code-border);
 }
 
 body.dark-theme .table th {
@@ -1760,6 +1998,31 @@ body.dark-theme .table th {
 
 body.dark-theme .table td {
     border-color: #444C56;
+}
+
+/* 深色主题下修复 var(--c-base-02) 颜色可见性问题 */
+body.dark-theme .c-archives__year,
+body.dark-theme .c-article__title,
+body.dark-theme .c-page__header h1,
+body.dark-theme .site-title,
+body.dark-theme .site-title:visited {
+    color: var(--dark-theme-heading); /* 使用专门的深色主题标题颜色 */
+}
+
+body.dark-theme .c-article__main strong {
+    color: var(--dark-theme-heading); /* 修复加粗文本在深色主题下的可见性 */
+}
+
+html.dark-theme .c-archives__year,
+html.dark-theme .c-article__title,
+html.dark-theme .c-page__header h1,
+html.dark-theme .site-title,
+html.dark-theme .site-title:visited {
+    color: var(--dark-theme-heading);
+}
+
+html.dark-theme .c-article__main strong {
+    color: var(--dark-theme-heading);
 }
 
 body.dark-theme blockquote {
@@ -1812,8 +2075,8 @@ body.dark-theme .c-article__title a:visited {
 /* 浅色主题 */
 html.light-theme,
 body.light-theme {
-    background-color: #f5f5f5;
-    color: #333333;
+    background-color: var(--light-theme-background);
+    color: var(--light-theme-text);
 }
 
 html.light-theme h1,
@@ -1828,7 +2091,29 @@ body.light-theme h3,
 body.light-theme h4,
 body.light-theme h5,
 body.light-theme h6 {
-    color: #333333;
+    color: var(--light-theme-heading);
+}
+
+html.light-theme a,
+body.light-theme a {
+    color: var(--light-theme-link);
+}
+
+html.light-theme a:hover,
+body.light-theme a:hover {
+    color: var(--light-theme-link-hover);
+}
+
+html.light-theme code,
+body.light-theme code {
+    background-color: var(--light-theme-code-bg);
+    border-color: var(--light-theme-code-border);
+}
+
+html.light-theme pre,
+body.light-theme pre {
+    background-color: var(--light-theme-code-bg);
+    border-color: var(--light-theme-code-border);
 }
 
 /* ==========================================================================
@@ -1917,6 +2202,7 @@ html.dark-theme .theme-switch input:checked + .switch {
     flex-shrink: 0; /* 防止标题被压缩 */
     font-size: 2.6rem; /* 保持标题大小 */
     line-height: 1.2; /* 稍微增加行高以更好对齐 */
+    letter-spacing: normal; /* 重置字符间距为正常 */
 }
 
 /* 页面标题样式 */
@@ -1978,6 +2264,7 @@ html.dark-theme .header-date {
     
     .title-nav-wrapper h1 {
         font-size: 2.2rem; /* 略微减小标题字号 */
+        letter-spacing: normal; /* 保持正常字符间距 */
     }
     
     .header-nav {
@@ -2015,20 +2302,24 @@ html.dark-theme .header-date {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #f5f5f5;
+    background-color: var(--light-theme-header-bg);
     z-index: 100;
-    padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 8px 0;
+    box-shadow: 0 2px 8px var(--light-theme-shadow);
     height: var(--header-height); /* 确保header高度与CSS变量一致 */
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 html.dark-theme .c-page__header {
-    background-color: var(--dark-theme-background);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2); /* 增强暗色主题下的阴影效果 */
-    border-bottom: 1px solid #333; /* 添加底部边框以增强分离感 */
+    background-color: var(--dark-theme-header-bg);
+    box-shadow: 0 2px 8px var(--dark-theme-shadow);
+    border-bottom: 1px solid var(--dark-theme-border);
     height: var(--header-height); /* 确保header高度与CSS变量一致 */
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 /* 暗色主题下的页面标题样式 */
@@ -2050,6 +2341,7 @@ html.dark-theme .c-page__header h1 {
     margin-bottom: calc(var(--spacing-unit) / 4); /* 7.5px - 进一步减小标题下方间距 */
     color: var(--c-base-02);
     font-weight: 350; /* 统一修改为350 */
+    letter-spacing: normal; /* 重置字符间距为正常 */
 }
 
 .c-page__header p {
