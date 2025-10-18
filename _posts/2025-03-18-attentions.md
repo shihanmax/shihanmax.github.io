@@ -8,15 +8,13 @@ title: Attentions
 tags: ["Deep Learning", "NLP", "attention"]
 ---
 
-## Attention机制小结
-
-### 1. 背景与动机
+## 1. 背景与动机
 
 Attention机制最早在machine translation中被提出，用于seq2seq的解码过程中与encoder作注意力计算。
 
 在传统seq2seq模型中，输入通过encoder计算得到一个固定维度的中间向量（context vector），decoder接受中间向量后解码得到输出。这里存在一个关键问题：**固定维度的中间向量容量有限，无法完整保留长序列的所有信息**，导致信息瓶颈问题。针对这个现象，[Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf)提出了attention机制。
 
-### 2. Seq2Seq中的Attention
+## 2. Seq2Seq中的Attention
 
 以一般的seq2seq模型为例，定义如下：
 
@@ -40,16 +38,16 @@ $$e_{ti} = a(\rm{s}_{t-1}, \mathrm{h}_i)$$
 
 这里$a(\cdot)$是alignment函数（或称为scoring function），用于计算query和key之间的相关性。
 
-### 3. 常见的Attention变体
+## 3. 常见的Attention变体
 
-#### 3.1 按信息来源分类
+### 3.1 按信息来源分类
 
 - **Content-based Attention**: 基于内容计算attention权重，依赖于query和key的语义相关性
 - **Location-based Attention**: 基于位置信息计算attention权重，主要用于图像等有空间结构的数据
 
-#### 3.2 经典Attention机制
+### 3.2 经典Attention机制
 
-##### 3.2.1 Bahdanau Attention (Additive Attention)
+#### 3.2.1 Bahdanau Attention (Additive Attention)
 
 最早提出的attention机制，使用加性模型计算alignment score：
 
@@ -62,7 +60,7 @@ $$e_{ti} = \mathbf{v}^T \tanh(\mathbf{W}_1 \rm{s}_{t-1} + \mathbf{W}_2 \mathrm{h
 - 参数量：$d_h \times d_s + d_h \times d_h + d_h$
 - 计算复杂度：$O(n \times d_h)$
 
-##### 3.2.2 Luong Attention (Multiplicative Attention)
+#### 3.2.2 Luong Attention (Multiplicative Attention)
 
 [Luong et al., 2015](https://arxiv.org/pdf/1508.04025.pdf)提出了三种变体：
 
@@ -89,7 +87,7 @@ $$e_{ti} = \mathbf{v}^T \tanh(\mathbf{W}[\rm{s}_{t}; \mathrm{h}_i])$$
 - 与Bahdanau类似，但使用拼接而非分别变换
 - 参数量：$(d_s + d_h) \times d_h + d_h$
 
-##### 3.2.3 Scaled Dot-Product Attention
+#### 3.2.3 Scaled Dot-Product Attention
 
 [Vaswani et al., 2017](https://arxiv.org/pdf/1706.03762.pdf)在Transformer中提出，是目前最广泛使用的attention机制：
 
@@ -121,9 +119,9 @@ $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
 - 时间复杂度：$O(n^2 d_k)$
 - 空间复杂度：$O(n^2)$（需存储attention矩阵）
 
-### 4. Self-Attention vs Cross-Attention
+## 4. Self-Attention vs Cross-Attention
 
-#### 4.1 Self-Attention（自注意力）
+### 4.1 Self-Attention（自注意力）
 
 $Q, K, V$来自**同一个序列**：
 
@@ -138,7 +136,7 @@ $$Q = K = V = X$$
 
 **示例**：在句子"The animal didn't cross the street because it was too tired"中，self-attention可以让模型学习到"it"指向"animal"。
 
-#### 4.2 Cross-Attention（交叉注意力）
+### 4.2 Cross-Attention（交叉注意力）
 
 $Q$来自一个序列，$K, V$来自**另一个序列**：
 
@@ -152,7 +150,7 @@ $$Q = X_{\text{target}}, \quad K = V = X_{\text{source}}$$
 - 图像captioning（文本attend to图像特征）
 - Vision-Language模型（CLIP, BLIP等）
 
-### 5. Multi-Head Attention
+## 5. Multi-Head Attention
 
 **核心思想**：并行运行多个attention head，每个head关注不同的表示子空间。
 
@@ -176,7 +174,7 @@ $$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
 **计算复杂度**：
 与单个scaled dot-product attention相同：$O(n^2 d)$
 
-### 6. Causal/Masked Attention
+## 6. Causal/Masked Attention
 
 **应用场景**：自回归语言模型（GPT系列）
 
@@ -202,16 +200,16 @@ q3 [  ✓   ✓   ✓   ✗  ]  (只能看到k1, k2, k3)
 q4 [  ✓   ✓   ✓   ✓  ]  (可以看到全部)
 ```
 
-### 7. Attention机制的现代应用
+## 7. Attention机制的现代应用
 
-#### 7.1 Natural Language Processing
+### 7.1 Natural Language Processing
 
 - **BERT**: Bidirectional self-attention用于预训练
 - **GPT系列**: Causal self-attention用于文本生成
 - **T5**: Encoder-decoder架构，同时使用self和cross-attention
 - **LLaMA/Llama 2/3**: 使用Grouped-Query Attention（GQA）减少KV cache
 
-#### 7.2 Computer Vision
+### 7.2 Computer Vision
 
 - **Vision Transformer (ViT)**: 将图像分割成patches，使用self-attention
   - 输入：$16\times16$或$32\times32$的image patches
@@ -227,42 +225,42 @@ q4 [  ✓   ✓   ✓   ✓  ]  (可以看到全部)
   - Shifted window attention降低复杂度到$O(n)$
   - 层级结构，适合密集预测任务
 
-#### 7.3 Multimodal
+### 7.3 Multimodal
 
 - **CLIP**: Vision-text对比学习，使用双编码器架构
 - **BLIP**: 使用cross-attention融合图像和文本
 - **Flamingo**: Few-shot learning，cross-attention连接vision和language
 
-#### 7.4 Audio/Speech
+### 7.4 Audio/Speech
 
 - **Whisper**: 语音识别，encoder-decoder transformer架构
 - **AudioLM**: 音频生成
 - **MusicGen**: 音乐生成，使用multi-stream modeling
 
-### 8. 效率优化变体
+## 8. 效率优化变体
 
 标准attention的$O(n^2)$复杂度在长序列上成为瓶颈，催生了众多高效变体：
 
-#### 8.1 Linear Attention
+### 8.1 Linear Attention
 - **Linformer**: 将$K, V$投影到低维：$O(n)$复杂度
 - **Performer**: 使用随机特征近似softmax：$O(n)$复杂度
 
-#### 8.2 Sparse Attention
+### 8.2 Sparse Attention
 - **Sparse Transformer**: 固定稀疏模式
 - **Longformer**: Sliding window + global attention
 - **BigBird**: Random + window + global attention
 
-#### 8.3 FlashAttention
+### 8.3 FlashAttention
 - **核心创新**: IO-aware算法，优化GPU内存访问
 - **效果**: 2-4x加速，支持更长上下文
 - **应用**: 广泛用于GPT-4、LLaMA等模型训练
 
-#### 8.4 Grouped-Query Attention (GQA)
+### 8.4 Grouped-Query Attention (GQA)
 - **动机**: 减少KV cache大小，降低推理成本
 - **方法**: 多个query head共享同一组KV head
 - **应用**: LLaMA 2, Mistral等模型
 
-### 9. Attention权重可视化与可解释性
+## 9. Attention权重可视化与可解释性
 
 Attention权重提供了一定的可解释性：
 
@@ -275,23 +273,23 @@ Attention权重提供了一定的可解释性：
 - Multi-head中不同head关注点不同
 - 深层网络的attention解释性较弱
 
-### 10. 实现要点
+## 10. 实现要点
 
-#### 10.1 数值稳定性
+### 10.1 数值稳定性
 - Softmax前进行scaling（$1/\sqrt{d_k}$）
 - 使用log-space计算避免overflow
 
-#### 10.2 掩码机制
+### 10.2 掩码机制
 - Padding mask：处理变长序列
 - Causal mask：自回归生成
 - Attention mask：控制可见范围
 
-#### 10.3 位置编码
+### 10.3 位置编码
 - Absolute: Sinusoidal或learnable
 - Relative: T5-style相对位置编码
 - Rotary (RoPE): 旋转位置编码，用于LLaMA等
 
-### 参考文献
+## 参考文献
 
 1. [Bahdanau et al., 2015] Neural Machine Translation by Jointly Learning to Align and Translate
 2. [Luong et al., 2015] Effective Approaches to Attention-based Neural Machine Translation  

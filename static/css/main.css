@@ -92,6 +92,25 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* 文章正文段落优化 */
+.c-article__main p {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+/* 文章正文列表优化 */
+.c-article__main ul,
+.c-article__main ol {
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+    margin-left: 0;
+    padding-left: 2.5rem; /* 使用padding代替margin避免溢出 */
+}
+
+.c-article__main li {
+    margin-bottom: 0.5rem;
+}
+
 /* 中文字符优化 */
 body, p, h1, h2, h3, h4, h5, h6, li, td, th {
     -webkit-font-smoothing: antialiased;
@@ -1787,26 +1806,6 @@ body.dark-theme .MathJax_Display {
     margin-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
 }
 
-.c-article__main h2 {
-    line-height: 1.5;
-    font-size: 2.4rem;
-}
-
-.c-article__main h3 {
-    line-height: 1.5;
-    font-size: 2rem;
-}
-
-.c-article__main h4 {
-    line-height: 1.6;
-    font-size: 1.8rem;
-}
-
-.c-article__main h5 {
-    line-height: 1.55;
-    font-size: 1.8rem;
-}
-
 .c-article__main strong {
     color: var(--c-base-02);
     font-weight: 350; /* 统一修改为350 */
@@ -1819,6 +1818,86 @@ body.dark-theme .MathJax_Display {
 .c-article__main ul,
 .c-article__main ol {
     margin-left: 2.1rem;
+}
+
+/* Article headings with gradient colors - defined after .c-article__main for proper specificity */
+.c-article__main h1 {
+    font-size: 3.2rem !important;
+    font-weight: 400 !important;
+    color: #0F4C81 !important; /* 深海蓝 */
+    margin-top: 3rem !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.3 !important;
+}
+
+.c-article__main h2 {
+    font-size: 2.6rem !important;
+    font-weight: 400 !important;
+    color: #1565C0 !important; /* 钴蓝 */
+    margin-top: 2.5rem !important;
+    margin-bottom: 1.2rem !important;
+    line-height: 1.35 !important;
+}
+
+.c-article__main h3 {
+    font-size: 2.2rem !important;
+    font-weight: 400 !important;
+    color: #1976D2 !important; /* 标准蓝 */
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.4 !important;
+}
+
+.c-article__main h4 {
+    font-size: 2.0rem !important;
+    font-weight: 400 !important;
+    color: #42A5F5 !important; /* 天蓝 */
+    margin-top: 1.8rem !important;
+    margin-bottom: 0.9rem !important;
+    line-height: 1.4 !important;
+}
+
+.c-article__main h5 {
+    font-size: 1.9rem !important;
+    font-weight: 400 !important;
+    color: #64B5F6 !important; /* 浅天蓝 */
+    margin-top: 1.6rem !important;
+    margin-bottom: 0.8rem !important;
+    line-height: 1.45 !important;
+}
+
+.c-article__main h6 {
+    font-size: 1.8rem !important;
+    font-weight: 400 !important;
+    color: #90CAF9 !important; /* 淡蓝 */
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.8rem !important;
+    line-height: 1.45 !important;
+}
+
+/* Dark theme headings - brighter shades for contrast */
+html.dark-theme .c-article__main h1 {
+    color: #64B5F6 !important; /* 明亮蓝 */
+}
+
+html.dark-theme .c-article__main h2 {
+    color: #42A5F5 !important; /* 亮蓝 */
+}
+
+html.dark-theme .c-article__main h3 {
+    color: #29B6F6 !important; /* 青蓝 */
+}
+
+html.dark-theme .c-article__main h4 {
+    color: #4FC3F7 !important; /* 浅青蓝 */
+}
+
+html.dark-theme .c-article__main h5 {
+    color: #81D4FA !important; /* 淡青蓝 */
+}
+
+html.dark-theme .c-article__main h6 {
+    color: #B3E5FC !important; /* 极淡蓝 */
 }
 
 /* ==========================================================================
@@ -1937,21 +2016,6 @@ html.dark-theme .c-article__main,
 body.dark-theme .c-article__main {
     color: var(--dark-theme-text);
     opacity: 0.95;
-}
-
-html.dark-theme h1,
-html.dark-theme h2,
-html.dark-theme h3,
-html.dark-theme h4,
-html.dark-theme h5,
-html.dark-theme h6,
-body.dark-theme h1,
-body.dark-theme h2,
-body.dark-theme h3,
-body.dark-theme h4,
-body.dark-theme h5,
-body.dark-theme h6 {
-    color: var(--dark-theme-heading);
 }
 
 body.dark-theme .c-archives__list .c-archives__item {
