@@ -84,28 +84,34 @@ class PostManager:
         return None
     
     def _load_posts(self) -> List[Dict]:
-        """加载所有文章"""
+        """Recursively load all posts from _posts directory and subdirectories"""
         posts = []
         
         if not os.path.exists(self.posts_dir):
             print(f"Posts directory does not exist: {self.posts_dir}")
             return posts
         
-        files = [f for f in os.listdir(self.posts_dir) if f.endswith('.md')]
-        print(f"Found {len(files)} markdown files in {self.posts_dir}")
+        # Recursively walk through all subdirectories
+        markdown_files = []
+        for root, dirs, files in os.walk(self.posts_dir):
+            for filename in files:
+                if filename.endswith('.md'):
+                    filepath = os.path.join(root, filename)
+                    markdown_files.append((filename, filepath))
         
-        for filename in files:
+        print(f"Found {len(markdown_files)} markdown files in {self.posts_dir} (including subdirectories)")
+        
+        for filename, filepath in markdown_files:
             if not filename.endswith('.md'):
                 continue
             
-            # 解析文件名
+            # Parse filename
             parsed = self._parse_filename(filename)
             if not parsed:
                 print(f"Skipping file with unparseable name: {filename}")
                 continue
             
             year, month, day, slug = parsed
-            filepath = os.path.join(self.posts_dir, filename)
             
             try:
                 with open(filepath, 'r', encoding='utf-8') as f:

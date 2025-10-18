@@ -197,14 +197,27 @@
 
                     </div>
                 </div>
-                <!-- 切换明暗模式的按钮 -->
-                <label class="theme-switch" for="theme-toggle">
-                    <input type="checkbox" id="theme-toggle" style="display:none">
-                    <span class="switch">
-                        <span class="icon" id="theme-icon-moon">&#127762;</span> 
-                        <span class="icon" id="theme-icon-sun">&#127773;</span>
-                    </span>
-                </label>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <!-- 编辑按钮（仅对管理员和文章页面显示） -->
+                    {% if page_type == 'post' %}
+                    <div class="c-article__actions admin-only" style="display: none; margin: 0;">
+                        <a href="{{ url_for('edit_post', year=post.year, month=post.month, slug=post.slug) }}" 
+                           class="btn btn-edit" 
+                           title="编辑文章">
+                            编辑
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- 切换明暗模式的按钮 -->
+                    <label class="theme-switch" for="theme-toggle">
+                        <input type="checkbox" id="theme-toggle" style="display:none">
+                        <span class="switch">
+                            <span class="icon" id="theme-icon-moon">&#127762;</span> 
+                            <span class="icon" id="theme-icon-sun">&#127773;</span>
+                        </span>
+                    </label>
+                </div>
             </div>
         </header>
 

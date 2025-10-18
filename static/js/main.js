@@ -153,7 +153,7 @@
 
         // 点击返回顶部
         button.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            fastScrollTo(0);
         });
     }
 
@@ -200,11 +200,34 @@
         // 计算目标位置
         const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
         
-        // 平滑滚动
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
+        // 使用更快的自定义滚动动画
+        fastScrollTo(targetPosition);
+    }
+    
+    /**
+     * 快速滚动到指定位置
+     */
+    function fastScrollTo(targetPosition) {
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        const duration = Math.min(400, Math.abs(distance) * 0.8); // 更快的滚动，最长400ms
+        const startTime = performance.now();
+        
+        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4); // 更快的缓动函数
+        
+        const scrollStep = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeOutQuart(progress);
+            
+            window.scrollTo(0, startPosition + distance * easedProgress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(scrollStep);
+            }
+        };
+        
+        requestAnimationFrame(scrollStep);
     }
 
     /**

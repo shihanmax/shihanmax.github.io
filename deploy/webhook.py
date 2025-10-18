@@ -34,11 +34,6 @@ logger.info(f"load env from {env_path}, succeed: {load_result}")
 app = Flask(__name__)
 
 
-logger.info("环境变量:")
-for key in os.environ:
-    logger.info(f"{key}: {os.environ[key]}")
-    
-
 # 博客根目录
 BLOG_ROOT = "."
 

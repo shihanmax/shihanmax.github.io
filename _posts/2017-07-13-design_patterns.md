@@ -1,10 +1,10 @@
 ---
-date: 2025-02-07 21:06:09
-display_type: note
+date: 2017-07-13 21:06:09
+display_type: post
 layout: post
 mathjax: true
 syntaxHighlighter: true
-tags:
+tags: 
 title: 设计模式简述
 ---
 
