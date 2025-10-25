@@ -47,7 +47,7 @@ class Solution:
         return r
 ```
 
-## [704 二分查找](https://leetcode.cn/problems/binary-search/description/)
+### [704 二分查找](https://leetcode.cn/problems/binary-search/description/)
 
 左右闭合，查中点，循环条件l<=r
 
@@ -69,7 +69,7 @@ class Solution:
         return -1
 ```
 
-[27 移除元素](https://leetcode.cn/problems/remove-element/description/)
+### [27 移除元素](https://leetcode.cn/problems/remove-element/description/)
 快慢指针，快指针先找到第一个不等于 val 的值，将其值与慢指针交换（复制到慢指针上），随后快慢指针各走1；循环条件：fast < len(nums)
 
 ```python
