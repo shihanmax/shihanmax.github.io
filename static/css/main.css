@@ -29,22 +29,25 @@
     --c-accent-blue: #2563EB;
     --c-accent-green: #10B981;
     
-    /* 优化的暗黑主题配色 */
-    --dark-theme-background: #0F172A;
-    --dark-theme-text: #E2E8F0;
-    --dark-theme-heading: #F1F5F9;
-    --dark-theme-link: #60A5FA;
-    --dark-theme-link-hover: #93C5FD;
-    --dark-theme-button-bg: #1E293B;
-    --dark-theme-button-border: #334155;
-    --dark-theme-code-bg: #1E293B;
-    --dark-theme-code-border: #334155;
-    --dark-theme-header-bg: #1E293B;
-    --dark-theme-border: #334155;
-    --dark-theme-shadow: rgba(0, 0, 0, 0.3);
+    /* VSCode Dark 风格暗黑主题配色 - 灰色调 */
+    --dark-theme-background: #1E1E1E;
+    --dark-theme-text: #D4D4D4;
+    --dark-theme-heading: #E5E5E5;
+    --dark-theme-link: #9CDCFE;
+    --dark-theme-link-hover: #B4D9FE;
+    --dark-theme-button-bg: #252526;
+    --dark-theme-button-border: #3E3E42;
+    --dark-theme-code-bg: #1E1E1E;
+    --dark-theme-code-border: #3E3E42;
+    --dark-theme-header-bg: #252526;
+    --dark-theme-border: #3E3E42;
+    --dark-theme-shadow: rgba(0, 0, 0, 0.4);
     
     /* Layout dimensions */
     --header-height: 56px; /* Optimized height: 80% of original 70px - 更新为实际高度 */
+    
+    /* Mobile header height */
+    --header-height-mobile: 140px; /* 移动端需要更高的header以容纳垂直布局，增加到140px以防止遮挡 */
     
     /* Breakpoints */
     --bp-sm: 45rem; /* 450px */
@@ -78,6 +81,17 @@ html {
     min-height: 100%;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+}
+
+/* 主容器适配固定header */
+.u-container {
+    padding-top: calc(var(--header-height) + 2rem); /* 桌面端增加2rem空白，创造呼吸感 */
+}
+
+@media screen and (max-width: 768px) {
+    .u-container {
+        padding-top: calc(var(--header-height-mobile) + 4rem); /* 移动端增加4rem空白，创造更多呼吸感 */
+    }
 }
 
 body {
@@ -341,6 +355,15 @@ html.dark-theme .logged-in-title::after {
     margin-top: 0; /* 与页面顶部对齐 */
 }
 
+/* 桌面端文章标题和内容上方留白 */
+.c-article__header {
+    margin-top: 1.5rem; /* 桌面端标题上方留白 */
+}
+
+.c-article__main {
+    margin-top: 1rem; /* 桌面端内容上方留白 */
+}
+
 /* 独立的悬浮目录面板 */
 .toc-panel {
     position: fixed;
@@ -361,11 +384,11 @@ html.dark-theme .logged-in-title::after {
     box-sizing: border-box;
 }
 
-/* 深色主题下的目录面板 */
+/* 深色主题下的目录面板 - VSCode Dark 风格 */
 html.dark-theme .toc-panel {
-    background: #2d2d2d;
-    border: 1px solid #515862;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: #252526;
+    border: 1px solid #3E3E42;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* 目录面板折叠状态 */
@@ -392,10 +415,10 @@ html.dark-theme .toc-panel {
     z-index: 10;
 }
 
-/* 深色主题下的目录头部 */
+/* 深色主题下的目录头部 - VSCode Dark 风格 */
 html.dark-theme .toc-header {
-    background: #2d2d2d;
-    border-bottom-color: #515862;
+    background: #252526;
+    border-bottom-color: #3E3E42;
 }
 
 .toc-header h3 {
@@ -405,9 +428,9 @@ html.dark-theme .toc-header {
     color: var(--c-base-01);
 }
 
-/* 深色主题下的目录标题 */
+/* 深色主题下的目录标题 - VSCode Dark 风格 */
 html.dark-theme .toc-header h3 {
-    color: #d8d8d8;
+    color: #CCCCCC;
 }
 
 /* 目录切换按钮 */
@@ -427,10 +450,10 @@ html.dark-theme .toc-header h3 {
     height: 28px;
 }
 
-/* 深色主题下的目录切换按钮 */
+/* 深色主题下的目录切换按钮 - VSCode Dark 风格 */
 html.dark-theme .toc-toggle {
-    border-color: #515862;
-    color: #d8d8d8;
+    border-color: #3E3E42;
+    color: #CCCCCC;
 }
 
 .toc-toggle:hover {
@@ -438,10 +461,10 @@ html.dark-theme .toc-toggle {
     border-color: #8c959f;
 }
 
-/* 深色主题下的目录切换按钮悬停 */
+/* 深色主题下的目录切换按钮悬停 - VSCode Dark 风格 */
 html.dark-theme .toc-toggle:hover {
-    background-color: #515862;
-    border-color: #8b949e;
+    background-color: #3E3E42;
+    border-color: #555555;
 }
 
 .toc-icon {
@@ -519,10 +542,10 @@ html.dark-theme .toc-toggle:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* 深色主题下的编辑按钮 */
+/* 深色主题下的编辑按钮 - VSCode Dark 风格 */
 html.dark-theme .toc-edit-btn {
-    background: #58a6ff;
-    color: #1a1a1a;
+    background: #569CD6;
+    color: #1E1E1E;
 }
 
 /* 悬停时显示编辑按钮 */
@@ -537,14 +560,14 @@ html.dark-theme .toc-edit-btn {
     transform: translateY(-50%) scale(1.1);
 }
 
-/* 深色主题下编辑按钮悬停 */
+/* 深色主题下编辑按钮悬停 - VSCode Dark 风格 */
 html.dark-theme .toc-edit-btn:hover {
-    background: #3fb950;
+    background: #4EC9B0;
 }
 
-/* 深色主题下的目录链接 */
+/* 深色主题下的目录链接 - VSCode Dark 风格 */
 html.dark-theme .toc-link {
-    color: #d8d8d8;
+    color: #D4D4D4;
 }
 
 .toc-link:hover {
@@ -553,10 +576,10 @@ html.dark-theme .toc-link {
     text-decoration: none;
 }
 
-/* 深色主题下的目录链接悬停 */
+/* 深色主题下的目录链接悬停 - VSCode Dark 风格 */
 html.dark-theme .toc-link:hover {
-    background-color: #515862;
-    color: #58a6ff;
+    background-color: #2A2D2E;
+    color: #9CDCFE;
 }
 
 /* 活动目录项 */
@@ -566,10 +589,10 @@ html.dark-theme .toc-link:hover {
     font-weight: 500;
 }
 
-/* 深色主题下的活动目录项 */
+/* 深色主题下的活动目录项 - VSCode Dark 风格 */
 html.dark-theme .toc-link.active {
-    background-color: #58a6ff;
-    color: #1a1a1a;
+    background-color: #37373D;
+    color: #FFFFFF;
 }
 
 /* TOC item base styles */
@@ -587,10 +610,10 @@ html.dark-theme .toc-link.active {
     z-index: 1;
 }
 
-/* 深色主题下的连接线颜色 */
+/* 深色主题下的连接线颜色 - VSCode Dark 风格 */
 html.dark-theme .toc-item.current-chapter-tree::before,
 html.dark-theme .toc-item.current-chapter-tree::after {
-    border-left-color: #515862;
+    border-left-color: #3E3E42;
 }
 
 /* 垂直连接线 - 连接到子级 */
@@ -611,9 +634,9 @@ html.dark-theme .toc-item.current-chapter-tree::after {
     border-left: none;
 }
 
-/* 深色主题下的水平连接线 */
+/* 深色主题下的水平连接线 - VSCode Dark 风格 */
 html.dark-theme .toc-item.current-chapter-tree::after {
-    border-top-color: #515862;
+    border-top-color: #3E3E42;
 }
 
 /* 当前章节中最后一个子项不显示下半部分的垂直线 */
@@ -697,17 +720,35 @@ html.dark-theme .toc-item.current-chapter-tree::after {
     .post-container {
         flex-direction: column;
         min-height: auto;
-        margin-left: 0; /* 移动端移除左边距 */
-        margin-top: 0; /* 移动端与顶部对齐 */
+        margin-left: 0;
+        margin-top: 0;
+        padding-top: 0; /* 移除额外padding，由.u-container统一控制 */
+    }
+    
+    /* 移动端文章标题上方留白 */
+    .c-article__header {
+        margin-top: 2.5rem; /* 标题上方增加更多留白 */
+    }
+    
+    /* 移动端文章内容上方留白 */
+    .c-article__main {
+        margin-top: 2rem; /* 内容上方增加更多留白 */
     }
     
     .toc-panel {
-        display: none; /* 移动端隐藏目录面板 */
+        display: none !important; /* 移动端隐藏目录面板 */
     }
     
     .c-article {
-        order: 1; /* 文章内容放在前面 */
+        order: 1;
         overflow-y: visible;
+    }
+    
+    /* 移动端header固定时，确保内容不被遮挡 */
+    .c-page__header {
+        position: fixed;
+        height: auto;
+        min-height: var(--header-height);
     }
 }
 
@@ -960,10 +1001,10 @@ html.dark-theme .editor-container {
     flex-shrink: 0;
 }
 
-/* 深色主题下的目录容器 */
+/* 深色主题下的目录容器 - VSCode Dark 风格 */
 html.dark-theme .toc-container {
-    background-color: #161b22;
-    border-right-color: #30363d;
+    background-color: #252526;
+    border-right-color: #3E3E42;
 }
 
 /* 目录头部 */
@@ -980,10 +1021,10 @@ html.dark-theme .toc-container {
     z-index: 10;
 }
 
-/* 深色主题下的目录头部 */
+/* 深色主题下的目录头部 - VSCode Dark 风格 */
 html.dark-theme .toc-header {
-    background-color: #161b22;
-    border-bottom-color: #30363d;
+    background-color: #252526;
+    border-bottom-color: #3E3E42;
 }
 
 .toc-header h4 {
@@ -992,9 +1033,9 @@ html.dark-theme .toc-header {
     color: var(--c-base-01);
 }
 
-/* 深色主题下的目录标题 */
+/* 深色主题下的目录标题 - VSCode Dark 风格 */
 html.dark-theme .toc-header h4 {
-    color: #d8d8d8;
+    color: #CCCCCC;
 }
 
 /* 目录切换按钮 */
@@ -1008,19 +1049,19 @@ html.dark-theme .toc-header h4 {
     color: var(--c-base-01);
 }
 
-/* 深色主题下的目录切换按钮 */
+/* 深色主题下的目录切换按钮 - VSCode Dark 风格 */
 html.dark-theme .toc-toggle {
-    border-color: #30363d;
-    color: #d8d8d8;
+    border-color: #3E3E42;
+    color: #CCCCCC;
 }
 
 .toc-toggle:hover {
     background-color: #eaecef;
 }
 
-/* 深色主题下的目录切换按钮悬停 */
+/* 深色主题下的目录切换按钮悬停 - VSCode Dark 风格 */
 html.dark-theme .toc-toggle:hover {
-    background-color: #30363d;
+    background-color: #3E3E42;
 }
 
 /* 目录列表 */
@@ -1060,10 +1101,10 @@ html.dark-theme .toc-toggle:hover {
     z-index: 1;
 }
 
-/* 深色主题下的连接线颜色 */
+/* 深色主题下的连接线颜色 - VSCode Dark 风格 */
 html.dark-theme .toc-list li.current-chapter-tree::before,
 html.dark-theme .toc-list li.current-chapter-tree::after {
-    border-left-color: #515862;
+    border-left-color: #3E3E42;
 }
 
 /* 垂直连接线 - 连接到子级 */
@@ -1084,9 +1125,9 @@ html.dark-theme .toc-list li.current-chapter-tree::after {
     border-left: none;
 }
 
-/* 深色主题下的水平连接线 */
+/* 深色主题下的水平连接线 - VSCode Dark 风格 */
 html.dark-theme .toc-list li.current-chapter-tree::after {
-    border-top-color: #515862;
+    border-top-color: #3E3E42;
 }
 
 /* 编辑器中最后一个当前章节子项不显示下半部分的垂直线 */
@@ -1136,10 +1177,10 @@ html.dark-theme .toc-list a {
     text-decoration: none;
 }
 
-/* 深色主题下的目录链接悬停 */
+/* 深色主题下的目录链接悬停 - VSCode Dark 风格 */
 html.dark-theme .toc-list a:hover {
-    background-color: #30363d;
-    color: #58a6ff;
+    background-color: #2A2D2E;
+    color: #9CDCFE;
 }
 
 /* 活动目录项 */
@@ -1148,10 +1189,10 @@ html.dark-theme .toc-list a:hover {
     color: white;
 }
 
-/* 深色主题下的活动目录项 */
+/* 深色主题下的活动目录项 - VSCode Dark 风格 */
 html.dark-theme .toc-list a.active {
-    background-color: #58a6ff;
-    color: #1a1a1a;
+    background-color: #37373D;
+    color: #FFFFFF;
 }
 
 /* 不同级别的目录项 */
@@ -1640,7 +1681,6 @@ body.dark-theme .MathJax_Display {
     max-width: calc(866px - (var(--spacing-unit) * 2));
     margin-right: auto;
     margin-left: auto;
-    margin-top: calc(var(--header-height) + var(--spacing-unit)); /* 70px + 30px = 100px - 为固定header留出足够空间 */
     padding-right: var(--spacing-unit);
     padding-left: var(--spacing-unit);
     /* 移除额外的内边距，与Jekyll版本保持一致 */
@@ -1649,9 +1689,16 @@ body.dark-theme .MathJax_Display {
 @media screen and (max-width: 800px) {
     .u-container {
         max-width: calc(800px - var(--spacing-unit));
-        margin-top: calc(var(--header-height) + calc(var(--spacing-unit) * 1.5)); /* 70px + 45px = 115px - 移动端略加额外间距 */
         padding-right: calc(var(--spacing-unit) / 2);
         padding-left: calc(var(--spacing-unit) / 2);
+    }
+}
+
+/* 移动端容器额外优化 */
+@media screen and (max-width: 768px) {
+    .u-container {
+        padding-right: 1.5rem; /* 移动端左右留出舒适边距 */
+        padding-left: 1.5rem;
     }
 }
 
@@ -1875,29 +1922,29 @@ body.dark-theme .MathJax_Display {
     line-height: 1.45 !important;
 }
 
-/* Dark theme headings - brighter shades for contrast */
+/* Dark theme headings - VSCode Dark 风格灰色调 */
 html.dark-theme .c-article__main h1 {
-    color: #64B5F6 !important; /* 明亮蓝 */
+    color: #C586C0 !important; /* 紫灰色 - 最高级标题 */
 }
 
 html.dark-theme .c-article__main h2 {
-    color: #42A5F5 !important; /* 亮蓝 */
+    color: #DCDCAA !important; /* 淡金色 - 次级标题 */
 }
 
 html.dark-theme .c-article__main h3 {
-    color: #29B6F6 !important; /* 青蓝 */
+    color: #4EC9B0 !important; /* 青绿色 - 三级标题 */
 }
 
 html.dark-theme .c-article__main h4 {
-    color: #4FC3F7 !important; /* 浅青蓝 */
+    color: #569CD6 !important; /* 淡蓝色 - 四级标题 */
 }
 
 html.dark-theme .c-article__main h5 {
-    color: #81D4FA !important; /* 淡青蓝 */
+    color: #9CDCFE !important; /* 浅蓝色 - 五级标题 */
 }
 
 html.dark-theme .c-article__main h6 {
-    color: #B3E5FC !important; /* 极淡蓝 */
+    color: #CE9178 !important; /* 橙褐色 - 六级标题 */
 }
 
 /* ==========================================================================
@@ -2019,7 +2066,7 @@ body.dark-theme .c-article__main {
 }
 
 body.dark-theme .c-archives__list .c-archives__item {
-    border-top: 1px solid #515862;
+    border-top: 1px solid #3E3E42;
 }
 
 body.dark-theme img {
@@ -2060,12 +2107,12 @@ body.dark-theme .highlight {
 }
 
 body.dark-theme .table th {
-    background-color: #2d2d2d;
-    border-color: #444C56;
+    background-color: #252526;
+    border-color: #3E3E42;
 }
 
 body.dark-theme .table td {
-    border-color: #444C56;
+    border-color: #3E3E42;
 }
 
 /* 深色主题下修复 var(--c-base-02) 颜色可见性问题 */
@@ -2094,7 +2141,7 @@ html.dark-theme .c-article__main strong {
 }
 
 body.dark-theme blockquote {
-    border-left-color: #515862;
+    border-left-color: #3E3E42;
     color: #999;
 }
 
@@ -2120,7 +2167,7 @@ body.dark-theme .listing-item a:hover {
 }
 
 body.dark-theme hr {
-    border-color: #515862;
+    border-color: #3E3E42;
 }
 
 /* 深色主题下的文章标题链接样式 */
@@ -2346,14 +2393,52 @@ html.dark-theme .header-date {
 }
 
 @media screen and (max-width: 768px) {
+    .header-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        height: 100%;
+        min-height: var(--header-height-mobile);
+    }
+    
     .title-nav-wrapper {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.8rem; /* 竖直布局时的间距 */
+        gap: 0.3rem; /* 减少间距以节省空间 */
+        width: 100%;
+    }
+    
+    .title-nav-wrapper h1 {
+        font-size: 1.8rem;
+        word-break: break-word;
+        max-width: 100%;
+        line-height: 1.3;
     }
     
     .header-nav {
-        /* 竖直布局时保持对齐，不需要margin-top */
+        font-size: 1.4rem;
+        flex-wrap: wrap;
+    }
+    
+    .header-nav a {
+        font-size: 1.4rem;
+    }
+    
+    /* 移动端页面标题样式 */
+    .page-title {
+        font-size: 1.6rem !important;
+        word-break: break-word;
+        line-height: 1.3 !important;
+    }
+    
+    .page-title-divider {
+        display: none; /* 移动端隐藏分隔符 */
+    }
+    
+    /* 移动端日期样式 */
+    .header-date {
+        margin-left: 0;
+        font-size: 1.3rem;
+        margin-top: 0.3rem;
     }
 }
 
@@ -2378,16 +2463,44 @@ html.dark-theme .header-date {
     box-sizing: border-box;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
 }
+
+/* 移动端header隐藏状态 - 已合并到上面的media query中 */
 
 html.dark-theme .c-page__header {
     background-color: var(--dark-theme-header-bg);
     box-shadow: 0 2px 8px var(--dark-theme-shadow);
     border-bottom: 1px solid var(--dark-theme-border);
-    height: var(--header-height); /* 确保header高度与CSS变量一致 */
+    height: var(--header-height);
     box-sizing: border-box;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+
+/* 移动端自适应高度 */
+@media screen and (max-width: 768px) {
+    :root {
+        --header-height: var(--header-height-mobile);
+    }
+    
+    .c-page__header {
+        height: auto;
+        min-height: var(--header-height-mobile);
+        max-height: fit-content; /* 允许内容自适应，但不超过必要高度 */
+        padding: 0.8rem 0; /* 减少内边距以节省空间 */
+    }
+    
+    .c-page__header.header-hidden {
+        transform: translateY(-100%);
+    }
+    
+    html.dark-theme .c-page__header {
+        height: auto;
+        min-height: var(--header-height-mobile);
+        max-height: fit-content; /* 允许内容自适应，但不超过必要高度 */
+        padding: 0.8rem 0; /* 减少内边距以节省空间 */
+    }
 }
 
 /* 暗色主题下的页面标题样式 */
@@ -2507,9 +2620,9 @@ html.dark-theme .c-page__header h1 {
     font-size: 0.9em !important; /* 设置为0.9em并确保优先级 */
 }
 
-/* 深色主题下的页脚样式 */
+/* 深色主题下的页脚样式 - VSCode Dark 风格 */
 body.dark-theme .site-footer {
-    border-top-color: #515862;
+    border-top-color: #3E3E42;
 }
 
 body.dark-theme .site-footer a {
@@ -2679,6 +2792,14 @@ body.dark-theme .copy-button:hover {
 
 .tag-section {
     margin-bottom: var(--spacing-unit); /* 30px - 与Jekyll标准一致 */
+    scroll-margin-top: calc(var(--header-height) + 2rem); /* 为锚点跳转添加偏移，考虑固定header的高度 + 额外空白 */
+}
+
+/* 移动端tag-section锚点偏移优化 */
+@media screen and (max-width: 768px) {
+    .tag-section {
+        scroll-margin-top: calc(var(--header-height-mobile) + 2rem); /* 移动端使用更大的偏移 */
+    }
 }
 
 /* 返回顶部按钮 */
@@ -2698,10 +2819,10 @@ body.dark-theme .copy-button:hover {
     margin: 0 0.5rem;
 }
 
-/* 深色主题下的目录样式 */
+/* 深色主题下的目录样式 - VSCode Dark 风格 */
 body.dark-theme .table-of-contents {
-    background: #2d2d2d;
-    border-color: #515862;
+    background: #252526;
+    border-color: #3E3E42;
 }
 
 body.dark-theme .table-of-contents a {
@@ -2713,7 +2834,7 @@ body.dark-theme .table-of-contents a:hover {
 }
 
 body.dark-theme .c-article__tags {
-    border-top-color: #515862;
+    border-top-color: #3E3E42;
 }
 
 /* 深色主题下的标签样式 */
@@ -3191,8 +3312,8 @@ body.dark-theme .note-tag {
 }
 
 body.dark-theme .bookmark-item {
-    background: #2d2d2d;
-    border-color: #444C56;
+    background: #252526;
+    border-color: #3E3E42;
     color: var(--dark-theme-text);
 }
 
@@ -3220,8 +3341,8 @@ body.dark-theme .btn-icon:hover {
 body.dark-theme .form-input,
 body.dark-theme .form-select,
 body.dark-theme .form-textarea {
-    background-color: #333;
-    border-color: #555;
+    background-color: #1E1E1E;
+    border-color: #3E3E42;
     color: var(--dark-theme-text);
 }
 
@@ -3233,26 +3354,26 @@ body.dark-theme .form-textarea:focus {
 }
 
 body.dark-theme .tag {
-    background-color: #444;
-    color: #ccc;
-    border-color: #555;
+    background-color: #37373D;
+    color: #CCCCCC;
+    border-color: #3E3E42;
 }
 
 body.dark-theme .modal-content {
-    background: #2d2d2d;
+    background: #252526;
     color: var(--dark-theme-text);
 }
 
 body.dark-theme .modal-header {
-    border-bottom-color: #444;
+    border-bottom-color: #3E3E42;
 }
 
 body.dark-theme .form-actions {
-    border-top-color: #444;
+    border-top-color: #3E3E42;
 }
 
 body.dark-theme .modal-actions {
-    border-top-color: #444;
+    border-top-color: #3E3E42;
 }
 
 body.dark-theme .form-group label {

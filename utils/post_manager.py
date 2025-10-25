@@ -136,9 +136,17 @@ class PostManager:
                     continue
                 
                 # 构建文章数据
+                # 优先从frontmatter的date字段获取完整的时间戳（包括小时分秒）
+                frontmatter_date = post.metadata.get('date')
+                if isinstance(frontmatter_date, datetime):
+                    date = frontmatter_date
+                else:
+                    # 如果没有完整的时间戳，则只使用年月日
+                    date = datetime(year, month, day)
+                
                 post_data = {
                     'title': post.metadata.get('title', slug.replace('-', ' ').title()),
-                    'date': datetime(year, month, day),
+                    'date': date,
                     'slug': slug,
                     'year': year,
                     'month': month,
@@ -222,6 +230,10 @@ class PostManager:
             for tag in post.get('tags', []):
                 tags[tag].append(post)
         
+        # 对每个标签下的文章按日期从小到大排序
+        for tag in tags:
+            tags[tag].sort(key=lambda x: x['date'])
+        
         # 按标签名排序
         return dict(sorted(tags.items()))
     
@@ -235,6 +247,10 @@ class PostManager:
         for post in posts:
             for tag in post.get('tags', []):
                 tags[tag].append(post)
+        
+        # 对每个标签下的文章按日期从小到大排序
+        for tag in tags:
+            tags[tag].sort(key=lambda x: x['date'])
         
         # 按标签名排序
         return dict(sorted(tags.items()))
@@ -251,6 +267,10 @@ class PostManager:
                 post_tags = []
             for tag in post_tags:
                 tags[tag].append(post)
+        
+        # 对每个标签下的文章按日期从小到大排序
+        for tag in tags:
+            tags[tag].sort(key=lambda x: x['date'])
         
         # 按标签名排序
         return dict(sorted(tags.items()))

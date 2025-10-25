@@ -64,49 +64,412 @@
             img.style.cursor = 'pointer';
             
             img.addEventListener('click', function() {
-                // 创建遮罩层
-                const overlay = document.createElement('div');
-                overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.9);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 1000;
-                    cursor: pointer;
-                `;
-                
-                // 创建放大的图片
-                const zoomedImg = document.createElement('img');
-                zoomedImg.src = img.src;
-                zoomedImg.alt = img.alt;
-                zoomedImg.style.cssText = `
-                    max-width: 90%;
-                    max-height: 90%;
-                    object-fit: contain;
-                `;
-                
-                overlay.appendChild(zoomedImg);
-                document.body.appendChild(overlay);
-                
-                // 点击关闭
-                overlay.addEventListener('click', function() {
-                    document.body.removeChild(overlay);
-                });
-                
-                // ESC键关闭
-                function handleEsc(e) {
-                    if (e.key === 'Escape') {
-                        document.body.removeChild(overlay);
-                        document.removeEventListener('keydown', handleEsc);
-                    }
-                }
-                document.addEventListener('keydown', handleEsc);
+                showImagePreview(img.src, img.alt);
             });
+        });
+    }
+
+    /**
+     * 显示图片预览模态框
+     */
+    function showImagePreview(imageUrl, altText = '') {
+        let currentScale = 1;
+        const scaleStep = 0.2;
+        const minScale = 0.5;
+        const maxScale = 3;
+        
+        // 拖动相关变量 - 只允许Y轴拖动
+        let isDragging = false;
+        let startY = 0;
+        let translateY = 0;
+        
+        // 获取文章内容区域的宽度
+        const articleMain = document.querySelector('.c-article__main');
+        const articleWidth = articleMain ? articleMain.offsetWidth : 800; // 默认800px
+        
+        // 创建遮罩层
+        const overlay = document.createElement('div');
+        overlay.className = 'image-preview-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow: hidden;
+        `;
+        
+        // 创建图片容器（用于居中和缩放）
+        const imageContainer = document.createElement('div');
+        imageContainer.style.cssText = `
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: ${articleWidth}px;
+            max-width: 90%;
+            height: 100%;
+            cursor: grab;
+        `;
+        
+        // 创建加载指示器
+        const loader = document.createElement('div');
+        loader.className = 'image-loader';
+        loader.style.cssText = `
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        `;
+        
+        imageContainer.appendChild(loader);
+        overlay.appendChild(imageContainer);
+        document.body.appendChild(overlay);
+        
+        // 触发淡入动画
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+        }, 10);
+        
+        // 预加载图片
+        const img = new Image();
+        
+        img.onload = function() {
+            // 移除加载指示器
+            loader.remove();
+            
+            // 创建放大的图片
+            const zoomedImg = document.createElement('img');
+            zoomedImg.src = imageUrl;
+            zoomedImg.alt = altText;
+            zoomedImg.style.cssText = `
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                transform: scale(1) translateY(0px);
+                cursor: grab;
+                user-select: none;
+                pointer-events: auto;
+            `;
+            
+            imageContainer.appendChild(zoomedImg);
+            
+            // 触发图片淡入
+            setTimeout(() => {
+                zoomedImg.style.opacity = '1';
+            }, 10);
+            
+            // 更新变换 - 只使用Y轴平移
+            function updateTransform() {
+                zoomedImg.style.transform = `scale(${currentScale}) translateY(${translateY}px)`;
+            }
+            
+            // 鼠标拖动事件 - 只处理Y轴
+            zoomedImg.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startY = e.clientY - translateY;
+                zoomedImg.style.cursor = 'grabbing';
+                imageContainer.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                translateY = e.clientY - startY;
+                updateTransform();
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    zoomedImg.style.cursor = 'grab';
+                    imageContainer.style.cursor = 'grab';
+                }
+            });
+            
+            // 触摸拖动事件（移动端）- 只处理Y轴
+            zoomedImg.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    const touch = e.touches[0];
+                    startY = touch.clientY - translateY;
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+                const touch = e.touches[0];
+                translateY = touch.clientY - startY;
+                updateTransform();
+            }, { passive: false });
+            
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+            
+            // 鼠标滚轮缩放
+            imageContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -scaleStep : scaleStep;
+                const newScale = currentScale + delta;
+                
+                if (newScale >= minScale && newScale <= maxScale) {
+                    currentScale = newScale;
+                    updateTransform();
+                    updateScaleDisplay();
+                }
+            }, { passive: false });
+            
+            // 创建控制按钮容器
+            const controls = document.createElement('div');
+            controls.className = 'image-preview-controls';
+            controls.style.cssText = `
+                position: fixed;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 10px;
+                background: rgba(0,0,0,0.7);
+                padding: 10px 20px;
+                border-radius: 30px;
+                backdrop-filter: blur(10px);
+                z-index: 10001;
+            `;
+            
+            // 创建缩放按钮样式
+            const buttonStyle = `
+                width: 40px;
+                height: 40px;
+                border: none;
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 20px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                user-select: none;
+            `;
+            
+            // 放大按钮
+            const zoomInBtn = document.createElement('button');
+            zoomInBtn.innerHTML = '+';
+            zoomInBtn.title = '放大';
+            zoomInBtn.style.cssText = buttonStyle;
+            zoomInBtn.addEventListener('mouseenter', () => {
+                zoomInBtn.style.background = 'rgba(255,255,255,0.3)';
+                zoomInBtn.style.transform = 'scale(1.1)';
+            });
+            zoomInBtn.addEventListener('mouseleave', () => {
+                zoomInBtn.style.background = 'rgba(255,255,255,0.2)';
+                zoomInBtn.style.transform = 'scale(1)';
+            });
+            zoomInBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentScale < maxScale) {
+                    currentScale += scaleStep;
+                    updateTransform();
+                    updateScaleDisplay();
+                }
+            });
+            
+            // 缩小按钮
+            const zoomOutBtn = document.createElement('button');
+            zoomOutBtn.innerHTML = '−';
+            zoomOutBtn.title = '缩小';
+            zoomOutBtn.style.cssText = buttonStyle;
+            zoomOutBtn.addEventListener('mouseenter', () => {
+                zoomOutBtn.style.background = 'rgba(255,255,255,0.3)';
+                zoomOutBtn.style.transform = 'scale(1.1)';
+            });
+            zoomOutBtn.addEventListener('mouseleave', () => {
+                zoomOutBtn.style.background = 'rgba(255,255,255,0.2)';
+                zoomOutBtn.style.transform = 'scale(1)';
+            });
+            zoomOutBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentScale > minScale) {
+                    currentScale -= scaleStep;
+                    updateTransform();
+                    updateScaleDisplay();
+                }
+            });
+            
+            // 重置按钮
+            const resetBtn = document.createElement('button');
+            resetBtn.innerHTML = '↻';
+            resetBtn.title = '重置';
+            resetBtn.style.cssText = buttonStyle;
+            resetBtn.addEventListener('mouseenter', () => {
+                resetBtn.style.background = 'rgba(255,255,255,0.3)';
+                resetBtn.style.transform = 'scale(1.1)';
+            });
+            resetBtn.addEventListener('mouseleave', () => {
+                resetBtn.style.background = 'rgba(255,255,255,0.2)';
+                resetBtn.style.transform = 'scale(1)';
+            });
+            resetBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentScale = 1;
+                translateY = 0;
+                updateTransform();
+                updateScaleDisplay();
+            });
+            
+            // 缩放比例显示
+            const scaleDisplay = document.createElement('div');
+            scaleDisplay.style.cssText = `
+                color: white;
+                font-size: 14px;
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+                min-width: 50px;
+                justify-content: center;
+                user-select: none;
+            `;
+            scaleDisplay.textContent = '100%';
+            
+            function updateScaleDisplay() {
+                scaleDisplay.textContent = Math.round(currentScale * 100) + '%';
+            }
+            
+            // 关闭按钮
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '×';
+            closeBtn.title = '关闭 (ESC)';
+            closeBtn.style.cssText = buttonStyle + 'font-size: 28px;';
+            closeBtn.addEventListener('mouseenter', () => {
+                closeBtn.style.background = 'rgba(255,100,100,0.5)';
+                closeBtn.style.transform = 'scale(1.1)';
+            });
+            closeBtn.addEventListener('mouseleave', () => {
+                closeBtn.style.background = 'rgba(255,255,255,0.2)';
+                closeBtn.style.transform = 'scale(1)';
+            });
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closePreview();
+            });
+            
+            // 组装控制按钮
+            controls.appendChild(zoomOutBtn);
+            controls.appendChild(scaleDisplay);
+            controls.appendChild(zoomInBtn);
+            controls.appendChild(resetBtn);
+            controls.appendChild(closeBtn);
+            
+            overlay.appendChild(controls);
+            
+            // 阻止控制按钮容器的点击事件冒泡
+            controls.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        };
+        
+        img.onerror = function() {
+            // 移除加载指示器
+            loader.remove();
+            
+            // 显示错误信息
+            const errorMsg = document.createElement('div');
+            errorMsg.style.cssText = `
+                color: white;
+                font-size: 18px;
+                text-align: center;
+                padding: 20px;
+            `;
+            errorMsg.textContent = '图片加载失败';
+            imageContainer.appendChild(errorMsg);
+        };
+        
+        // 开始加载图片
+        img.src = imageUrl;
+        
+        // 点击遮罩层关闭（但不包括拖动后的点击）
+        let clickStartTime = 0;
+        let clickStartY = 0;
+        
+        overlay.addEventListener('mousedown', (e) => {
+            clickStartTime = Date.now();
+            clickStartY = e.clientY;
+        });
+        
+        overlay.addEventListener('click', function(e) {
+            // 只有在快速点击且没有移动太多时才关闭
+            const timeDiff = Date.now() - clickStartTime;
+            const distance = Math.abs(e.clientY - clickStartY);
+            
+            if (e.target === overlay && timeDiff < 300 && distance < 10) {
+                closePreview();
+            }
+        });
+        
+        // ESC键关闭
+        function handleEsc(e) {
+            if (e.key === 'Escape') {
+                closePreview();
+                document.removeEventListener('keydown', handleEsc);
+            }
+        }
+        document.addEventListener('keydown', handleEsc);
+        
+        // 关闭预览函数
+        function closePreview() {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                if (overlay.parentNode) {
+                    document.body.removeChild(overlay);
+                }
+            }, 300);
+        }
+    }
+
+    /**
+     * 处理超链接点击 - 区分图片链接和普通链接
+     */
+    function handleImageLinks() {
+        // 图片文件扩展名正则
+        const imageExtensions = /\.(png|jpe?g|gif|webp|bmp|svg)$/i;
+        
+        // 监听所有文章内容区域的链接点击
+        document.addEventListener('click', function(e) {
+            // 查找最近的 <a> 标签
+            const link = e.target.closest('a');
+            
+            // 如果不是链接或没有 href，直接返回
+            if (!link || !link.href) return;
+            
+            // 检查链接是否在文章内容区域（包括引用块）
+            const articleMain = link.closest('.c-article__main');
+            if (!articleMain) return;
+            
+            // 检查是否是图片链接
+            if (imageExtensions.test(link.href)) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 获取链接文本作为 alt
+                const altText = link.textContent || link.title || '';
+                showImagePreview(link.href, altText);
+            }
+            // 非图片链接保持默认行为（正常跳转）
         });
     }
 
@@ -238,6 +601,31 @@
         addImageZoom();
         addBackToTop();
         handleAnchorScrolling();
+        handleImageLinks();
+        addSpinnerAnimation();
+    }
+
+    /**
+     * 添加加载动画的CSS
+     */
+    function addSpinnerAnimation() {
+        // 检查是否已存在动画样式
+        if (document.getElementById('spinner-animation-style')) return;
+        
+        const style = document.createElement('style');
+        style.id = 'spinner-animation-style';
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            /* 防止body滚动 */
+            body.image-preview-open {
+                overflow: hidden;
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     // DOM加载完成后初始化
