@@ -9,9 +9,9 @@ title: Algorithm Notes
 ---
 
 
-# 1. 数组
+## 1. 数组
 
-## [912 排序](https://leetcode.cn/problems/sort-an-array/)
+### [912 排序](https://leetcode.cn/problems/sort-an-array/)
 
 快排实现
 
@@ -47,7 +47,8 @@ class Solution:
         return r
 ```
 
-[704 二分查找](https://leetcode.cn/problems/binary-search/description/)：
+## [704 二分查找](https://leetcode.cn/problems/binary-search/description/)
+
 左右闭合，查中点，循环条件l<=r
 
 ```python
