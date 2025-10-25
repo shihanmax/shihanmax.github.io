@@ -594,6 +594,51 @@
     }
 
     /**
+     * Handle collection expand/collapse
+     */
+    function initCollections() {
+        const collectionHeaders = document.querySelectorAll('.c-archives__collection-header');
+        
+        collectionHeaders.forEach(function(header) {
+            header.style.cursor = 'pointer';
+            
+            header.addEventListener('click', function() {
+                const collectionList = this.nextElementSibling;
+                const icon = this.querySelector('.c-archives__collection-icon');
+                const collectionName = this.dataset.collection;
+                
+                // Toggle display
+                const isExpanded = collectionList.style.display !== 'none';
+                
+                if (isExpanded) {
+                    // Collapse
+                    collectionList.style.display = 'none';
+                    icon.style.transform = 'rotate(0deg)';
+                    // Save state to localStorage
+                    localStorage.removeItem('collection-expanded-' + collectionName);
+                } else {
+                    // Expand
+                    collectionList.style.display = 'block';
+                    icon.style.transform = 'rotate(90deg)';
+                    // Save state to localStorage
+                    localStorage.setItem('collection-expanded-' + collectionName, 'true');
+                }
+            });
+            
+            // Restore state from localStorage
+            const collectionName = header.dataset.collection;
+            const isExpanded = localStorage.getItem('collection-expanded-' + collectionName);
+            
+            if (isExpanded === 'true') {
+                const collectionList = header.nextElementSibling;
+                const icon = header.querySelector('.c-archives__collection-icon');
+                collectionList.style.display = 'block';
+                icon.style.transform = 'rotate(90deg)';
+            }
+        });
+    }
+
+    /**
      * 初始化所有功能
      */
     function init() {
@@ -603,6 +648,7 @@
         handleAnchorScrolling();
         handleImageLinks();
         addSpinnerAnimation();
+        initCollections();
     }
 
     /**

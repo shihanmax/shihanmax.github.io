@@ -1730,6 +1730,7 @@ body.dark-theme .MathJax_Display {
     margin-bottom: var(--spacing-unit); /* 30px - 增加列表与下一年份的间距 */
     list-style: none;
     margin-left: 0;
+    border-bottom: 1px solid #DADDE1; /* Add bottom border to last item */
 }
 
 .c-archives__item {
@@ -1737,10 +1738,26 @@ body.dark-theme .MathJax_Display {
     padding-bottom: calc(var(--spacing-unit) / 2); /* 15px - 与Jekyll标准一致 */
     border-top: 1px solid #DADDE1;
     margin-bottom: 0; /* 移除多余的底部外边距 */
+    transition: background-color 0.2s ease;
+}
+
+.c-archives__item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Make entire item clickable */
+.c-archives__item-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.c-archives__item-link:hover {
+    text-decoration: none; /* No underline on hover */
 }
 
 @media screen and (min-width: 45rem) {
-    .c-archives__item {
+    .c-archives__item-link {
         display: -webkit-box;
         display: -webkit-flex;
         display: -ms-flexbox;
@@ -1759,18 +1776,8 @@ body.dark-theme .MathJax_Display {
     }
 }
 
-.c-archives__item h3 a {
-    color: var(--c-accent-blue); /* 保持蓝色 */
-    text-decoration: none;
-}
-
-.c-archives__item h3 a:hover {
-    color: var(--c-accent-blue); /* 鼠标悬停时保持蓝色不变 */
-    text-decoration: none; /* 鼠标悬停时不加下划线 */
-}
-
-.c-archives__item h3 a:visited {
-    color: var(--c-accent-blue); /* 访问过的链接保持蓝色 */
+.c-archives__item-link h3 {
+    color: var(--c-accent-blue); /* Article title color */
 }
 
 .c-archives__item h3 {
@@ -1785,6 +1792,151 @@ body.dark-theme .MathJax_Display {
     font-size: 1.8rem;
     color: #515862;
     margin-bottom: 0;
+}
+
+.c-archives__item-link p {
+    color: #515862; /* Explicit color for date in link */
+}
+
+/* Collection styles */
+.c-archives__collection.c-archives__item {
+    border-top: none !important; /* Remove inherited border from .c-archives__item */
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+/* Override flexbox for collection items */
+@media screen and (min-width: 45rem) {
+    .c-archives__collection {
+        display: block !important; /* Override the flex layout */
+    }
+}
+
+.c-archives__collection-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: calc(var(--spacing-unit) / 2) 0;
+    border-top: 1px solid #DADDE1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Desktop layout for collection header */
+@media screen and (min-width: 45rem) {
+    .c-archives__collection-header {
+        justify-content: space-between;
+    }
+}
+
+.c-archives__collection-header:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.c-archives__collection-icon {
+    font-size: 1.4rem;
+    color: var(--c-base-01);
+    transition: transform 0.2s ease;
+    display: inline-block;
+    width: 1.4rem;
+    text-align: center;
+}
+
+.c-archives__collection-title {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--c-accent-blue); /* Match article link color */
+    margin: 0;
+    flex: 1;
+}
+
+.c-archives__collection-count {
+    font-size: 1.4rem;
+    font-weight: 350;
+    color: var(--c-base-01);
+}
+
+.c-archives__collection-header > p {
+    line-height: 1.5;
+    font-size: 1.8rem;
+    color: #515862;
+    margin-bottom: 0;
+}
+
+.c-archives__collection-list {
+    list-style: none;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-left: 4ch; /* Indent 1 tab (4 characters) */
+}
+
+.c-archives__collection-item {
+    padding: calc(var(--spacing-unit) / 2) 0; /* Same padding as regular items */
+    border-top: 1px solid #DADDE1; /* Same border as regular items */
+    transition: background-color 0.2s ease;
+}
+
+.c-archives__collection-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Make entire collection item clickable */
+.c-archives__collection-item-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.c-archives__collection-item-link:hover {
+    text-decoration: none; /* No underline on hover */
+}
+
+/* Collection items should use flexbox on desktop */
+@media screen and (min-width: 45rem) {
+    .c-archives__collection-item-link {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+}
+
+.c-archives__collection-item-link h4 {
+    color: var(--c-accent-blue); /* Article title color */
+}
+
+.c-archives__collection-item h4 {
+    line-height: 1.5;
+    font-size: 1.8rem; /* Same as regular item h3 */
+    margin-bottom: 0;
+    font-weight: 350;
+}
+
+.c-archives__collection-item p {
+    line-height: 1.5;
+    font-size: 1.8rem; /* Same as regular item p */
+    color: #515862; /* Same color as regular item p */
+    margin-bottom: 0;
+}
+
+/* Mobile responsive for collections */
+@media screen and (max-width: 45rem) {
+    .c-archives__collection-list {
+        padding-left: 4ch; /* Same indent on mobile */
+    }
 }
 
 /* 文章样式 */
@@ -2069,6 +2221,14 @@ body.dark-theme .c-archives__list .c-archives__item {
     border-top: 1px solid #3E3E42;
 }
 
+body.dark-theme .c-archives__list {
+    border-bottom-color: #3E3E42; /* Match dark theme border color */
+}
+
+body.dark-theme .c-archives__item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
 body.dark-theme img {
     filter: brightness(0.8) saturate(1.25);
 }
@@ -2171,20 +2331,98 @@ body.dark-theme hr {
 }
 
 /* 深色主题下的文章标题链接样式 */
-body.dark-theme .c-archives__item h3 a,
+body.dark-theme .c-archives__item-link h3,
 body.dark-theme .c-article__title a {
     color: var(--dark-theme-link); /* 深色主题下保持蓝色 */
 }
 
-body.dark-theme .c-archives__item h3 a:hover,
-body.dark-theme .c-article__title a:hover {
-    color: var(--dark-theme-link); /* 深色主题下文章标题鼠标悬停时保持蓝色不变 */
-    text-decoration: none;
+/* Dark theme collection styles */
+body.dark-theme .c-archives__collection-header {
+    border-top-color: #3E3E42;
 }
 
-body.dark-theme .c-archives__item h3 a:visited,
-body.dark-theme .c-article__title a:visited {
-    color: var(--dark-theme-link); /* 深色主题下访问过的文章标题保持蓝色 */
+body.dark-theme .c-archives__collection-header:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-theme .c-archives__collection-icon {
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .c-archives__collection-title {
+    color: var(--dark-theme-link); /* Match article link color in dark theme */
+}
+
+body.dark-theme .c-archives__collection-count {
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .c-archives__collection-header > p {
+    color: var(--dark-theme-text);
+}
+
+body.dark-theme .c-archives__item-link p {
+    color: var(--dark-theme-text); /* Match collection date color */
+}
+
+body.dark-theme .c-archives__collection-item {
+    border-top-color: #3E3E42; /* Same as regular items in dark theme */
+}
+
+body.dark-theme .c-archives__collection-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-theme .c-archives__collection-item-link h4 {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme .c-archives__collection-item p {
+    color: #515862; /* Match light theme for consistency */
+}
+
+html.dark-theme .c-archives__collection-header {
+    border-top-color: #3E3E42;
+}
+
+html.dark-theme .c-archives__collection-header:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+html.dark-theme .c-archives__collection-icon {
+    color: var(--dark-theme-text);
+}
+
+html.dark-theme .c-archives__collection-title {
+    color: var(--dark-theme-link); /* Match article link color in dark theme */
+}
+
+html.dark-theme .c-archives__collection-count {
+    color: var(--dark-theme-text);
+}
+
+html.dark-theme .c-archives__collection-header > p {
+    color: var(--dark-theme-text);
+}
+
+html.dark-theme .c-archives__item-link p {
+    color: var(--dark-theme-text); /* Match collection date color */
+}
+
+html.dark-theme .c-archives__collection-item {
+    border-top-color: #3E3E42; /* Same as regular items in dark theme */
+}
+
+html.dark-theme .c-archives__collection-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+html.dark-theme .c-archives__collection-item-link h4 {
+    color: var(--dark-theme-link);
+}
+
+html.dark-theme .c-archives__collection-item p {
+    color: var(--dark-theme-text); /* Match dark theme default text */
 }
 
 /* 浅色主题 */

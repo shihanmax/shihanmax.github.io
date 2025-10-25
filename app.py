@@ -103,9 +103,9 @@ def index():
     # 根据登录状态获取可见的文章
     is_logged_in = bool(session.get('admin_logged_in'))
     posts = post_manager.get_posts_by_visibility(is_logged_in)
-    posts_by_year = post_manager.group_posts_by_year(posts)
+    posts_by_year_and_collection = post_manager.group_posts_by_year_and_collection(posts)
     return render_template('index.html', 
-                         posts_by_year=posts_by_year, 
+                         posts_by_year_and_collection=posts_by_year_and_collection, 
                          page_type='home',
                          title='Home')
 

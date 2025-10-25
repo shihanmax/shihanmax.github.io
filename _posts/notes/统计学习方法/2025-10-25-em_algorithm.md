@@ -6,7 +6,8 @@ mathjax: true
 syntaxHighlighter: true
 tags: 
     - 统计学习方法
-title: 统计学习方法：九、EM算法：期望最大化（Expectation Maximization）
+title: 九、EM算法：期望最大化（Expectation Maximization）
+collection: 统计学习方法
 ---
 
 [合集：统计学习方法笔记](/tags#统计学习方法)

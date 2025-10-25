@@ -6,7 +6,8 @@ mathjax: true
 syntaxHighlighter: true
 tags: 
     - 统计学习方法
-title: 统计学习方法：十二、监督学习方法总结
+title: 十二、监督学习方法总结
+collection: 统计学习方法
 ---
 
 [合集：统计学习方法笔记](/tags#统计学习方法)

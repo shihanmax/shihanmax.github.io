@@ -157,6 +157,8 @@ class PostManager:
                     'description': post.metadata.get('description', ''),
                     'layout': post.metadata.get('layout', 'post'),
                     'display_type': display_type,  # 添加display_type字段到post_data
+                    'collection': post.metadata.get('collection'),  # Collection name
+                    'collection_order': post.metadata.get('collection_order', 0),  # Collection order
                     'filename': filename,
                     'filepath': filepath
                 }
@@ -221,6 +223,86 @@ class PostManager:
         
         # 转换为有序字典，按年份降序
         return OrderedDict(sorted(grouped.items(), reverse=True))
+    
+    def group_posts_by_year_and_collection(self, posts: List[Dict]) -> OrderedDict:
+        """按年份和合集分组文章，collections和single posts按日期混合排序
+        
+        Returns:
+            OrderedDict: {
+                year: {
+                    'mixed_items': [  # Mixed list of collections and posts sorted by date
+                        {
+                            'type': 'collection',
+                            'name': str,
+                            'posts': [post1, post2, ...],
+                            'latest_date': datetime,
+                            'count': int
+                        },
+                        {
+                            'type': 'post',
+                            'data': post_dict
+                        },
+                        ...
+                    ]
+                }
+            }
+        """
+        grouped_by_year = defaultdict(lambda: {'collections': defaultdict(lambda: {'posts': [], 'latest_date': None, 'count': 0}), 'single_posts': []})
+        
+        for post in posts:
+            year = post['year']
+            collection = post.get('collection')  # Get collection name from front matter
+            
+            if collection:
+                # Add collection_order for sorting, default to 0 if not specified
+                if 'collection_order' not in post:
+                    post['collection_order'] = 0
+                grouped_by_year[year]['collections'][collection]['posts'].append(post)
+                
+                # Update latest_date
+                current_latest = grouped_by_year[year]['collections'][collection]['latest_date']
+                if current_latest is None or post['date'] > current_latest:
+                    grouped_by_year[year]['collections'][collection]['latest_date'] = post['date']
+                
+                # Update count
+                grouped_by_year[year]['collections'][collection]['count'] += 1
+            else:
+                grouped_by_year[year]['single_posts'].append(post)
+        
+        # Sort posts within each collection by collection_order (ascending), then by date (descending)
+        for year_data in grouped_by_year.values():
+            for collection_name, collection_data in year_data['collections'].items():
+                collection_data['posts'].sort(key=lambda x: (x.get('collection_order', 0), -x['date'].timestamp()))
+        
+        # Merge collections and single posts, sort by date
+        result = OrderedDict()
+        for year in sorted(grouped_by_year.keys(), reverse=True):
+            year_data = grouped_by_year[year]
+            mixed_items = []
+            
+            # Add collections as items
+            for collection_name, collection_data in year_data['collections'].items():
+                mixed_items.append({
+                    'type': 'collection',
+                    'name': collection_name,
+                    'posts': collection_data['posts'],
+                    'latest_date': collection_data['latest_date'],
+                    'count': collection_data['count']
+                })
+            
+            # Add single posts as items
+            for post in year_data['single_posts']:
+                mixed_items.append({
+                    'type': 'post',
+                    'data': post
+                })
+            
+            # Sort items by date (collection uses latest_date, post uses date)
+            mixed_items.sort(key=lambda x: x['latest_date'] if x['type'] == 'collection' else x['data']['date'], reverse=True)
+            
+            result[year] = {'mixed_items': mixed_items}
+        
+        return result
     
     def group_posts_by_tags(self, posts: List[Dict]) -> Dict[str, List[Dict]]:
         """根据指定文章列表获取所有标签及对应的文章"""

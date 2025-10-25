@@ -8,7 +8,8 @@ tags:
 - Deep Learning
 - RL
 - 强化学习的数学基础
-title: '强化学习的数学基础 Lecture -1: Prefix'
+collection: 强化学习的数学基础
+title: 'Lecture -1: Prefix'
 ---
 
 西湖大学赵世钰老师[《强化学习的数学原理》](https://www.bilibili.com/video/BV1sd4y167NS)笔记整理：了解强化学习名词脉络（p1）。

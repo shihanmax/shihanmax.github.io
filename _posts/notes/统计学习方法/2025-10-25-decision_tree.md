@@ -6,7 +6,8 @@ mathjax: true
 syntaxHighlighter: true
 tags: 
     - 统计学习方法
-title: 统计学习方法：五、决策树（Decision Tree）
+title: 五、决策树（Decision Tree）
+collection: 统计学习方法
 ---
 
 [合集：统计学习方法笔记](/tags#统计学习方法)
