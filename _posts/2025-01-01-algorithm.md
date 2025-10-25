@@ -11,7 +11,7 @@ title: Algorithm Notes
 
 # 1. 数组
 
-[912 排序](https://leetcode.cn/problems/sort-an-array/)
+## [912 排序](https://leetcode.cn/problems/sort-an-array/)
 
 快排实现
 
