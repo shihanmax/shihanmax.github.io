@@ -29,19 +29,19 @@
     --c-accent-blue: #2563EB;
     --c-accent-green: #10B981;
     
-    /* VSCode Dark 风格暗黑主题配色 - 灰色调 */
-    --dark-theme-background: #1E1E1E;
-    --dark-theme-text: #D4D4D4;
-    --dark-theme-heading: #E5E5E5;
-    --dark-theme-link: #9CDCFE;
-    --dark-theme-link-hover: #B4D9FE;
-    --dark-theme-button-bg: #252526;
-    --dark-theme-button-border: #3E3E42;
-    --dark-theme-code-bg: #1E1E1E;
-    --dark-theme-code-border: #3E3E42;
-    --dark-theme-header-bg: #252526;
-    --dark-theme-border: #3E3E42;
-    --dark-theme-shadow: rgba(0, 0, 0, 0.4);
+    /* One Monokai 风格暗黑主题配色 - 融合 Monokai 和 One Dark */
+    --dark-theme-background: #282C34;
+    --dark-theme-text: #ABB2BF;
+    --dark-theme-heading: #E5C07B;
+    --dark-theme-link: #61AFEF;
+    --dark-theme-link-hover: #84C0F4;
+    --dark-theme-button-bg: #2C313A;
+    --dark-theme-button-border: #3E4451;
+    --dark-theme-code-bg: #282C34;
+    --dark-theme-code-border: #3E4451;
+    --dark-theme-header-bg: #21252B;
+    --dark-theme-border: #3E4451;
+    --dark-theme-shadow: rgba(0, 0, 0, 0.5);
     
     /* Layout dimensions */
     --header-height: 56px; /* Optimized height: 80% of original 70px - 更新为实际高度 */
@@ -177,21 +177,82 @@ h1, h2, h3, h4, h5, h6 {
     scroll-margin-top: var(--header-height);
 }
 
-/* 链接 */
+/* ==========================================================================
+   统一链接和文章标题样式
+   ========================================================================== */
+
+/* 基础链接样式 */
 a {
-    color: var(--light-theme-link);
+    color: var(--c-accent-blue);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 a:visited {
-    color: var(--light-theme-link); /* 访问过的链接保持与普通链接相同的颜色 */
+    color: var(--c-accent-blue);
 }
 
 a:hover {
     color: var(--light-theme-link-hover);
     text-decoration: underline;
 }
+
+/* 暗色主题链接样式 */
+body.dark-theme a,
+html.dark-theme a {
+    color: var(--dark-theme-link);
+}
+
+body.dark-theme a:hover,
+html.dark-theme a:hover {
+    color: var(--dark-theme-link-hover);
+    text-decoration: underline;
+}
+
+/* 取消暗色主题下主页文章标题的hover下划线 */
+body.dark-theme .c-archives__item-link:hover,
+body.dark-theme .c-archives__collection-item-link:hover {
+    text-decoration: none;
+}
+
+html.dark-theme .c-archives__item-link:hover,
+html.dark-theme .c-archives__collection-item-link:hover {
+    text-decoration: none;
+}
+
+/* 统一文章标题样式 */
+.c-archives__item-link h3,
+.c-archives__collection-title,
+.c-archives__collection-item-link h4,
+.c-article__title a {
+    color: var(--c-accent-blue) !important;
+}
+
+/* 暗色主题文章标题样式 */
+body.dark-theme .c-archives__item-link h3,
+body.dark-theme .c-archives__collection-title,
+body.dark-theme .c-archives__collection-item-link h4,
+body.dark-theme .c-article__title a,
+html.dark-theme .c-archives__item-link h3,
+html.dark-theme .c-archives__collection-title,
+html.dark-theme .c-archives__collection-item-link h4,
+html.dark-theme .c-article__title a {
+    color: var(--dark-theme-link) !important;
+}
+
+/* 移除文章标题hover时的下划线 */
+.c-archives__item-link:hover,
+.c-archives__item-link h3:hover,
+.c-archives__collection-title:hover,
+.c-archives__collection-item-link:hover,
+.c-archives__collection-item-link h4:hover,
+.c-article__title a:hover {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   原有样式部分
+   ========================================================================== */
 
 /* 引用块 */
 blockquote {
@@ -1777,7 +1838,7 @@ body.dark-theme .MathJax_Display {
 }
 
 .c-archives__item-link h3 {
-    color: var(--c-accent-blue); /* Article title color */
+    color: var(--c-accent-blue) !important; /* Article title color - force blue */
 }
 
 .c-archives__item h3 {
@@ -1785,6 +1846,7 @@ body.dark-theme .MathJax_Display {
     font-size: 1.8rem;
     margin-bottom: 0;
     font-weight: 350; /* 统一修改为350 */
+    color: var(--c-accent-blue); /* 明确设置为蓝色，与导航栏链接一致 */
 }
 
 .c-archives__item p {
@@ -1846,9 +1908,13 @@ body.dark-theme .MathJax_Display {
 .c-archives__collection-title {
     font-size: 1.8rem;
     font-weight: 500;
-    color: var(--c-accent-blue); /* Match article link color */
+    color: var(--c-accent-blue) !important; /* Match article link color - force blue */
     margin: 0;
     flex: 1;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .c-archives__collection-count {
@@ -1915,7 +1981,7 @@ body.dark-theme .MathJax_Display {
 }
 
 .c-archives__collection-item-link h4 {
-    color: var(--c-accent-blue); /* Article title color */
+    color: var(--c-accent-blue) !important; /* Article title color - force blue */
 }
 
 .c-archives__collection-item h4 {
@@ -2218,11 +2284,11 @@ body.dark-theme .c-article__main {
 }
 
 body.dark-theme .c-archives__list .c-archives__item {
-    border-top: 1px solid #3E3E42;
+    border-top: 1px solid var(--dark-theme-border);
 }
 
 body.dark-theme .c-archives__list {
-    border-bottom-color: #3E3E42; /* Match dark theme border color */
+    border-bottom-color: var(--dark-theme-border);
 }
 
 body.dark-theme .c-archives__item:hover {
@@ -2276,7 +2342,6 @@ body.dark-theme .table td {
 }
 
 /* 深色主题下修复 var(--c-base-02) 颜色可见性问题 */
-body.dark-theme .c-archives__year,
 body.dark-theme .c-article__title,
 body.dark-theme .c-page__header h1,
 body.dark-theme .site-title,
@@ -2288,7 +2353,16 @@ body.dark-theme .c-article__main strong {
     color: var(--dark-theme-heading); /* 修复加粗文本在深色主题下的可见性 */
 }
 
-html.dark-theme .c-archives__year,
+/* 暗色模式下主页年份使用和shihanmax一样的配色 */
+body.dark-theme .c-archives__year {
+    color: #D8DEE9; /* shihanmax灰白色配色 */
+}
+
+/* 暗色模式下timeline页面年份使用和shihanmax一样的配色 */
+body.dark-theme .c-article__main h2 {
+    color: #D8DEE9 !important; /* shihanmax灰白色配色 */
+}
+
 html.dark-theme .c-article__title,
 html.dark-theme .c-page__header h1,
 html.dark-theme .site-title,
@@ -2300,9 +2374,20 @@ html.dark-theme .c-article__main strong {
     color: var(--dark-theme-heading);
 }
 
+/* 暗色模式下主页年份使用和shihanmax一样的配色 */
+html.dark-theme .c-archives__year {
+    color: #D8DEE9; /* shihanmax灰白色配色 */
+}
+
+/* 暗色模式下timeline页面年份使用和shihanmax一样的配色 */
+html.dark-theme .c-article__main h2 {
+    color: #D8DEE9 !important; /* shihanmax灰白色配色 */
+}
+
 body.dark-theme blockquote {
-    border-left-color: #3E3E42;
-    color: #999;
+    border-left-color: var(--dark-theme-border);
+    color: var(--dark-theme-text);
+    opacity: 0.8;
 }
 
 /* 深色主题下的标签样式 */
@@ -2327,18 +2412,16 @@ body.dark-theme .listing-item a:hover {
 }
 
 body.dark-theme hr {
-    border-color: #3E3E42;
+    border-color: var(--dark-theme-border);
 }
 
-/* 深色主题下的文章标题链接样式 */
-body.dark-theme .c-archives__item-link h3,
-body.dark-theme .c-article__title a {
-    color: var(--dark-theme-link); /* 深色主题下保持蓝色 */
-}
+/* ==========================================================================
+   原有暗色主题样式部分
+   ========================================================================== */
 
 /* Dark theme collection styles */
 body.dark-theme .c-archives__collection-header {
-    border-top-color: #3E3E42;
+    border-top-color: var(--dark-theme-border);
 }
 
 body.dark-theme .c-archives__collection-header:hover {
@@ -2366,7 +2449,7 @@ body.dark-theme .c-archives__item-link p {
 }
 
 body.dark-theme .c-archives__collection-item {
-    border-top-color: #3E3E42; /* Same as regular items in dark theme */
+    border-top-color: var(--dark-theme-border);
 }
 
 body.dark-theme .c-archives__collection-item:hover {
@@ -2378,11 +2461,11 @@ body.dark-theme .c-archives__collection-item-link h4 {
 }
 
 body.dark-theme .c-archives__collection-item p {
-    color: #515862; /* Match light theme for consistency */
+    color: var(--dark-theme-text); /* Match dark theme text color */
 }
 
 html.dark-theme .c-archives__collection-header {
-    border-top-color: #3E3E42;
+    border-top-color: var(--dark-theme-border);
 }
 
 html.dark-theme .c-archives__collection-header:hover {
@@ -2410,7 +2493,7 @@ html.dark-theme .c-archives__item-link p {
 }
 
 html.dark-theme .c-archives__collection-item {
-    border-top-color: #3E3E42; /* Same as regular items in dark theme */
+    border-top-color: var(--dark-theme-border);
 }
 
 html.dark-theme .c-archives__collection-item:hover {
