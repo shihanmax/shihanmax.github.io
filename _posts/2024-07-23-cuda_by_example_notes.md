@@ -10,11 +10,7 @@ tags:
 title: 《GPU高性能编程CUDA实战（CUDA By Example）》阅读笔记 合集
 ---
 
-* 导航
-{:toc #markdown-toc}
-
 ⌛️  更新中..（last update: 2024-07-31）
-
 
 > Changelog:
 > - 2024-07-31: 更新第四章：Parallel Programming in CUDA C
