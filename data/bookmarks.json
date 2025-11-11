@@ -30,6 +30,17 @@
       "tags": [],
       "created_at": "2025-10-09T20:15:17.756754",
       "updated_at": "2025-10-09T20:15:17.756772"
+    },
+    {
+      "id": 12,
+      "title": "decoding-claude-code",
+      "url": "https://minusx.ai/blog/decoding-claude-code/",
+      "description": "",
+      "tags": [
+        "claude-code"
+      ],
+      "created_at": "2025-11-11T10:23:34.513588",
+      "updated_at": "2025-11-11T10:23:34.513605"
     }
   ],
   "categories": [
@@ -39,5 +50,5 @@
     "工具软件",
     "其他"
   ],
-  "next_id": 12
+  "next_id": 13
 }
