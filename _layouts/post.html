@@ -1,0 +1,189 @@
+---
+layout: default
+---
+<!-- 悬浮目录面板 -->
+<aside class="toc-panel" id="toc-panel">
+    <div class="toc-header">
+        <h3>目录</h3>
+        <button id="toggle-toc" class="toc-toggle" title="折叠/展开目录">
+            <span class="toc-icon">≡</span>
+        </button>
+    </div>
+    <div id="toc-content" class="toc-content">
+        <div id="toc-list" class="toc-list"></div>
+    </div>
+</aside>
+
+<div class="post-container">
+    <article class="c-article">
+        <header class="c-article__header"></header>
+
+        <div class="c-article__main" id="article-content">
+            {{ content }}
+        </div>
+
+        <footer class="c-article__footer">
+            {% if page.tags and page.tags.size > 0 %}
+            <div class="c-article__tags">
+                <p>Tags:
+                    {% for tag in page.tags %}
+                    <a href="{{ '/tags' | relative_url }}#{{ tag }}" class="tag-link">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+                    {% endfor %}
+                </p>
+            </div>
+            {% endif %}
+        </footer>
+    </article>
+</div>
+
+<script>
+class TOCManager {
+    constructor() {
+        this.tocPanel = document.getElementById('toc-panel');
+        this.tocList = document.getElementById('toc-list');
+        this.tocContent = document.getElementById('toc-content');
+        this.toggleButton = document.getElementById('toggle-toc');
+        this.tocIcon = document.querySelector('.toc-icon');
+        this.articleContent = document.getElementById('article-content');
+        this.isCollapsed = false;
+        this.headings = [];
+        this.headingPositions = [];
+        this.lastActiveId = null;
+        this.throttle = this.createThrottle();
+        this.init();
+    }
+
+    createThrottle() {
+        let lastTime = 0;
+        const delay = 16;
+        return (callback) => {
+            const now = Date.now();
+            if (now - lastTime >= delay) { lastTime = now; callback(); }
+        };
+    }
+
+    init() {
+        if (!this.tocPanel || !this.tocList || !this.articleContent) return;
+        this.generateTOC();
+        this.bindEvents();
+        this.initScrollSpy();
+    }
+
+    generateTOC() {
+        this.tocList.innerHTML = '';
+        this.headings = this.articleContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        if (this.headings.length === 0) { this.tocPanel.style.display = 'none'; return; }
+        this.tocPanel.style.display = 'block';
+        const tocUl = document.createElement('ul');
+        tocUl.className = 'toc-ul';
+        this.headings.forEach((heading, index) => {
+            if (!heading.id) heading.id = this.generateAnchor(heading.textContent, index);
+            const level = parseInt(heading.tagName.charAt(1));
+            const tocItem = document.createElement('li');
+            tocItem.className = `toc-item level-${level}`;
+            const tocLink = document.createElement('a');
+            tocLink.href = `#${heading.id}`;
+            tocLink.textContent = heading.textContent;
+            tocLink.dataset.target = heading.id;
+            tocLink.className = 'toc-link';
+            tocItem.appendChild(tocLink);
+            tocUl.appendChild(tocItem);
+        });
+        this.tocList.appendChild(tocUl);
+        this.updateHeadingPositions();
+    }
+
+    generateAnchor(title, index) {
+        let anchor = title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[-\s]+/g, '-').trim('-');
+        return anchor || `heading-${index}`;
+    }
+
+    bindEvents() {
+        this.tocList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('toc-link')) {
+                e.preventDefault();
+                const targetEl = document.getElementById(e.target.dataset.target);
+                if (targetEl) {
+                    const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 70;
+                    this.fastScrollTo(targetEl.getBoundingClientRect().top + window.pageYOffset - headerHeight);
+                    this.updateActiveTOCItem(e.target.dataset.target);
+                }
+            }
+        });
+        if (this.toggleButton) {
+            this.toggleButton.addEventListener('click', () => this.toggleTOC());
+        }
+    }
+
+    fastScrollTo(targetPosition) {
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        const duration = Math.min(400, Math.abs(distance) * 0.8);
+        const startTime = performance.now();
+        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+        const scrollStep = (currentTime) => {
+            const progress = Math.min((currentTime - startTime) / duration, 1);
+            window.scrollTo(0, startPosition + distance * easeOutQuart(progress));
+            if (progress < 1) requestAnimationFrame(scrollStep);
+        };
+        requestAnimationFrame(scrollStep);
+    }
+
+    toggleTOC() {
+        this.isCollapsed = !this.isCollapsed;
+        this.tocContent.style.display = this.isCollapsed ? 'none' : 'block';
+        this.tocIcon.textContent = this.isCollapsed ? '≡' : '×';
+        this.tocPanel.classList.toggle('collapsed', this.isCollapsed);
+    }
+
+    initScrollSpy() {
+        window.addEventListener('scroll', () => {
+            this.throttle(() => { this.updateHeadingPositions(); this.updateActiveTOCItem(); });
+        }, { passive: true });
+        window.addEventListener('resize', () => this.updateHeadingPositions());
+        setTimeout(() => { this.updateHeadingPositions(); this.updateActiveTOCItem(); }, 100);
+    }
+
+    updateHeadingPositions() {
+        this.headingPositions = Array.from(this.headings).map(h => ({
+            element: h, top: h.getBoundingClientRect().top + window.pageYOffset
+        }));
+    }
+
+    updateActiveTOCItem(activeId = null) {
+        if (!activeId) {
+            const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 70;
+            const activationPoint = window.pageYOffset + headerHeight + window.innerHeight * 0.25;
+            for (let i = this.headingPositions.length - 1; i >= 0; i--) {
+                if (this.headingPositions[i].top <= activationPoint) { activeId = this.headingPositions[i].element.id; break; }
+            }
+        }
+        if (activeId === this.lastActiveId) return;
+        this.lastActiveId = activeId;
+        this.tocList.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+        this.tocList.querySelectorAll('.toc-item').forEach(i => i.classList.remove('current-chapter-tree'));
+        if (activeId) {
+            const activeLink = this.tocList.querySelector(`.toc-link[data-target="${activeId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                activeLink.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            }
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    window.tocManager = new TOCManager();
+    setTimeout(() => window.tocManager && window.tocManager.generateTOC(), 500);
+});
+
+window.addEventListener('load', function() {
+    setTimeout(() => window.tocManager && window.tocManager.generateTOC(), 100);
+});
+
+if (typeof MathJax !== 'undefined' && MathJax.startup) {
+    MathJax.startup.promise && MathJax.startup.promise.then(() => {
+        setTimeout(() => window.tocManager && window.tocManager.generateTOC(), 100);
+    }).catch(() => {});
+}
+</script>

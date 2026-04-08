@@ -1,0 +1,49 @@
+title: "Shihanmax's blog"
+description: "机器学习、深度学习、编程技术分享"
+url: "https://shihanmax.github.io"
+baseurl: ""
+author:
+  name: Shihanmax
+  email: shihanmax@foxmail.com
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+highlighter: rouge
+
+permalink: /:year/:month/:slug
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+sass:
+  style: compressed
+
+exclude:
+  - app.py
+  - requirements.txt
+  - utils/
+  - deploy/
+  - templates/
+  - data/
+  - test/
+  - venv/
+  - "*.sh"
+  - Gemfile.lock
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: "_pages"
+    values:
+      layout: "page"

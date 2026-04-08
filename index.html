@@ -1,0 +1,67 @@
+---
+layout: default
+title: Home
+page_type: home
+---
+<section class="c-archives">
+    {% assign sorted_posts = site.posts | sort: "date" | reverse %}
+
+    {% comment %} Collect unique years {% endcomment %}
+    {% assign years = "" | split: "" %}
+    {% for post in sorted_posts %}
+        {% assign year = post.date | date: "%Y" %}
+        {% unless years contains year %}
+            {% assign years = years | push: year %}
+        {% endunless %}
+    {% endfor %}
+
+    {% for year in years %}
+        <h2 class="c-archives__year" id="{{ year }}-ref">{{ year }}</h2>
+        <ul class="c-archives__list">
+
+        {% assign year_posts = sorted_posts | where_exp: "post", "post.date | date: '%Y' == year" %}
+
+        {% comment %} Collect collections in this year {% endcomment %}
+        {% assign seen_collections = "" | split: "" %}
+
+        {% for post in year_posts %}
+            {% if post.collection %}
+                {% unless seen_collections contains post.collection %}
+                    {% assign seen_collections = seen_collections | push: post.collection %}
+
+                    {% comment %} Render collection group {% endcomment %}
+                    {% assign coll_posts = year_posts | where: "collection", post.collection | sort: "collection_order" %}
+                    {% assign latest = coll_posts | first %}
+                    <li class="c-archives__item c-archives__collection">
+                        <div class="c-archives__collection-header" data-collection="{{ post.collection }}">
+                            <span class="c-archives__collection-icon">▶</span>
+                            <h3 class="c-archives__collection-title">
+                                {{ post.collection }} <span class="c-archives__collection-count">({{ coll_posts.size }})</span>
+                            </h3>
+                            <p>{{ latest.date | date: "%b %-d, %Y" }}</p>
+                        </div>
+                        <ul class="c-archives__collection-list" style="display: none;">
+                            {% for cp in coll_posts %}
+                            <li class="c-archives__collection-item">
+                                <a href="{{ cp.url | relative_url }}" class="c-archives__collection-item-link">
+                                    <h4>{{ cp.title }}</h4>
+                                    <p>{{ cp.date | date: "%b %-d, %Y" }}</p>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endunless %}
+            {% else %}
+                <li class="c-archives__item">
+                    <a href="{{ post.url | relative_url }}" class="c-archives__item-link">
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.date | date: "%b %-d, %Y" }}</p>
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        </ul>
+    {% endfor %}
+</section>

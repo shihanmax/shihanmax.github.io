@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 立即执行防闪烁脚本 -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('themePreference');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = savedTheme ? (savedTheme === 'dark') : prefersDark;
+            var html = document.documentElement;
+            if (isDark) {
+                html.classList.remove('light-theme');
+                html.classList.add('dark-theme');
+                html.setAttribute('data-theme', 'dark');
+                if (!savedTheme) localStorage.setItem('themePreference', 'dark');
+            } else {
+                html.classList.remove('dark-theme');
+                html.classList.add('light-theme');
+                html.setAttribute('data-theme', 'light');
+                if (!savedTheme) localStorage.setItem('themePreference', 'light');
+            }
+        })();
+    </script>
+
+    <!-- 立即生效的主题样式 -->
+    <style id="theme-flash-fix">
+        html.dark-theme, html.dark-theme body { background-color: #0F172A !important; color: #E2E8F0 !important; }
+        html.light-theme, html.light-theme body { background-color: #FAFAFA !important; color: #2C3E50 !important; }
+        html.dark-theme .bookmark-item { background: #2d2d2d !important; border-color: #444C56 !important; color: #d8d8d8 !important; }
+        html.dark-theme .form-input { background-color: #333 !important; border-color: #555 !important; color: #d8d8d8 !important; }
+        html.dark-theme .bookmark-title a { color: #60A5FA !important; }
+        html.dark-theme .tag { background-color: #444 !important; color: #ccc !important; border-color: #555 !important; }
+        html.dark-theme .bookmark-date { color: #d8d8d8 !important; }
+        html, body { transition: none !important; }
+    </style>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% if page.title %}{{ page.title }} - {% endif %}Shihanmax's blog</title>
+    <meta name="description" content="Shihanmax's blog - 机器学习、深度学习、编程技术分享">
+
+    <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}">
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/highlight.css' | relative_url }}">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore'
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <main class="u-container">
+        <header class="c-page__header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="title-nav-wrapper">
+                        <h1>Shihanmax's blog</h1>
+                        <div>&nbsp;&nbsp;</div>
+                        {% if page.page_type == 'home' %}
+                        <nav class="header-nav">
+                            <a href="{{ '/' | relative_url }}">Home</a><span class="u-separate"> | </span>
+                            <a href="{{ '/timeline' | relative_url }}">Timeline</a><span class="u-separate"> | </span>
+                            <a href="{{ '/tags' | relative_url }}">Tags</a><span class="u-separate"> | </span>
+                            <a href="{{ '/bookmarks' | relative_url }}">Bookmarks</a><span class="u-separate"> | </span>
+                            <a href="{{ '/about' | relative_url }}">About</a>
+                        </nav>
+                        {% else %}
+                        <nav class="header-nav">
+                            <a href="{{ '/' | relative_url }}">&lt; Back</a>
+                        </nav>
+                        {% endif %}
+                        {% if page.page_type != 'home' and page.title %}
+                        <div class="page-title-divider">&nbsp;</div>
+                        <h1 class="page-title"> {{ page.title }}</h1>
+                        {% endif %}
+                        {% if page.layout == 'post' %}
+                        <div class="header-date">
+                            <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <label class="theme-switch" for="theme-toggle">
+                        <input type="checkbox" id="theme-toggle" style="display:none">
+                        <span class="switch">
+                            <span class="icon" id="theme-icon-moon">&#127762;</span>
+                            <span class="icon" id="theme-icon-sun">&#127773;</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </header>
+
+        {{ content }}
+
+        <footer class="site-footer">
+            <div style="margin:10px auto;">
+                <p style="text-align:center;font-size:0.9em !important" id="fortune-text"></p>
+                <p style="text-align:center;">&copy; Shihanmax {{ site.time | date: "%Y" }} | Powered by Jekyll</p>
+                <p style="text-align:center;font-size:1em;">
+                    <a href="http://beian.miit.gov.cn/">沪ICP备2024055727号</a>
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/navigation.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/fortune.js' | relative_url }}"></script>
+
+    {{ page.extra_js }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var flashFixStyle = document.getElementById('theme-flash-fix');
+                if (flashFixStyle) {
+                    flashFixStyle.textContent = flashFixStyle.textContent.replace(/transition: none !important;/g, 'transition: background-color 0.3s ease, color 0.3s ease;');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
