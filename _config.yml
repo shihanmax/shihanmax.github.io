@@ -1,7 +1,7 @@
 title: "Shihanmax's blog"
 description: "机器学习、深度学习、编程技术分享"
 url: "https://shihanmax.github.io"
-baseurl: ""
+baseurl: "/blog"
 author:
   name: Shihanmax
   email: shihanmax@foxmail.com
