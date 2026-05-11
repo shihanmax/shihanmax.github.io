@@ -3,9 +3,34 @@
 {% include head.html %}
 
 <body>
+    <div class="s7-menubar" role="menubar">
+        <span class="s7-apple" aria-hidden="true">&#63743;</span>
+        <a class="s7-menu-item" href="{{ "/" | prepend: site.baseurl }}">File</a>
+        <a class="s7-menu-item" href="{{ "/timeline/" | prepend: site.baseurl }}">Edit</a>
+        <a class="s7-menu-item" href="{{ "/tags/" | prepend: site.baseurl }}">View</a>
+        <a class="s7-menu-item" href="{{ "/about/" | prepend: site.baseurl }}">Special</a>
+        <span class="s7-spacer"></span>
+        <span class="s7-clock" id="s7-clock"></span>
+    </div>
     <main class="u-container">
         {{ content }}
     </main>
+    <script>
+        (function () {
+            var el = document.getElementById('s7-clock');
+            if (!el) return;
+            function tick() {
+                var d = new Date();
+                var h = d.getHours();
+                var m = d.getMinutes();
+                var ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12; if (h === 0) h = 12;
+                el.textContent = h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+            }
+            tick();
+            setInterval(tick, 30000);
+        })();
+    </script>
 </body>
 <script>
     // baidu analysis
@@ -56,13 +81,15 @@
     }
 
     // 监听主题切换
-    toggle.addEventListener('change', () => {
-        if (sunIcon.style.display === 'block') {
-            setToLight();
-        } else {
-            setToDark();
-        }
-    });
+    if (toggle) {
+        toggle.addEventListener('change', () => {
+            if (sunIcon.style.display === 'block') {
+                setToLight();
+            } else {
+                setToDark();
+            }
+        });
+    }
 
     function setToDark() {
         moonIcon.style.display = 'none';

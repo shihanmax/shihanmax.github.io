@@ -32,3 +32,7 @@
 
 @import
     'my/ads';
+
+// System 7 theme — keep last so it overrides everything above
+@import
+    'my/system7';
