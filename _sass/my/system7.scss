@@ -1,0 +1,433 @@
+/* ==========================================================================
+   System 7 theme overrides
+   黑白点阵桌面 / 窗口标题栏 / 立体按钮风格
+   ========================================================================== */
+
+$s7-font: "ChicagoFLF", "Chicago", "Geneva", "Lucida Grande",
+          "Helvetica Neue", "Tahoma", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+
+$s7-mono: "Monaco", "Andale Mono", "Courier New", monospace;
+
+// 50% 点阵桌面（黑白棋盘）
+$s7-desktop: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'><rect width='1' height='1' fill='%23000'/><rect x='1' y='1' width='1' height='1' fill='%23000'/></svg>");
+
+html {
+    background: #aaa $s7-desktop repeat;
+    background-size: 2px 2px;
+}
+
+body,
+body.light-theme,
+body.dark-theme {
+    background: transparent !important;
+    color: #000 !important;
+    font-family: $s7-font !important;
+    font-weight: normal !important;
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+    text-rendering: geometricPrecision;
+    padding-top: 22px; // 给顶部菜单栏腾位置
+}
+
+/* ---------- 顶部菜单栏 ---------- */
+.s7-menubar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 20px;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 #000;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-family: $s7-font;
+    font-size: 13px;
+    line-height: 20px;
+    z-index: 1000;
+    user-select: none;
+
+    .s7-apple {
+        margin-right: 18px;
+        font-size: 14px;
+        line-height: 1;
+        cursor: default;
+    }
+
+    .s7-menu-item {
+        margin-right: 18px;
+        color: #000 !important;
+        text-decoration: none !important;
+        padding: 0 4px;
+        cursor: default;
+
+        &:hover {
+            background: #000;
+            color: #fff !important;
+        }
+    }
+
+    .s7-spacer { flex: 1; }
+
+    .s7-clock {
+        font-variant-numeric: tabular-nums;
+        padding: 0 4px;
+    }
+}
+
+/* ---------- 主容器 = 一个窗口 ---------- */
+.u-container {
+    background: #fff !important;
+    border: 1px solid #000 !important;
+    box-shadow: 2px 2px 0 #000;
+    max-width: 760px !important;
+    margin: 30px auto 60px !important;
+    padding: 0 !important;
+}
+
+/* ---------- 页面头部 = 窗口标题栏 ---------- */
+.c-page__header {
+    margin: 0 !important;
+    padding: 0;
+    position: relative;
+    border-bottom: 1px solid #000;
+    background: #fff;
+
+    .container1 {
+        position: relative;
+        height: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // 6 条水平细线（活动窗口标题栏的经典纹理）
+        background-image: repeating-linear-gradient(
+            to bottom,
+            #000 0 1px,
+            #fff 1px 3px
+        );
+        border-bottom: 1px solid #000;
+
+        h1 {
+            background: #fff;
+            color: #000 !important;
+            font-family: $s7-font !important;
+            font-size: 13px !important;
+            font-weight: normal !important;
+            line-height: 1;
+            margin: 0 !important;
+            padding: 0 14px;
+            white-space: nowrap;
+        }
+    }
+
+    // 关闭框（标题栏左侧小方块）
+    &::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 6px;
+        width: 11px;
+        height: 11px;
+        background: #fff;
+        border: 1px solid #000;
+        z-index: 2;
+    }
+
+    // 缩放框（标题栏右侧小方块，嵌套方框样式）
+    &::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        width: 11px;
+        height: 11px;
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 2px #000;
+        z-index: 2;
+    }
+
+    > p {
+        margin: 0 !important;
+        padding: 8px 14px !important;
+        background: #fff;
+        border-bottom: 1px solid #000;
+        font-size: 13px;
+        line-height: 1;
+
+        a {
+            display: inline-block;
+            color: #000 !important;
+            text-decoration: none !important;
+            background: #fff;
+            border: 1px solid #000;
+            padding: 3px 10px;
+            margin-right: 6px;
+            box-shadow: 1px 1px 0 #000;
+            font-family: $s7-font;
+            font-size: 12px;
+            line-height: 1.2;
+
+            &:hover {
+                background: #000;
+                color: #fff !important;
+                box-shadow: none;
+                transform: translate(1px, 1px);
+            }
+        }
+
+        .u-separate { display: none; }
+    }
+
+    // 隐藏明暗主题切换（System 7 是单色）
+    .theme-switch { display: none !important; }
+}
+
+/* ---------- 文章/页面正文区域 ---------- */
+.c-article { margin-bottom: 0 !important; }
+
+.c-article__main,
+.c-article__header,
+.c-article__footer {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    color: #000 !important;
+}
+
+.c-article__header {
+    padding-top: 18px !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 12px !important;
+    border-bottom: 1px dashed #000;
+}
+
+.c-article__title {
+    color: #000 !important;
+    font-family: $s7-font !important;
+    font-size: 22px !important;
+    font-weight: bold !important;
+    line-height: 1.3 !important;
+}
+
+.c-article__time {
+    color: #000 !important;
+    font-size: 12px !important;
+}
+
+.c-article__main {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    color: #000 !important;
+    padding-top: 6px !important;
+    padding-bottom: 18px !important;
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #000 !important;
+        font-family: $s7-font !important;
+        font-weight: bold !important;
+        margin-top: 1.2em;
+    }
+    h2 { font-size: 18px !important; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    h3 { font-size: 16px !important; }
+    h4 { font-size: 15px !important; }
+
+    strong { color: #000 !important; font-weight: bold !important; }
+
+    blockquote {
+        margin: 12px 0 !important;
+        padding: 8px 12px !important;
+        background-image: repeating-linear-gradient(
+            45deg,
+            #fff 0 4px,
+            #ddd 4px 5px
+        );
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        font-style: normal !important;
+        font-size: 14px !important;
+        letter-spacing: 0 !important;
+    }
+
+    img {
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: 2px 2px 0 #000 !important;
+        padding: 2px;
+    }
+}
+
+/* ---------- 首页归档列表 ---------- */
+.c-archives {
+    padding: 18px 24px 8px !important;
+    margin-bottom: 0 !important;
+}
+
+.c-archives__year {
+    font-family: $s7-font !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #000 !important;
+    margin: 14px 0 6px !important;
+    padding: 2px 6px;
+    display: inline-block;
+    background: #000;
+    color: #fff !important;
+}
+
+.c-archives__list { margin: 0 !important; padding: 0 !important; }
+
+.c-archives__item {
+    border-top: 1px dashed #000 !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+
+    // 文件图标
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 14px;
+        margin-right: 8px;
+        background: #fff;
+        border: 1px solid #000;
+        // 文件夹/文档图标：右上角折角
+        box-shadow:
+            inset -3px 3px 0 #fff,
+            inset -3px 3px 0 1px #000;
+        flex-shrink: 0;
+    }
+
+    h3 {
+        flex: 1;
+        font-size: 14px !important;
+        margin: 0 !important;
+        line-height: 1.3 !important;
+
+        a {
+            color: #000 !important;
+            text-decoration: none !important;
+
+            &:hover {
+                background: #000;
+                color: #fff !important;
+            }
+        }
+    }
+
+    p {
+        font-size: 12px !important;
+        color: #000 !important;
+        margin: 0 0 0 12px !important;
+    }
+}
+
+/* ---------- 页脚 = 状态栏 ---------- */
+.c-page__footer {
+    margin: 0 !important;
+    padding: 6px 14px !important;
+    background: #fff;
+    border-top: 1px solid #000;
+    display: block !important;
+    font-size: 12px;
+
+    hr { display: none; }
+
+    p {
+        color: #000 !important;
+        font-size: 12px !important;
+        text-align: center !important;
+        margin: 2px 0 !important;
+        line-height: 1.3 !important;
+    }
+}
+
+/* ---------- 标签 ---------- */
+.c-tag {
+    color: #000 !important;
+    &:before { color: #000 !important; }
+
+    a {
+        display: inline-block;
+        border: 1px solid #000;
+        background: #fff;
+        color: #000 !important;
+        padding: 1px 8px;
+        margin: 2px 2px 2px 0;
+        box-shadow: 1px 1px 0 #000;
+        font-size: 12px;
+        text-decoration: none !important;
+
+        &:hover {
+            background: #000;
+            color: #fff !important;
+            box-shadow: none;
+            transform: translate(1px, 1px);
+        }
+    }
+}
+
+/* ---------- 链接 ---------- */
+a, a:visited {
+    color: #000 !important;
+    text-decoration: underline;
+}
+
+a:hover {
+    background: #000;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+/* ---------- 代码 ---------- */
+pre, code {
+    font-family: $s7-mono !important;
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    border-radius: 0 !important;
+}
+
+pre {
+    padding: 8px 10px !important;
+    box-shadow: 2px 2px 0 #000;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+
+    > code { box-shadow: none; border: 0 !important; }
+}
+
+code { padding: 0 3px !important; font-size: 13px !important; }
+
+/* ---------- 水平分隔线 ---------- */
+hr {
+    border: 0;
+    border-top: 1px dashed #000;
+    margin: 12px 0;
+}
+
+/* ---------- 表格 ---------- */
+table {
+    border-collapse: collapse;
+    border: 1px solid #000;
+    margin: 12px 0;
+
+    th, td {
+        border: 1px solid #000 !important;
+        padding: 4px 8px !important;
+        font-size: 13px !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    th {
+        background: #000 !important;
+        color: #fff !important;
+        font-weight: bold !important;
+    }
+}
+
+/* ---------- 隐藏与主题不符的元素 ---------- */
+.theme-switch { display: none !important; }
