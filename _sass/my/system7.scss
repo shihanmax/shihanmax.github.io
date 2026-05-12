@@ -525,8 +525,9 @@ table {
     display: block;
     width: 13px;
     height: 15px;
+    color: #000;                       // currentColor 驱动 SVG fill
 }
-.s7-menubar .s7-apple { line-height: 0; display: inline-flex; align-items: center; }
+.s7-menubar .s7-apple { line-height: 0; display: inline-flex; align-items: center; color: #000; }
 
 /* ---------- Apple 菜单：纯 CSS 下拉 ---------- */
 .s7-apple-menu {
@@ -539,12 +540,14 @@ table {
     cursor: default;
     outline: none;
     user-select: none;
+    color: #000;
 
     &:hover,
     &:focus,
     &:focus-within {
         background: #000;
-        .s7-apple svg path { fill: #fff !important; }
+        color: #fff;
+        .s7-apple, .s7-apple svg { color: #fff; }
     }
 }
 
