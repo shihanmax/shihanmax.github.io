@@ -50,10 +50,9 @@ body.dark-theme {
     height: 22px;
     background: #fff;
     border-bottom: 1px solid #000;
-    box-shadow: 0 1px 0 #000;
     display: flex;
-    align-items: center;
-    padding: 0 14px;
+    align-items: stretch;
+    padding: 0 8px 0 0;
     font-family: $s7-chrome;
     font-size: 14px;
     line-height: 22px;
@@ -89,15 +88,29 @@ body.dark-theme {
     }
 }
 
-/* ---------- 主容器 = 窗口 ---------- */
+/* ---------- 主容器 = 窗口 ----------
+   System 7 窗口没有投影（投影是 Mac OS 8+ Platinum 风格），
+   只有 1px 黑边把窗口和桌面区隔开。 */
 .u-container {
+    position: relative;
     background: #fff !important;
     border: 1px solid #000 !important;
-    box-shadow: 2px 2px 0 #000;
     max-width: 1080px !important;
     width: calc(100% - 48px) !important;
     margin: 36px auto 64px !important;
     padding: 0 !important;
+}
+
+/* 窗口右下角 grow box（resize handle） */
+.u-container::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15' shape-rendering='crispEdges'><rect width='15' height='15' fill='%23fff'/><rect x='2' y='2' width='11' height='11' fill='none' stroke='%23000' stroke-width='1'/><rect x='5' y='5' width='5' height='5' fill='%23000'/><line x1='0' y1='0' x2='15' y2='0' stroke='%23000' stroke-width='1'/><line x1='0' y1='0' x2='0' y2='15' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
+    pointer-events: none;
 }
 
 /* ---------- 页面头部 = 窗口标题栏 ---------- */
@@ -135,7 +148,7 @@ body.dark-theme {
         }
     }
 
-    // 关闭框
+    // 关闭框：System 7 里就是 1px 黑边的白色方块；按下时整体反色
     &::before {
         content: "";
         position: absolute;
@@ -146,9 +159,11 @@ body.dark-theme {
         background: #fff;
         border: 1px solid #000;
         z-index: 2;
+        cursor: default;
     }
+    &:hover::before, &:active::before { background: #000; }
 
-    // 缩放框
+    // 缩放框：嵌套小方框；按下时反色（嵌套方框翻转黑白）
     &::after {
         content: "";
         position: absolute;
@@ -160,6 +175,11 @@ body.dark-theme {
         border: 1px solid #000;
         box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 2px #000;
         z-index: 2;
+        cursor: default;
+    }
+    &:hover::after, &:active::after {
+        background: #000;
+        box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
     }
 
     > p {
@@ -287,11 +307,20 @@ body.dark-theme {
     font-size: 18px !important;
     font-weight: 400 !important;
     color: #fff !important;
+    background: #000 !important;
     margin: 18px 0 8px !important;
-    padding: 3px 10px;
+    padding: 3px 10px !important;
     display: inline-block;
-    background: #000;
     letter-spacing: 0.04em;
+    border-bottom: none !important;     // 撤掉来自 .c-article__main h2 的下划线
+}
+
+// 同时在 .c-article__main 内部明确覆盖，确保赢过 `.c-article__main h2` 的颜色规则
+.c-article__main .c-archives__year {
+    color: #fff !important;
+    background: #000 !important;
+    border-bottom: none !important;
+    padding-bottom: 3px !important;
 }
 
 .c-archives__list { margin: 0 !important; padding: 0 !important; }
@@ -305,19 +334,15 @@ body.dark-theme {
     align-items: center;
     gap: 8px;
 
-    // 文档图标
+    // 文档图标（内嵌 SVG，折角清晰）
     &::before {
         content: "";
         display: inline-block;
-        width: 12px;
-        height: 14px;
+        width: 14px;
+        height: 16px;
         margin-right: 10px;
-        background: #fff;
-        border: 1px solid #000;
-        box-shadow:
-            inset -3px 3px 0 #fff,
-            inset -3px 3px 0 1px #000;
         flex-shrink: 0;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16' shape-rendering='crispEdges'><path d='M1 1 H9 L13 5 V15 H1 Z' fill='%23fff' stroke='%23000' stroke-width='1'/><polyline points='9,1 9,5 13,5' fill='none' stroke='%23000' stroke-width='1'/><line x1='3' y1='8'  x2='11' y2='8'  stroke='%23000' stroke-width='1'/><line x1='3' y1='10' x2='11' y2='10' stroke='%23000' stroke-width='1'/><line x1='3' y1='12' x2='9'  y2='12' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
     }
 
     h3 {
@@ -471,3 +496,512 @@ table {
     .s7-menubar { padding: 0 8px; font-size: 13px; }
     .s7-menubar .s7-menu-item { margin-right: 12px; }
 }
+
+/* =================================================================
+   打磨细节
+   ================================================================= */
+
+/* ---------- 经典反白选区 ---------- */
+::selection      { background: #000; color: #fff; }
+::-moz-selection { background: #000; color: #fff; }
+
+/* ---------- 正文方块 bullet ---------- */
+.c-article__main {
+    ul { list-style: square outside; padding-left: 1.5em; }
+    ol { padding-left: 1.5em; }
+    li { margin-bottom: 0.3em; }
+    li::marker { color: #000; }
+}
+
+/* ---------- 菜单栏：时钟前竖线 ---------- */
+.s7-menubar .s7-clock {
+    border-left: 1px solid #000;
+    margin-left: 8px;
+    padding-left: 10px !important;
+}
+
+/* ---------- 菜单栏：Apple SVG 图标 ---------- */
+.s7-menubar .s7-apple svg {
+    display: block;
+    width: 13px;
+    height: 15px;
+}
+.s7-menubar .s7-apple { line-height: 0; display: inline-flex; align-items: center; }
+
+/* ---------- Apple 菜单：纯 CSS 下拉 ---------- */
+.s7-apple-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: default;
+    outline: none;
+    user-select: none;
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+        background: #000;
+        .s7-apple svg path { fill: #fff !important; }
+    }
+}
+
+.s7-apple-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -1px;            // 顶端与菜单栏底线对齐
+    margin: 0;
+    padding: 3px 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 1px 1px 0 #000;
+    min-width: 200px;
+    font-family: $s7-chrome;
+    font-size: 13px;
+    line-height: 1.4;
+    z-index: 1100;
+
+    li { margin: 0; padding: 0; list-style: none; }
+
+    a {
+        display: block;
+        padding: 3px 22px 3px 22px;
+        color: #000 !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        background: #fff;
+
+        &:hover {
+            background: #000;
+            color: #fff !important;
+        }
+    }
+
+    .s7-divider {
+        height: 1px;
+        background: #000;
+        margin: 3px 0;
+        opacity: 0.55;
+    }
+}
+
+.s7-apple-menu:hover .s7-apple-dropdown,
+.s7-apple-menu:focus-within .s7-apple-dropdown {
+    display: block;
+}
+
+/* 菜单栏导航项也调整：让 height/padding 撑满栏高，hover 高亮整条 */
+.s7-menubar .s7-menu-item {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    margin-right: 0;
+}
+
+/* ---------- WebKit 滚动条：经典 System 7 ---------- */
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+    background: #fff;
+}
+::-webkit-scrollbar-track {
+    // 滚动条轨道使用稀疏点阵
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'><rect width='1' height='1' fill='%23bbb'/><rect x='1' y='1' width='1' height='1' fill='%23bbb'/></svg>");
+    background-size: 2px 2px;
+    image-rendering: pixelated;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'><rect width='4' height='4' fill='%23fff'/><rect x='0' y='0' width='1' height='1' fill='%23000'/><rect x='2' y='2' width='1' height='1' fill='%23000'/></svg>");
+    background-size: 4px 4px;
+    image-rendering: pixelated;
+    border: 1px solid #000;
+    box-shadow: inset 1px 1px 0 #fff;
+}
+::-webkit-scrollbar-thumb:hover { background-color: #eee; }
+::-webkit-scrollbar-button:single-button {
+    background: #fff;
+    border: 1px solid #000;
+    display: block;
+    height: 16px;
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 7px 7px;
+}
+::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='3.5,1 6,5 1,5' fill='%23000'/></svg>");
+}
+::-webkit-scrollbar-button:vertical:increment {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='1,2 6,2 3.5,6' fill='%23000'/></svg>");
+}
+::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='1,3.5 5,1 5,6' fill='%23000'/></svg>");
+}
+::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='2,1 6,3.5 2,6' fill='%23000'/></svg>");
+}
+::-webkit-scrollbar-corner {
+    background: #fff;
+    border: 1px solid #000;
+}
+
+/* Firefox */
+* {
+    scrollbar-color: #000 #fff;
+    scrollbar-width: thin;
+}
+
+/* ---------- 语法高亮 -> 单色 ---------- */
+/* 覆盖 rouge_monokai：System 7 是黑白世界 */
+.highlight, .highlighter-rouge, pre.highlight {
+    background: #fff !important;
+    color: #000 !important;
+}
+.highlight pre, .highlighter-rouge pre {
+    background: #fff !important;
+    color: #000 !important;
+}
+.highlight .lineno,
+.highlight .gl {
+    color: #888 !important;
+    background: transparent !important;
+    padding-right: 8px;
+    border-right: 1px solid #ccc;
+    margin-right: 8px;
+    user-select: none;
+}
+.highlight * {
+    background: transparent !important;
+    color: #000 !important;
+}
+/* 关键字粗体 */
+.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn,
+.highlight .kp, .highlight .kr, .highlight .kt,
+.highlight .nf, .highlight .nc, .highlight .nb {
+    font-weight: 700 !important;
+}
+/* 注释斜体 */
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cp,
+.highlight .cs, .highlight .cd {
+    font-style: italic !important;
+    color: #555 !important;
+}
+/* 字符串带下划线，区分度 */
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .se,
+.highlight .sb, .highlight .sc, .highlight .sd, .highlight .sh,
+.highlight .si, .highlight .sx, .highlight .sr {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+    color: #000 !important;
+}
+
+/* ---------- 文章标签区域 ---------- */
+.c-article__footer { padding-bottom: 18px !important; padding-top: 8px !important; }
+.c-article__footer p { margin-top: 8px; }
+
+/* =================================================================
+   Finder "marching ants" 链接选区动画
+   ================================================================= */
+@keyframes s7-marching-ants {
+    to {
+        background-position:
+            8px 0,        /* top edge slides right */
+            -8px 100%,    /* bottom edge slides left */
+            0 -8px,       /* left edge slides up */
+            100% 8px;     /* right edge slides down */
+    }
+}
+
+/* 给"内容里的普通链接"用 marching ants，
+   不影响菜单 / 按钮 / 关闭框等已经有反色动作的 chrome */
+.c-article__main a:not(.s7-btn),
+.c-archives__item h3 a {
+    position: relative;
+    padding: 1px 3px;
+    margin: 0 -1px;
+}
+
+.c-article__main a:not(.s7-btn):hover,
+.c-archives__item h3 a:hover {
+    background: transparent !important;
+    color: #000 !important;
+    text-decoration: none;
+    background-image:
+        linear-gradient(90deg, #000 50%, transparent 50%),
+        linear-gradient(90deg, #000 50%, transparent 50%),
+        linear-gradient(0deg,  #000 50%, transparent 50%),
+        linear-gradient(0deg,  #000 50%, transparent 50%);
+    background-size: 8px 1px, 8px 1px, 1px 8px, 1px 8px;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    animation: s7-marching-ants 0.45s linear infinite;
+}
+
+/* =================================================================
+   通用 System 7 按钮（prev/next、pagination 等共用）
+   ================================================================= */
+.s7-btn {
+    display: inline-block;
+    font-family: $s7-chrome;
+    font-size: 13px;
+    line-height: 1.2;
+    color: #000 !important;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 4px 14px;
+    margin: 0 4px;
+    box-shadow: 1px 1px 0 #000;
+    text-decoration: none !important;
+    cursor: default;
+    letter-spacing: 0.02em;
+
+    &:hover, &:focus {
+        background: #000 !important;
+        color: #fff !important;
+        box-shadow: none;
+        transform: translate(1px, 1px);
+        animation: none !important;       // 覆盖掉 marching ants
+        background-image: none !important;
+    }
+
+    /* 默认按钮（System 7 双重描边）：用于翻页器主按钮 / 弹窗 OK */
+    &.s7-btn--default {
+        box-shadow:
+            0 0 0 1px #000,
+            0 0 0 3px #fff,
+            0 0 0 4px #000,
+            2px 2px 0 0 #000;
+        margin: 4px 8px 4px 8px;
+        font-weight: 700;
+
+        &:hover, &:focus {
+            box-shadow:
+                0 0 0 1px #fff,
+                0 0 0 3px #000,
+                0 0 0 4px #000;
+            transform: translate(1px, 1px);
+        }
+    }
+}
+
+/* =================================================================
+   文章页 prev / next
+   ================================================================= */
+.s7-pn {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 36px 24px;
+    border-top: 1px dashed #000;
+    margin-top: 18px;
+
+    .s7-pn__slot { flex: 1 1 0; min-width: 0; }
+    .s7-pn__slot--next { text-align: right; }
+
+    a {
+        display: block;
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: 1px 1px 0 #000;
+        padding: 8px 12px;
+        color: #000 !important;
+        text-decoration: none !important;
+        font-family: $s7-body;
+
+        .s7-pn__label {
+            display: block;
+            font-family: $s7-chrome;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            color: #555;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .s7-pn__title {
+            display: block;
+            font-size: 14px;
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &:hover {
+            background: #000 !important;
+            color: #fff !important;
+            box-shadow: none;
+            transform: translate(1px, 1px);
+            background-image: none !important;
+            animation: none !important;
+            .s7-pn__label { color: #ccc; }
+        }
+    }
+
+    .s7-pn__placeholder {
+        opacity: 0.35;
+        font-family: $s7-chrome;
+        font-size: 12px;
+        align-self: center;
+        color: #000;
+    }
+}
+
+@media (max-width: 720px) {
+    .s7-pn { padding-left: 18px; padding-right: 18px; flex-direction: column; }
+    .s7-pn__slot--next { text-align: left; }
+}
+
+/* =================================================================
+   翻页器 = OK/Cancel 风格小对话框
+   ================================================================= */
+.pagination,
+.s7-pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    font-family: $s7-chrome;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 2px 2px 0 #000;
+    padding: 10px 18px;
+    margin: 24px auto;
+
+    /* 让父容器居中 */
+    .s7-pagination__wrap & { margin: 0; }
+
+    .s7-pagination__title {
+        margin-right: 14px;
+        padding-right: 14px;
+        border-right: 1px dashed #000;
+        font-size: 13px;
+        color: #000;
+    }
+
+    a, span.page-number {
+        display: inline-block;
+        padding: 4px 12px;
+        margin: 0 4px;
+        color: #000 !important;
+        text-decoration: none !important;
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: 1px 1px 0 #000;
+
+        &:hover {
+            background: #000 !important;
+            color: #fff !important;
+            box-shadow: none;
+            transform: translate(1px, 1px);
+            background-image: none !important;
+            animation: none !important;
+        }
+
+        &.current,
+        &[aria-current="page"] {
+            box-shadow:
+                0 0 0 1px #000,
+                0 0 0 3px #fff,
+                0 0 0 4px #000,
+                1px 1px 0 1px #000;
+            margin: 0 8px;
+            font-weight: 700;
+        }
+    }
+
+    span.disabled, span:not(.page-number) {
+        color: #999;
+        margin: 0 6px;
+    }
+}
+
+.s7-pagination__wrap {
+    text-align: center;
+    padding: 20px 36px 8px;
+}
+
+/* =================================================================
+   404 = 经典 System 7 alert 弹窗
+   ================================================================= */
+.s7-alert {
+    max-width: 460px;
+    margin: 60px auto;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 2px 2px 0 #000;
+    font-family: $s7-chrome;
+
+    /* alert 没有标题栏，但保留 1 排横线感觉 */
+    &::before {
+        content: "";
+        display: block;
+        height: 6px;
+        background: #fff;
+        border-bottom: 1px solid #000;
+    }
+}
+
+.s7-alert__body {
+    display: flex;
+    gap: 16px;
+    padding: 22px 24px 8px;
+
+    .s7-alert__icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    .s7-alert__text {
+        flex: 1;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #000;
+
+        strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+    }
+}
+
+.s7-alert__buttons {
+    text-align: right;
+    padding: 14px 24px 22px;
+
+    .s7-btn { margin-left: 8px; }
+}
+
+/* alert 弹窗用的"提示图标"：黑色圆 + 内嵌感叹号 */
+.s7-alert__icon--note {
+    background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' shape-rendering='geometricPrecision'><circle cx='20' cy='20' r='18' fill='none' stroke='%23000' stroke-width='2'/><rect x='18' y='10' width='4' height='14' fill='%23000'/><circle cx='20' cy='29' r='2.4' fill='%23000'/></svg>")
+        center/contain no-repeat;
+}
+
+/* 404 页是 alert 弹窗时，外层窗口（u-container）反而要隐藏起来：
+   让 alert 浮在桌面上更像系统级提示 */
+body.s7-modal .u-container {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+
+    .c-page__header,
+    .c-page__footer { display: none; }
+    .c-article__main { padding: 0 !important; }
+    .c-article__header { display: none; }
+}
+body.s7-modal .u-container::after { display: none; }   /* hide grow box */
