@@ -50,10 +50,9 @@ body.dark-theme {
     height: 22px;
     background: #fff;
     border-bottom: 1px solid #000;
-    box-shadow: 0 1px 0 #000;
     display: flex;
-    align-items: center;
-    padding: 0 14px;
+    align-items: stretch;
+    padding: 0 8px 0 0;
     font-family: $s7-chrome;
     font-size: 14px;
     line-height: 22px;
@@ -89,12 +88,13 @@ body.dark-theme {
     }
 }
 
-/* ---------- 主容器 = 窗口 ---------- */
+/* ---------- 主容器 = 窗口 ----------
+   System 7 窗口没有投影（投影是 Mac OS 8+ Platinum 风格），
+   只有 1px 黑边把窗口和桌面区隔开。 */
 .u-container {
     position: relative;
     background: #fff !important;
     border: 1px solid #000 !important;
-    box-shadow: 2px 2px 0 #000;
     max-width: 1080px !important;
     width: calc(100% - 48px) !important;
     margin: 36px auto 64px !important;
@@ -148,7 +148,7 @@ body.dark-theme {
         }
     }
 
-    // 关闭框（hover 时显示 X）
+    // 关闭框：System 7 里就是 1px 黑边的白色方块；按下时整体反色
     &::before {
         content: "";
         position: absolute;
@@ -160,16 +160,10 @@ body.dark-theme {
         border: 1px solid #000;
         z-index: 2;
         cursor: default;
-        transition: background-image 0.05s linear;
     }
-    &:hover::before {
-        background:
-            linear-gradient(45deg,  transparent 45%, #000 45%, #000 55%, transparent 55%) #fff,
-            linear-gradient(-45deg, transparent 45%, #000 45%, #000 55%, transparent 55%);
-        background-blend-mode: multiply;
-    }
+    &:hover::before, &:active::before { background: #000; }
 
-    // 缩放框（嵌套方框，hover 实心填中心方块）
+    // 缩放框：嵌套小方框；按下时反色（嵌套方框翻转黑白）
     &::after {
         content: "";
         position: absolute;
@@ -183,12 +177,9 @@ body.dark-theme {
         z-index: 2;
         cursor: default;
     }
-    &:hover::after {
-        box-shadow:
-            inset 0 0 0 1px #fff,
-            inset 0 0 0 2px #000,
-            inset 0 0 0 4px #fff,
-            inset 0 0 0 6px #000;
+    &:hover::after, &:active::after {
+        background: #000;
+        box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #fff;
     }
 
     > p {
@@ -532,10 +523,85 @@ table {
 /* ---------- 菜单栏：Apple SVG 图标 ---------- */
 .s7-menubar .s7-apple svg {
     display: block;
-    width: 12px;
-    height: 14px;
+    width: 13px;
+    height: 15px;
 }
-.s7-menubar .s7-apple { line-height: 0; margin-right: 18px; }
+.s7-menubar .s7-apple { line-height: 0; display: inline-flex; align-items: center; }
+
+/* ---------- Apple 菜单：纯 CSS 下拉 ---------- */
+.s7-apple-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: default;
+    outline: none;
+    user-select: none;
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+        background: #000;
+        .s7-apple svg path { fill: #fff !important; }
+    }
+}
+
+.s7-apple-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -1px;            // 顶端与菜单栏底线对齐
+    margin: 0;
+    padding: 3px 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 1px 1px 0 #000;
+    min-width: 200px;
+    font-family: $s7-chrome;
+    font-size: 13px;
+    line-height: 1.4;
+    z-index: 1100;
+
+    li { margin: 0; padding: 0; list-style: none; }
+
+    a {
+        display: block;
+        padding: 3px 22px 3px 22px;
+        color: #000 !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        background: #fff;
+
+        &:hover {
+            background: #000;
+            color: #fff !important;
+        }
+    }
+
+    .s7-divider {
+        height: 1px;
+        background: #000;
+        margin: 3px 0;
+        opacity: 0.55;
+    }
+}
+
+.s7-apple-menu:hover .s7-apple-dropdown,
+.s7-apple-menu:focus-within .s7-apple-dropdown {
+    display: block;
+}
+
+/* 菜单栏导航项也调整：让 height/padding 撑满栏高，hover 高亮整条 */
+.s7-menubar .s7-menu-item {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    margin-right: 0;
+}
 
 /* ---------- WebKit 滚动条：经典 System 7 ---------- */
 ::-webkit-scrollbar {
@@ -642,15 +708,300 @@ table {
 /* ---------- 文章标签区域 ---------- */
 .c-article__footer { padding-bottom: 18px !important; padding-top: 8px !important; }
 .c-article__footer p { margin-top: 8px; }
-.c-article__footer::before {
-    content: "Tags";
+
+/* =================================================================
+   Finder "marching ants" 链接选区动画
+   ================================================================= */
+@keyframes s7-marching-ants {
+    to {
+        background-position:
+            8px 0,        /* top edge slides right */
+            -8px 100%,    /* bottom edge slides left */
+            0 -8px,       /* left edge slides up */
+            100% 8px;     /* right edge slides down */
+    }
+}
+
+/* 给"内容里的普通链接"用 marching ants，
+   不影响菜单 / 按钮 / 关闭框等已经有反色动作的 chrome */
+.c-article__main a:not(.s7-btn),
+.c-archives__item h3 a {
+    position: relative;
+    padding: 1px 3px;
+    margin: 0 -1px;
+}
+
+.c-article__main a:not(.s7-btn):hover,
+.c-archives__item h3 a:hover {
+    background: transparent !important;
+    color: #000 !important;
+    text-decoration: none;
+    background-image:
+        linear-gradient(90deg, #000 50%, transparent 50%),
+        linear-gradient(90deg, #000 50%, transparent 50%),
+        linear-gradient(0deg,  #000 50%, transparent 50%),
+        linear-gradient(0deg,  #000 50%, transparent 50%);
+    background-size: 8px 1px, 8px 1px, 1px 8px, 1px 8px;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    animation: s7-marching-ants 0.45s linear infinite;
+}
+
+/* =================================================================
+   通用 System 7 按钮（prev/next、pagination 等共用）
+   ================================================================= */
+.s7-btn {
     display: inline-block;
     font-family: $s7-chrome;
-    font-size: 12px;
-    color: #000;
+    font-size: 13px;
+    line-height: 1.2;
+    color: #000 !important;
     background: #fff;
     border: 1px solid #000;
-    padding: 1px 8px;
-    margin-right: 8px;
+    padding: 4px 14px;
+    margin: 0 4px;
     box-shadow: 1px 1px 0 #000;
+    text-decoration: none !important;
+    cursor: default;
+    letter-spacing: 0.02em;
+
+    &:hover, &:focus {
+        background: #000 !important;
+        color: #fff !important;
+        box-shadow: none;
+        transform: translate(1px, 1px);
+        animation: none !important;       // 覆盖掉 marching ants
+        background-image: none !important;
+    }
+
+    /* 默认按钮（System 7 双重描边）：用于翻页器主按钮 / 弹窗 OK */
+    &.s7-btn--default {
+        box-shadow:
+            0 0 0 1px #000,
+            0 0 0 3px #fff,
+            0 0 0 4px #000,
+            2px 2px 0 0 #000;
+        margin: 4px 8px 4px 8px;
+        font-weight: 700;
+
+        &:hover, &:focus {
+            box-shadow:
+                0 0 0 1px #fff,
+                0 0 0 3px #000,
+                0 0 0 4px #000;
+            transform: translate(1px, 1px);
+        }
+    }
 }
+
+/* =================================================================
+   文章页 prev / next
+   ================================================================= */
+.s7-pn {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 36px 24px;
+    border-top: 1px dashed #000;
+    margin-top: 18px;
+
+    .s7-pn__slot { flex: 1 1 0; min-width: 0; }
+    .s7-pn__slot--next { text-align: right; }
+
+    a {
+        display: block;
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: 1px 1px 0 #000;
+        padding: 8px 12px;
+        color: #000 !important;
+        text-decoration: none !important;
+        font-family: $s7-body;
+
+        .s7-pn__label {
+            display: block;
+            font-family: $s7-chrome;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            color: #555;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .s7-pn__title {
+            display: block;
+            font-size: 14px;
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &:hover {
+            background: #000 !important;
+            color: #fff !important;
+            box-shadow: none;
+            transform: translate(1px, 1px);
+            background-image: none !important;
+            animation: none !important;
+            .s7-pn__label { color: #ccc; }
+        }
+    }
+
+    .s7-pn__placeholder {
+        opacity: 0.35;
+        font-family: $s7-chrome;
+        font-size: 12px;
+        align-self: center;
+        color: #000;
+    }
+}
+
+@media (max-width: 720px) {
+    .s7-pn { padding-left: 18px; padding-right: 18px; flex-direction: column; }
+    .s7-pn__slot--next { text-align: left; }
+}
+
+/* =================================================================
+   翻页器 = OK/Cancel 风格小对话框
+   ================================================================= */
+.pagination,
+.s7-pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    font-family: $s7-chrome;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 2px 2px 0 #000;
+    padding: 10px 18px;
+    margin: 24px auto;
+
+    /* 让父容器居中 */
+    .s7-pagination__wrap & { margin: 0; }
+
+    .s7-pagination__title {
+        margin-right: 14px;
+        padding-right: 14px;
+        border-right: 1px dashed #000;
+        font-size: 13px;
+        color: #000;
+    }
+
+    a, span.page-number {
+        display: inline-block;
+        padding: 4px 12px;
+        margin: 0 4px;
+        color: #000 !important;
+        text-decoration: none !important;
+        background: #fff;
+        border: 1px solid #000;
+        box-shadow: 1px 1px 0 #000;
+
+        &:hover {
+            background: #000 !important;
+            color: #fff !important;
+            box-shadow: none;
+            transform: translate(1px, 1px);
+            background-image: none !important;
+            animation: none !important;
+        }
+
+        &.current,
+        &[aria-current="page"] {
+            box-shadow:
+                0 0 0 1px #000,
+                0 0 0 3px #fff,
+                0 0 0 4px #000,
+                1px 1px 0 1px #000;
+            margin: 0 8px;
+            font-weight: 700;
+        }
+    }
+
+    span.disabled, span:not(.page-number) {
+        color: #999;
+        margin: 0 6px;
+    }
+}
+
+.s7-pagination__wrap {
+    text-align: center;
+    padding: 20px 36px 8px;
+}
+
+/* =================================================================
+   404 = 经典 System 7 alert 弹窗
+   ================================================================= */
+.s7-alert {
+    max-width: 460px;
+    margin: 60px auto;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: 2px 2px 0 #000;
+    font-family: $s7-chrome;
+
+    /* alert 没有标题栏，但保留 1 排横线感觉 */
+    &::before {
+        content: "";
+        display: block;
+        height: 6px;
+        background: #fff;
+        border-bottom: 1px solid #000;
+    }
+}
+
+.s7-alert__body {
+    display: flex;
+    gap: 16px;
+    padding: 22px 24px 8px;
+
+    .s7-alert__icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    .s7-alert__text {
+        flex: 1;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #000;
+
+        strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+    }
+}
+
+.s7-alert__buttons {
+    text-align: right;
+    padding: 14px 24px 22px;
+
+    .s7-btn { margin-left: 8px; }
+}
+
+/* alert 弹窗用的"提示图标"：黑色圆 + 内嵌感叹号 */
+.s7-alert__icon--note {
+    background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' shape-rendering='geometricPrecision'><circle cx='20' cy='20' r='18' fill='none' stroke='%23000' stroke-width='2'/><rect x='18' y='10' width='4' height='14' fill='%23000'/><circle cx='20' cy='29' r='2.4' fill='%23000'/></svg>")
+        center/contain no-repeat;
+}
+
+/* 404 页是 alert 弹窗时，外层窗口（u-container）反而要隐藏起来：
+   让 alert 浮在桌面上更像系统级提示 */
+body.s7-modal .u-container {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+
+    .c-page__header,
+    .c-page__footer { display: none; }
+    .c-article__main { padding: 0 !important; }
+    .c-article__header { display: none; }
+}
+body.s7-modal .u-container::after { display: none; }   /* hide grow box */

@@ -20,4 +20,27 @@ layout: page
         {% endfor %}
         </p>
     </footer>
+
+    <nav class="s7-pn" aria-label="Post navigation">
+        <div class="s7-pn__slot s7-pn__slot--prev">
+            {% if page.previous %}
+            <a href="{{ page.previous.url | prepend: site.baseurl }}" rel="prev">
+                <span class="s7-pn__label">&laquo; Previous</span>
+                <span class="s7-pn__title">{{ page.previous.title }}</span>
+            </a>
+            {% else %}
+            <span class="s7-pn__placeholder">&laquo; Previous</span>
+            {% endif %}
+        </div>
+        <div class="s7-pn__slot s7-pn__slot--next">
+            {% if page.next %}
+            <a href="{{ page.next.url | prepend: site.baseurl }}" rel="next">
+                <span class="s7-pn__label">Next &raquo;</span>
+                <span class="s7-pn__title">{{ page.next.title }}</span>
+            </a>
+            {% else %}
+            <span class="s7-pn__placeholder">Next &raquo;</span>
+            {% endif %}
+        </div>
+    </nav>
 </article>
