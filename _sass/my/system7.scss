@@ -2,21 +2,18 @@
    System 7 theme overrides
    ========================================================================== */
 
-/* 字体栈：Chicago 仅用于 chrome（标题栏 / 菜单栏 / 按钮 / 标题）。
-   正文用 Geneva-like 现代无衬线，避免位图字体拉伸丢失锐度。 */
-$s7-chrome: "ChicagoFLF", "Chicago", "Charcoal", "Geneva",
-            "Lucida Grande", -apple-system, BlinkMacSystemFont,
-            "Segoe UI", sans-serif;
+/* 字体策略（已彻底去除位图字体 Chicago/ChicagoFLF）：
+   - chrome（窗口标题 / 菜单栏 / 按钮 / 标题 / 表头等）：$s7-elegant
+   - 正文：$s7-body
+   - 代码：$s7-mono
+   位图风格只保留在桌面点阵底纹这种「图案」上，不再用于任何文字。 */
+$s7-elegant: "Lucida Grande", "Helvetica Neue", "Charcoal", "Geneva",
+             -apple-system, BlinkMacSystemFont, "Segoe UI",
+             "PingFang SC", system-ui, sans-serif;
 
 $s7-body: "Geneva", "Lucida Grande", "Helvetica Neue", -apple-system,
           BlinkMacSystemFont, "Segoe UI", "PingFang SC",
           "Microsoft YaHei", sans-serif;
-
-/* 优雅 chrome 字体：用于窗口标题 / 顶部菜单栏 / nav 按钮 / 年份等
-   不再使用位图风格的 Chicago，改用清爽的人文无衬线。 */
-$s7-elegant: "Lucida Grande", "Helvetica Neue", "Charcoal", "Geneva",
-             -apple-system, BlinkMacSystemFont, "Segoe UI",
-             "PingFang SC", system-ui, sans-serif;
 
 $s7-mono: "Monaco", "Andale Mono", "Courier New", monospace;
 
@@ -80,7 +77,7 @@ body.dark-theme {
         text-decoration: none !important;
         padding: 0 5px;
         cursor: default;
-        letter-spacing: 0.02em;
+        letter-spacing: 0;
 
         &:hover {
             background: #000;
@@ -117,7 +114,7 @@ body.dark-theme {
     bottom: 0;
     width: 15px;
     height: 15px;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15' shape-rendering='crispEdges'><rect width='15' height='15' fill='%23fff'/><rect x='2' y='2' width='11' height='11' fill='none' stroke='%23000' stroke-width='1'/><rect x='5' y='5' width='5' height='5' fill='%23000'/><line x1='0' y1='0' x2='15' y2='0' stroke='%23000' stroke-width='1'/><line x1='0' y1='0' x2='0' y2='15' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><rect width='15' height='15' fill='%23fff'/><rect x='2' y='2' width='11' height='11' fill='none' stroke='%23000' stroke-width='1'/><rect x='5' y='5' width='5' height='5' fill='%23000'/><line x1='0' y1='0' x2='15' y2='0' stroke='%23000' stroke-width='1'/><line x1='0' y1='0' x2='0' y2='15' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
     pointer-events: none;
 }
 
@@ -243,11 +240,11 @@ body.dark-theme {
 
 .c-article__title {
     color: #000 !important;
-    font-family: $s7-chrome !important;
-    font-size: 26px !important;
-    font-weight: 400 !important;
-    line-height: 1.3 !important;
-    letter-spacing: 0.01em;
+    font-family: $s7-elegant !important;
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.01em;
 }
 
 .c-article__time {
@@ -266,26 +263,23 @@ body.dark-theme {
 
     h1, h2, h3, h4, h5, h6 {
         color: #000 !important;
-        font-family: $s7-chrome !important;
-        font-weight: 400 !important;
-        letter-spacing: 0.01em;
+        font-family: $s7-elegant !important;
+        font-weight: 600 !important;
+        letter-spacing: 0;
         margin-top: 1.3em;
     }
-    h2 { font-size: 20px !important; border-bottom: 1px solid #000; padding-bottom: 3px; }
-    h3 { font-size: 17px !important; }
+    h2 { font-size: 21px !important; border-bottom: 1px solid #000; padding-bottom: 3px; }
+    h3 { font-size: 18px !important; }
     h4 { font-size: 15px !important; }
 
     strong { color: #000 !important; font-weight: 700 !important; }
 
     blockquote {
         margin: 14px 0 !important;
-        padding: 10px 14px !important;
-        background-image: repeating-linear-gradient(
-            45deg,
-            #fff 0 4px,
-            #ececec 4px 5px
-        );
-        border: 1px solid #000 !important;
+        padding: 10px 16px !important;
+        background: #f6f6f6 !important;
+        border: 0 !important;
+        border-left: 3px solid #000 !important;
         color: #111 !important;
         font-style: normal !important;
         font-size: 15px !important;
@@ -348,7 +342,7 @@ body.dark-theme {
         height: 16px;
         margin-right: 10px;
         flex-shrink: 0;
-        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16' shape-rendering='crispEdges'><path d='M1 1 H9 L13 5 V15 H1 Z' fill='%23fff' stroke='%23000' stroke-width='1'/><polyline points='9,1 9,5 13,5' fill='none' stroke='%23000' stroke-width='1'/><line x1='3' y1='8'  x2='11' y2='8'  stroke='%23000' stroke-width='1'/><line x1='3' y1='10' x2='11' y2='10' stroke='%23000' stroke-width='1'/><line x1='3' y1='12' x2='9'  y2='12' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16'><path d='M1 1 H9 L13 5 V15 H1 Z' fill='%23fff' stroke='%23000' stroke-width='1'/><polyline points='9,1 9,5 13,5' fill='none' stroke='%23000' stroke-width='1'/><line x1='3' y1='8'  x2='11' y2='8'  stroke='%23000' stroke-width='1'/><line x1='3' y1='10' x2='11' y2='10' stroke='%23000' stroke-width='1'/><line x1='3' y1='12' x2='9'  y2='12' stroke='%23000' stroke-width='1'/></svg>") center/contain no-repeat;
     }
 
     h3 {
@@ -412,7 +406,7 @@ body.dark-theme {
         padding: 2px 10px;
         margin: 3px 3px 3px 0;
         box-shadow: 1px 1px 0 #000;
-        font-family: $s7-chrome;
+        font-family: $s7-elegant;
         font-size: 12px;
         text-decoration: none !important;
 
@@ -483,7 +477,7 @@ table {
     th {
         background: #000 !important;
         color: #fff !important;
-        font-family: $s7-chrome;
+        font-family: $s7-elegant;
         font-weight: 400 !important;
         letter-spacing: 0.02em;
     }
@@ -612,60 +606,28 @@ table {
     margin-right: 0;
 }
 
-/* ---------- WebKit 滚动条：经典 System 7 ---------- */
+/* ---------- 自绘滚动条：纤细、纯色，无点阵/箭头 ---------- */
 ::-webkit-scrollbar {
-    width: 16px;
-    height: 16px;
+    width: 8px;
+    height: 8px;
     background: #fff;
 }
 ::-webkit-scrollbar-track {
-    // 滚动条轨道使用稀疏点阵
-    background-color: #fff;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'><rect width='1' height='1' fill='%23bbb'/><rect x='1' y='1' width='1' height='1' fill='%23bbb'/></svg>");
-    background-size: 2px 2px;
-    image-rendering: pixelated;
+    background: #fff;
     border-left: 1px solid #000;
-    border-right: 1px solid #000;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #fff;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'><rect width='4' height='4' fill='%23fff'/><rect x='0' y='0' width='1' height='1' fill='%23000'/><rect x='2' y='2' width='1' height='1' fill='%23000'/></svg>");
-    background-size: 4px 4px;
-    image-rendering: pixelated;
+    background: #888;
     border: 1px solid #000;
-    box-shadow: inset 1px 1px 0 #fff;
 }
-::-webkit-scrollbar-thumb:hover { background-color: #eee; }
-::-webkit-scrollbar-button:single-button {
-    background: #fff;
-    border: 1px solid #000;
-    display: block;
-    height: 16px;
-    width: 16px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 7px 7px;
-}
-::-webkit-scrollbar-button:vertical:decrement {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='3.5,1 6,5 1,5' fill='%23000'/></svg>");
-}
-::-webkit-scrollbar-button:vertical:increment {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='1,2 6,2 3.5,6' fill='%23000'/></svg>");
-}
-::-webkit-scrollbar-button:horizontal:decrement {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='1,3.5 5,1 5,6' fill='%23000'/></svg>");
-}
-::-webkit-scrollbar-button:horizontal:increment {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges'><polygon points='2,1 6,3.5 2,6' fill='%23000'/></svg>");
-}
+::-webkit-scrollbar-thumb:hover { background: #555; }
 ::-webkit-scrollbar-corner {
     background: #fff;
-    border: 1px solid #000;
 }
 
 /* Firefox */
 * {
-    scrollbar-color: #000 #fff;
+    scrollbar-color: #888 #fff;
     scrollbar-width: thin;
 }
 
@@ -761,7 +723,7 @@ table {
    ================================================================= */
 .s7-btn {
     display: inline-block;
-    font-family: $s7-chrome;
+    font-family: $s7-elegant;
     font-size: 13px;
     line-height: 1.2;
     color: #000 !important;
@@ -830,7 +792,7 @@ table {
 
         .s7-pn__label {
             display: block;
-            font-family: $s7-chrome;
+            font-family: $s7-elegant;
             font-size: 11px;
             letter-spacing: 0.06em;
             color: #555;
@@ -859,7 +821,7 @@ table {
 
     .s7-pn__placeholder {
         opacity: 0.35;
-        font-family: $s7-chrome;
+        font-family: $s7-elegant;
         font-size: 12px;
         align-self: center;
         color: #000;
@@ -879,7 +841,7 @@ table {
     display: inline-flex;
     align-items: center;
     gap: 0;
-    font-family: $s7-chrome;
+    font-family: $s7-elegant;
     font-size: 13px;
     background: #fff;
     border: 1px solid #000;
@@ -949,7 +911,7 @@ table {
     background: #fff;
     border: 1px solid #000;
     box-shadow: 2px 2px 0 #000;
-    font-family: $s7-chrome;
+    font-family: $s7-elegant;
 
     /* alert 没有标题栏，但保留 1 排横线感觉 */
     &::before {
