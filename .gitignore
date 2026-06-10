@@ -123,3 +123,5 @@ output/
 /online_resources
 
 .sass-cache/
+.jekyll-cache/
+.jekyll-metadata

@@ -7,7 +7,6 @@
 @import
     'helpers/mixins',
     'helpers/variables',
-    'helpers/night',  // dark theme
     'helpers/tables';  // table 样式
 
 // Base
@@ -29,9 +28,6 @@
 // Vendor
 @import
     'vendor/highlight';
-
-@import
-    'my/ads';
 
 // "Antique Web" theme — keep last so it overrides everything above
 @import

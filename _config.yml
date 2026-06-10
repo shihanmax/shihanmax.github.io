@@ -6,15 +6,11 @@ author: Shihanmax
 email: shihanmax@foxmail.com
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://shihanmax.github.io" # the base hostname & protocol for your site
-# twitter_username: YourTwitterNo
 github_username:  shihanmax
-
-# disqus_shortname: Test1
 
 # Build settings
 include: [_pages]
 highlighter: rouge
-# syntax_highlighter: rouge
 
 markdown: kramdown
 kramdown:
@@ -36,5 +32,3 @@ sass:
 paginate: 15
 paginate_path: "blog/page:num/"
 plugins: [jekyll-paginate, jemoji, jekyll-sitemap]
-collections:
-  protected:
