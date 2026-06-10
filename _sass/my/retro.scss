@@ -38,6 +38,9 @@ $rw-page:    46rem;          // 页面容器宽
    ---------------------------------------------------------------------------- */
 
 html {
+    /* 老主题的 base/reset 把根字号设成了 57%（1rem≈9px），
+       会让本主题所有 rem 尺寸缩水。这里恢复为正常 100%（1rem=16px）。 */
+    font-size: 100% !important;
     background: $rw-paper;
     /* 极淡的横向纸纹（细密扫描线，几乎不可见，仅增加质感） */
     background-image: repeating-linear-gradient(
@@ -55,9 +58,9 @@ body.dark-theme {
     background: transparent !important;
     color: $rw-ink !important;
     font-family: $rw-serif !important;
-    font-size: 18px;
+    font-size: 1.1875rem;        // ≈19px，衬线正文舒适基准
     font-weight: 400 !important;
-    line-height: 1.7;
+    line-height: 1.75;
     padding-top: 0 !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -198,8 +201,8 @@ body.dark-theme {
 
 .c-article__main {
     font-family: $rw-serif !important;
-    font-size: 1rem !important;
-    line-height: 1.78 !important;
+    font-size: 1.1875rem !important;   // ≈19px 正文
+    line-height: 1.8 !important;
     color: $rw-ink !important;
     max-width: $rw-measure;
     margin: 0 auto !important;
