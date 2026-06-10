@@ -1,32 +1,21 @@
-<header class="c-page__header">
+<header class="c-page__header rw-head">
 
-    <div class="container1">
-        <h1>{{ site.description }}</h1>
-        <!-- 切换明暗模式的按钮 -->
-        <label class="theme-switch" for="theme-toggle">
-            <input type="checkbox" id="theme-toggle" style="display:none">
-            <span class="switch">
-                <span class="icon" id="theme-icon-moon">&#127762;</span> 
-                <span class="icon" id="theme-icon-sun">&#127773;</span>
-            </span>
-        </label>
-        
-       
-    </div>
+    <div class="rw-rule-ascii">&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;</div>
 
-	{% if page.title == 'Home' %}
-    <p>
-        <a href="{{ "/" | prepend: site.baseurl }}">Home</a><span class="u-separate"></span>
-        <a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a><span class="u-separate"></span>
-        <a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a><span class="u-separate"></span>
+    <h1 class="rw-sitetitle">
+        <a href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a>
+    </h1>
+
+    <p class="rw-tagline">{{ site.description }}</p>
+
+    <nav class="rw-nav">
+        <a href="{{ "/" | prepend: site.baseurl }}">Home</a>
+        <a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a>
+        <a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a>
         <a href="{{ "/about/" | prepend: site.baseurl }}">About</a>
-        <!-- {% include ad.html %} -->
-    </p>
-	{% else %}
-    <p>
-        <a href="{{ "/" | prepend: site.baseurl }}">&lt; Back</a>
-        <!-- {% include ad.html %} -->
-    </p>
-	{% endif %}
+        <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a>
+    </nav>
+
+    <div class="rw-rule-ascii">&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;</div>
 
 </header>

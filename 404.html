@@ -1,22 +1,20 @@
 ---
-layout: default
-title: "404"
+layout: page
+title: "404 — Not Found"
 permalink: /404.html
 ---
 
-<div class="s7-alert" role="alertdialog" aria-modal="true" aria-labelledby="s7-alert-title">
-    <div class="s7-alert__body">
-        <div class="s7-alert__icon s7-alert__icon--note" aria-hidden="true"></div>
-        <div class="s7-alert__text">
-            <strong id="s7-alert-title">Sorry, a system error occurred.</strong>
-            "{{ page.url }}" could not be found.<br>
-            The file may have been moved or renamed, or the URL may be incorrect.
-        </div>
-    </div>
-    <div class="s7-alert__buttons">
-        <a class="s7-btn" href="javascript:history.back()">Cancel</a>
-        <a class="s7-btn s7-btn--default" href="{{ '/' | prepend: site.baseurl }}">OK</a>
-    </div>
-</div>
+<div class="rw-404">
+<pre>
+    _   _    ___    _  _
+   | | | |  / _ \  | || |
+   | |_| | | | | | | || |_
+   |___  | | |_| | |__   _|
+       |_|  \___/     |_|
+</pre>
 
-<script>document.body.classList.add('s7-modal');</script>
+<p>The page you asked for could not be found.</p>
+<p class="rw-404__hint">It may have been moved, renamed, or never existed at all.</p>
+
+<p>&mdash; <a href="{{ '/' | prepend: site.baseurl }}">Return to the front page</a> &mdash;</p>
+</div>

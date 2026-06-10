@@ -1,11 +1,13 @@
 <footer class="c-page__footer">
-	<hr>
-	<div style="margin:10px auto;">
-		<p style="text-align:center;font-size:1.6em">{% include fortune.html %}</p>
-		<p style="text-align:center;">&copy; {{ site.author }} {{ 'now' | date: '%Y' }} | Powered by Jekyll</p>
-		<p style="text-align:center;font-size:1.6em;">
-		<a href="http://beian.miit.gov.cn/">沪ICP备2024055727号</a>
-		</p>
-		<!-- <p style="text-align:center;">Follow me on: <a href="https://github.com/{{ site.github_username }}">Github</a></p> -->
+	<p class="rw-fortune">{% include fortune.html %}</p>
+
+	<div class="rw-badges">
+		<span class="rw-badge">Best viewed with any browser</span>
+		<span class="rw-badge">Made by hand</span>
+		<span class="rw-badge">Powered by Jekyll</span>
+		<span class="rw-badge">Est. {{ site.author }}</span>
 	</div>
+
+	<p>&copy; {{ site.author }} 2018&ndash;{{ 'now' | date: '%Y' }} &middot; All rights reserved</p>
+	<p><a href="http://beian.miit.gov.cn/">沪ICP备2024055727号</a></p>
 </footer>
