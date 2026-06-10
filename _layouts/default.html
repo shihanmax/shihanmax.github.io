@@ -3,184 +3,19 @@
 {% include head.html %}
 
 <body>
-    <div class="s7-menubar" role="menubar">
-        <div class="s7-apple-menu" tabindex="0" role="menuitem" aria-haspopup="true">
-            <span class="s7-apple" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" shape-rendering="geometricPrecision"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></span>
-            <ul class="s7-apple-dropdown" role="menu">
-                <li><a href="{{ "/about/" | prepend: site.baseurl }}">About This Site...</a></li>
-                <li class="s7-divider"></li>
-                <li><a href="{{ "/" | prepend: site.baseurl }}">Home</a></li>
-                <li><a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a></li>
-                <li><a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a></li>
-                <li class="s7-divider"></li>
-                <li><a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS Feed</a></li>
-                <li><a href="https://github.com/{{ site.github_username }}">GitHub</a></li>
-            </ul>
-        </div>
-        <a class="s7-menu-item" href="{{ "/" | prepend: site.baseurl }}">Home</a>
-        <a class="s7-menu-item" href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a>
-        <a class="s7-menu-item" href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a>
-        <a class="s7-menu-item" href="{{ "/about/" | prepend: site.baseurl }}">About</a>
-        <span class="s7-spacer"></span>
-        <span class="s7-clock" id="s7-clock"></span>
-    </div>
     <main class="u-container">
         {{ content }}
     </main>
+
     <script>
+        // baidu analysis
+        var _hmt = _hmt || [];
         (function () {
-            var el = document.getElementById('s7-clock');
-            if (!el) return;
-            function tick() {
-                var d = new Date();
-                var h = d.getHours();
-                var m = d.getMinutes();
-                var ampm = h >= 12 ? 'PM' : 'AM';
-                h = h % 12; if (h === 0) h = 12;
-                el.textContent = h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
-            }
-            tick();
-            setInterval(tick, 30000);
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6a7309420b13551443ee226a20c9f7b2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
         })();
     </script>
 </body>
-<script>
-    // baidu analysis
-    var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?6a7309420b13551443ee226a20c9f7b2";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-
-    // // 获取主题切换按钮和body的引用
-    const toggle = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    // // 获取主题切换复选框和图标元素
-    const moonIcon = document.getElementById('theme-icon-moon');
-    const sunIcon = document.getElementById('theme-icon-sun');
-
-    // 检测系统主题偏好
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    // 设置用户偏好的函数（可以存储在localStorage或Cookie中）
-    function setUserPreference(preference) {
-        // 示例：存储在localStorage中
-        localStorage.setItem('themePreference', preference);
-    }
-
-    // 页面加载时设置初始主题
-    function setInitialTheme() {
-        const savedPreference = localStorage.getItem('themePreference');
-
-        if (savedPreference) {
-            // 如果保存了主题，则使用
-            if (savedPreference === 'dark') {
-                setToDark();
-            } else {
-                setToLight();
-            }
-        } else {
-            // 如果从未保存过主题，则使用系统默认主题
-            if (prefersDarkScheme) {
-                setToDark();
-            } else {
-                setToLight();
-            }
-        }
-    }
-
-    // 监听主题切换
-    if (toggle) {
-        toggle.addEventListener('change', () => {
-            if (sunIcon.style.display === 'block') {
-                setToLight();
-            } else {
-                setToDark();
-            }
-        });
-    }
-
-    function setToDark() {
-        moonIcon.style.display = 'none';
-        sunIcon.style.display = 'block';
-        body.style.backgroundColor = '#181818'; // 直接设置背景颜色
-        body.classList.add('dark-theme')
-        body.classList.remove('light-theme')
-        setUserPreference('dark')
-    }
-
-    function setToLight() {
-        moonIcon.style.display = 'block';
-        sunIcon.style.display = 'none';
-        // body.style.backgroundColor = '#ffffff'; // 直接设置背景颜色
-        body.style.backgroundColor = '#f5f5f5'; // 直接设置背景颜色
-        // body.style.color = '#333333'; // 直接设置文字颜色
-        body.classList.add('light-theme')
-        body.classList.remove('dark-theme')
-
-        // 其他样式的直接应用...
-        setUserPreference('light')
-    }
-
-    setInitialTheme()
-
-</script>
-<!--script>
-    // ads
-    document.addEventListener('DOMContentLoaded', function () {
-        var image = document.getElementById('image');
-        var bubble = document.getElementById('bubble');
-        var ads = document.getElementById('ads');  // ad link
-        var message = document.getElementById('message');  // 右上角的消息框
-
-        const show_ads = localStorage.getItem('show_ads');
-        
-        if (show_ads) {
-            let parts = show_ads.split(",");
-            let lastClick = parts[1];
-            let show = parts[0];
-            let freshness = 1 * 24 * 60 * 60; // 1天
-
-            if (show === 'false' && (Date.now() - lastClick < freshness)) {
-                ads.style.display = 'none'; 
-                console.log("user set ads -> false")
-            } else {
-                localStorage.setItem('show_ads', `false,${Date.now()}`);
-                ads.style.display = 'block';
-                console.log("cache not fresh, show ads")
-            }
-        } else {
-            ads.style.display = 'block';
-            console.log("no ads setting")
-        }
-
-
-        image.addEventListener('mouseover', function () {
-            bubble.style.display = 'block';
-        });
-
-        image.addEventListener('mouseout', function () {
-            bubble.style.display = 'none';
-        });
-
-        image.addEventListener('click', function () {
-            localStorage.setItem('show_ads', `false,${Date.now()}`);
-
-            ads.style.display = 'none';
-            
-            // 点击图片时显示提示文字
-            message.style.display = 'block';
-
-            // 设置2秒后隐藏提示文字
-            setTimeout(function () {
-                message.style.display = 'none';
-            }, 1500);  // 1500ms
-        });
-    });
-
-</script-->
-
 </html>

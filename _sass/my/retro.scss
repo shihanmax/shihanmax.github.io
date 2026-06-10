@@ -1,0 +1,669 @@
+/* ==========================================================================
+   "Antique Web" theme
+   早期高级 web 风 / 世纪初学者个人主页美学
+   牛皮纸底 · 衬线排版 · 细线分隔 · 窄栏 · ASCII 骨架点缀
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------------
+   1. Design tokens
+   ---------------------------------------------------------------------------- */
+
+// 字体
+$rw-serif: Georgia, "Times New Roman", "Songti SC", "Source Han Serif SC",
+           "Noto Serif CJK SC", "SimSun", serif;
+$rw-mono:  "Inconsolata", "Courier New", Courier, Menlo, Consolas, monospace;
+$rw-sans:  Verdana, Geneva, "Helvetica Neue", Arial, "PingFang SC",
+           "Microsoft YaHei", sans-serif;
+
+// 颜色：牛皮纸 + 墨 + 经典链接
+$rw-paper:        #f4eede;   // 页面背景（温暖牛皮纸）
+$rw-card:         #fbf7ec;   // 内容纸张（略白）
+$rw-ink:          #2b2722;   // 正文墨色
+$rw-ink-soft:     #6a6253;   // 次要文字
+$rw-ink-faint:    #938a78;   // 更淡（meta / 装饰）
+$rw-rule:         #d8cdb4;   // 细线（米调）
+$rw-rule-dark:    #b3a888;   // 深细线
+$rw-link:         #1a4f8b;   // 经典深蓝链接
+$rw-link-visited: #6d2e6d;   // 访问过：暗紫
+$rw-accent:       #8a2422;   // 暗红强调（标题装饰 / 印章感）
+$rw-accent-2:     #3d6b3a;   // 墨绿（次强调）
+$rw-highlight:    #fff3b0;   // 荧光笔黄（::selection）
+
+// 尺度
+$rw-measure: 42rem;          // 正文最佳行宽 ≈ 672px
+$rw-page:    46rem;          // 页面容器宽
+
+/* ----------------------------------------------------------------------------
+   2. 基底
+   ---------------------------------------------------------------------------- */
+
+html {
+    background: $rw-paper;
+    /* 极淡的横向纸纹（细密扫描线，几乎不可见，仅增加质感） */
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.012) 0,
+        rgba(0,0,0,0.012) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+}
+
+body,
+body.light-theme,
+body.dark-theme {
+    background: transparent !important;
+    color: $rw-ink !important;
+    font-family: $rw-serif !important;
+    font-size: 18px;
+    font-weight: 400 !important;
+    line-height: 1.7;
+    padding-top: 0 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection      { background: $rw-highlight; color: $rw-ink; }
+::-moz-selection { background: $rw-highlight; color: $rw-ink; }
+
+/* 容器 = 一页纸 */
+.u-container {
+    max-width: $rw-page !important;
+    width: auto !important;
+    margin: 0 auto !important;
+    padding: 0 28px 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+.u-container::after { content: none !important; }   // 清掉 system7 grow box（若残留）
+
+/* ----------------------------------------------------------------------------
+   3. 站点页眉（header.html）
+   ---------------------------------------------------------------------------- */
+
+.c-page__header,
+.rw-head {
+    margin: 0 0 3rem !important;
+    padding: 2.4rem 0 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    text-align: center;
+}
+
+/* 顶部 ASCII 装饰线 */
+.rw-rule-ascii {
+    font-family: $rw-mono;
+    font-size: 14px;
+    line-height: 1;
+    color: $rw-ink-faint;
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 1.4rem 0;
+    user-select: none;
+}
+
+.rw-sitetitle {
+    font-family: $rw-serif !important;
+    font-size: 2.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+    color: $rw-ink !important;
+
+    a, a:visited {
+        color: $rw-ink !important;
+        text-decoration: none !important;
+        background: none !important;
+    }
+    a:hover {
+        color: $rw-accent !important;
+        background: none !important;
+        text-decoration: none !important;
+    }
+}
+
+.rw-tagline {
+    font-family: $rw-serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: $rw-ink-soft;
+    margin: 0.6rem 0 0 !important;
+}
+
+/* 导航：经典方括号 [ Home ] · [ Tags ] */
+.rw-nav {
+    font-family: $rw-mono;
+    font-size: 0.95rem;
+    margin: 1.4rem 0 0 !important;
+    color: $rw-ink-faint;
+
+    a {
+        color: $rw-link;
+        text-decoration: none;
+        padding: 0 0.15em;
+        white-space: nowrap;
+
+        &::before { content: "[ "; color: $rw-ink-faint; }
+        &::after  { content: " ]"; color: $rw-ink-faint; }
+
+        &:hover {
+            background: $rw-link;
+            color: $rw-paper !important;
+        }
+        &:hover::before, &:hover::after { color: $rw-paper; }
+    }
+
+    .u-separate { display: none; }
+}
+
+/* 隐藏旧明暗切换 */
+.theme-switch { display: none !important; }
+
+/* ----------------------------------------------------------------------------
+   4. 通用排版（正文区）
+   ---------------------------------------------------------------------------- */
+
+.c-article { margin-bottom: 0 !important; }
+
+.c-article__header {
+    margin: 0 0 1.8rem !important;
+    padding: 0 0 1rem !important;
+    border: 0 !important;
+    border-bottom: 1px solid $rw-rule !important;
+    text-align: left;
+    display: block !important;
+}
+
+.c-article__title {
+    font-family: $rw-serif !important;
+    font-size: 2.1rem !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0 !important;
+    color: $rw-ink !important;
+    margin: 0 0 0.4rem !important;
+}
+
+.c-article__time {
+    font-family: $rw-mono !important;
+    font-size: 0.85rem !important;
+    color: $rw-ink-faint !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.c-article__main {
+    font-family: $rw-serif !important;
+    font-size: 1rem !important;
+    line-height: 1.78 !important;
+    color: $rw-ink !important;
+    max-width: $rw-measure;
+    margin: 0 auto !important;
+
+    > * { margin-bottom: 1.5rem; }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: $rw-serif !important;
+        font-weight: 700 !important;
+        color: $rw-ink !important;
+        line-height: 1.3 !important;
+        margin-top: 2.2rem !important;
+        letter-spacing: 0 !important;
+    }
+    h2 {
+        font-size: 1.5rem !important;
+        padding-bottom: 0.3rem;
+        border-bottom: 1px solid $rw-rule;
+    }
+    h2::before {
+        content: "§ ";
+        color: $rw-accent;
+        font-weight: 400;
+    }
+    h3 { font-size: 1.25rem !important; }
+    h4 { font-size: 1.08rem !important; }
+
+    p { margin-bottom: 1.5rem; }
+
+    strong { font-weight: 700 !important; color: $rw-ink !important; }
+    em { font-style: italic; }
+
+    blockquote {
+        margin: 1.8rem 0 !important;
+        padding: 0.2rem 0 0.2rem 1.4rem !important;
+        border-left: 3px double $rw-rule-dark !important;
+        color: $rw-ink-soft !important;
+        font-style: italic !important;
+        font-size: 1rem !important;
+    }
+
+    ul, ol { margin-left: 1.6rem; }
+    li { margin-bottom: 0.4rem; }
+
+    /* 复古列表符号 */
+    ul { list-style: none; padding-left: 1.4rem; }
+    ul > li::before {
+        content: "\203A";          // ›
+        color: $rw-accent;
+        display: inline-block;
+        width: 1.1em;
+        margin-left: -1.4em;
+        text-align: center;
+        font-family: $rw-mono;
+    }
+
+    img {
+        display: block;
+        margin: 1.5rem auto;
+        max-width: 100%;
+        border: 1px solid $rw-rule-dark;
+        padding: 4px;
+        background: $rw-card;
+        box-shadow: 0 1px 0 $rw-rule-dark;
+    }
+
+    a, a:visited { word-break: break-word; }
+}
+
+/* ----------------------------------------------------------------------------
+   5. 首页归档
+   ---------------------------------------------------------------------------- */
+
+.c-archives {
+    margin: 0 auto 3rem !important;
+    padding: 0 !important;
+    max-width: $rw-measure;
+    font-family: $rw-serif;
+}
+
+.c-archives__year {
+    font-family: $rw-mono !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: $rw-accent !important;
+    background: transparent !important;
+    border: 0 !important;
+    margin: 2.4rem 0 0.8rem !important;
+    padding: 0 !important;
+    display: block;
+    letter-spacing: 0.05em;
+
+    &::before { content: "\002A\0020"; color: $rw-ink-faint; } // "* "
+    &::after  { content: " " ; }
+}
+/* 年份后接一条 ASCII 虚线（用边框模拟） */
+.c-archives__year + .c-archives__list { margin-top: 0.4rem !important; }
+
+.c-archives__list { margin: 0 !important; padding: 0 !important; list-style: none; }
+
+.c-archives__item {
+    border: 0 !important;
+    border-bottom: 1px dotted $rw-rule-dark !important;
+    padding: 0.7rem 0 !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+
+    &::before {
+        content: "\2014";          // — em dash 作为条目标记
+        color: $rw-ink-faint;
+        font-family: $rw-mono;
+        margin-right: 0.2rem;
+        flex-shrink: 0;
+    }
+
+    h3 {
+        flex: 1;
+        margin: 0 !important;
+        font-family: $rw-serif !important;
+        font-size: 1.08rem !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+
+        a {
+            color: $rw-link !important;
+            text-decoration: none !important;
+            border-bottom: 1px solid transparent;
+            &:hover {
+                color: $rw-accent !important;
+                background: none !important;
+                border-bottom-color: $rw-accent;
+            }
+        }
+    }
+
+    p {
+        margin: 0 !important;
+        font-family: $rw-mono !important;
+        font-size: 0.8rem !important;
+        color: $rw-ink-faint !important;
+        white-space: nowrap;
+        letter-spacing: 0.03em;
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   6. 标签
+   ---------------------------------------------------------------------------- */
+
+.c-article__footer {
+    margin-top: 2.4rem !important;
+    padding-top: 1.2rem !important;
+    border-top: 1px solid $rw-rule;
+    max-width: $rw-measure;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.c-tag {
+    font-family: $rw-mono !important;
+    color: $rw-ink-soft !important;
+    margin-right: 0.4rem;
+    white-space: nowrap;
+
+    &::before { content: "#"; color: $rw-accent; }
+
+    a {
+        color: $rw-link !important;
+        text-decoration: none !important;
+        &:hover { color: $rw-accent !important; background: none !important; text-decoration: underline; }
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   7. 链接（全局）
+   ---------------------------------------------------------------------------- */
+
+a, a:link {
+    color: $rw-link;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+a:visited { color: $rw-link-visited; }
+a:hover {
+    color: $rw-accent;
+    background: none;
+}
+
+/* ----------------------------------------------------------------------------
+   8. 代码
+   ---------------------------------------------------------------------------- */
+
+pre, code {
+    font-family: $rw-mono !important;
+    font-size: 0.92rem !important;
+    background: $rw-card !important;
+    color: $rw-ink !important;
+    border-radius: 0 !important;
+}
+
+code {
+    border: 1px solid $rw-rule !important;
+    padding: 0.05em 0.35em !important;
+}
+
+pre {
+    border: 1px solid $rw-rule-dark !important;
+    padding: 1rem 1.1rem !important;
+    line-height: 1.55 !important;
+    overflow-x: auto;
+    box-shadow: 3px 3px 0 $rw-rule;
+
+    > code { border: 0 !important; padding: 0 !important; background: transparent !important; }
+}
+
+/* ----------------------------------------------------------------------------
+   9. 表格
+   ---------------------------------------------------------------------------- */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5rem 0;
+    font-family: $rw-serif;
+    font-size: 0.95rem;
+
+    th, td {
+        border: 1px solid $rw-rule-dark !important;
+        padding: 0.5rem 0.8rem !important;
+        text-align: left;
+    }
+    th {
+        background: $rw-rule !important;
+        color: $rw-ink !important;
+        font-weight: 700 !important;
+        font-family: $rw-mono !important;
+        font-size: 0.85rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
+}
+
+/* ----------------------------------------------------------------------------
+   10. 水平分隔（hr -> ASCII 风）
+   ---------------------------------------------------------------------------- */
+
+hr {
+    border: 0;
+    height: auto;
+    text-align: center;
+    margin: 2.4rem auto;
+    color: $rw-ink-faint;
+    overflow: hidden;
+}
+hr::before {
+    content: "\00B7 \00B7 \00B7 \00B7 \00B7 \00B7 \00B7";  // · · · · · · ·
+    font-family: $rw-mono;
+    letter-spacing: 0.6em;
+    font-size: 1rem;
+}
+
+/* ----------------------------------------------------------------------------
+   11. 文章 prev/next（沿用 .s7-pn 结构，换皮）
+   ---------------------------------------------------------------------------- */
+
+.s7-pn {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 2.4rem auto 0 !important;
+    padding-top: 1.4rem;
+    border-top: 1px solid $rw-rule;
+    max-width: $rw-measure;
+    font-family: $rw-mono;
+
+    .s7-pn__slot { flex: 1 1 0; min-width: 0; }
+    .s7-pn__slot--next { text-align: right; }
+
+    a {
+        display: block;
+        color: $rw-link !important;
+        text-decoration: none !important;
+
+        .s7-pn__label {
+            display: block;
+            font-size: 0.75rem;
+            color: $rw-ink-faint;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.2rem;
+        }
+        .s7-pn__title {
+            font-family: $rw-serif;
+            font-size: 1rem;
+            line-height: 1.35;
+        }
+        &:hover { color: $rw-accent !important; background: none !important; }
+        &:hover .s7-pn__title { text-decoration: underline; }
+    }
+
+    .s7-pn__placeholder {
+        color: $rw-ink-faint;
+        font-size: 0.8rem;
+        align-self: center;
+        opacity: 0.6;
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   12. 翻页器
+   ---------------------------------------------------------------------------- */
+
+.s7-pagination__wrap { text-align: center; padding: 2rem 0; }
+
+.s7-pagination, .pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: $rw-mono;
+    font-size: 0.9rem;
+
+    .s7-pagination__title {
+        color: $rw-ink-soft;
+        margin-right: 0.8rem;
+        padding-right: 0.8rem;
+        border-right: 1px solid $rw-rule-dark;
+    }
+    a, span.page-number {
+        color: $rw-link !important;
+        text-decoration: none !important;
+        padding: 0.1em 0.5em;
+        &:hover { color: $rw-accent !important; background: none !important; text-decoration: underline; }
+    }
+    span.disabled { color: $rw-ink-faint; padding: 0.1em 0.5em; }
+}
+
+/* ----------------------------------------------------------------------------
+   13. 页脚（footer.html）
+   ---------------------------------------------------------------------------- */
+
+.c-page__footer {
+    margin: 4rem auto 3rem !important;
+    padding: 1.6rem 0 0 !important;
+    border-top: 2px solid $rw-rule-dark;
+    display: block !important;
+    text-align: center;
+    font-family: $rw-mono;
+    color: $rw-ink-soft;
+    max-width: $rw-page;
+
+    hr { display: none; }
+
+    .rw-fortune {
+        font-family: $rw-serif !important;
+        font-style: italic;
+        font-size: 1.02rem !important;
+        color: $rw-ink-soft !important;
+        max-width: $rw-measure;
+        margin: 0 auto 1.2rem !important;
+        line-height: 1.6;
+    }
+    .rw-fortune::before { content: "\201C"; }   // 左引号
+    .rw-fortune::after  { content: "\201D"; }   // 右引号
+
+    p {
+        font-size: 0.82rem !important;
+        color: $rw-ink-soft !important;
+        margin: 0.4rem 0 !important;
+        line-height: 1.5 !important;
+        letter-spacing: 0.02em;
+    }
+
+    a { color: $rw-link !important; }
+    a:hover { color: $rw-accent !important; }
+}
+
+/* 复古徽章条 */
+.rw-badges {
+    margin: 1rem 0 0.4rem !important;
+    font-family: $rw-mono;
+    font-size: 0.72rem !important;
+    color: $rw-ink-faint !important;
+    letter-spacing: 0.02em;
+
+    .rw-badge {
+        display: inline-block;
+        border: 1px solid $rw-rule-dark;
+        padding: 0.15em 0.5em;
+        margin: 0.2em 0.25em;
+        background: $rw-card;
+        color: $rw-ink-soft;
+        white-space: nowrap;
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   14. 404（ASCII art）
+   ---------------------------------------------------------------------------- */
+
+.rw-404 {
+    text-align: center;
+    padding: 2rem 0 4rem;
+    max-width: $rw-measure;
+    margin: 0 auto;
+
+    pre {
+        display: inline-block;
+        text-align: left;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        color: $rw-accent !important;
+        font-size: 0.8rem !important;
+        line-height: 1.1 !important;
+        margin: 0 auto 1.6rem;
+    }
+    p { font-family: $rw-serif; font-size: 1.05rem; color: $rw-ink; }
+    .rw-404__hint { font-family: $rw-mono; font-size: 0.85rem; color: $rw-ink-faint; }
+}
+
+/* ----------------------------------------------------------------------------
+   15. 语法高亮 -> 牛皮纸单色调（覆盖 rouge_monokai）
+   ---------------------------------------------------------------------------- */
+
+.highlight, .highlighter-rouge, pre.highlight {
+    background: $rw-card !important;
+    color: $rw-ink !important;
+}
+.highlight pre, .highlighter-rouge pre { background: $rw-card !important; color: $rw-ink !important; }
+.highlight * { background: transparent !important; color: $rw-ink !important; }
+.highlight .lineno {
+    color: $rw-ink-faint !important;
+    border-right: 1px solid $rw-rule;
+    margin-right: 0.6em;
+    padding-right: 0.6em;
+    user-select: none;
+}
+.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp,
+.highlight .kr, .highlight .kt, .highlight .nf, .highlight .nc, .highlight .nb {
+    font-weight: 700 !important;
+}
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs {
+    font-style: italic !important; color: $rw-ink-faint !important;
+}
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .se, .highlight .sb {
+    color: $rw-accent-2 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   16. 响应式
+   ---------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    body { font-size: 17px; }
+    .u-container { padding-left: 18px !important; padding-right: 18px !important; }
+    .rw-sitetitle { font-size: 2.1rem !important; }
+    .rw-rule-ascii { font-size: 11px; }
+    .c-archives__item { gap: 0.2rem; }
+    .c-archives__item p { white-space: normal; }
+    .s7-pn { flex-direction: column; }
+    .s7-pn__slot--next { text-align: left; }
+}
