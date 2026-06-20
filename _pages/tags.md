@@ -5,19 +5,15 @@ permalink: /tags/
 ---
 
 <div>
-{% for tag in site.tags%}
-<!-- <h3 class="listing-seperator" id="{{ tag[0] }}">{{ tag[0] }}</h3> -->
-    <a href="#{{ tag[0] }}"> {{ tag[0] }} ({{tag[1] | size}})</a> &nbsp; 
+{% for tag in site.tags %}
+    <a href="#{{ tag[0] }}"> {{ tag[0] }} ({{ tag[1] | size }})</a> &nbsp;
 {% endfor %}
 </div>
 
 <hr>
 
-<!-- <ul class="listing"> -->
 {% for tag in site.tags %}
-<!-- <h3 class="listing-seperator" id="{{ tag[0] }}">{{ tag[0] }}</h3> -->
-<h3 id="{{ tag[0] }}">{{ tag[0] }} <a href="#">⤴</a> </h3> 
- <!-- ⭡ -->
+<h3 id="{{ tag[0] }}">{{ tag[0] }} <a href="#">⤴</a></h3>
 {% for post in tag[1] %}
 <ul style="list-style-type:circle">
     <li class="listing-item">
@@ -28,4 +24,3 @@ permalink: /tags/
 {% endfor %}
 <br/>
 {% endfor %}
-<!-- </ul> -->
