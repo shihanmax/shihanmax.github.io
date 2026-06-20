@@ -1,13 +1,12 @@
 <footer class="c-page__footer">
-	<p class="rw-fortune">{% include fortune.html %}</p>
 
-	<div class="rw-badges">
-		<span class="rw-badge">Best viewed with any browser</span>
-		<span class="rw-badge">Made by hand</span>
-		<span class="rw-badge">Powered by Jekyll</span>
-		<span class="rw-badge">Est. {{ site.author }}</span>
-	</div>
+    <span class="ink-seal" title="世瀚" aria-label="世瀚">世瀚</span>
 
-	<p>&copy; {{ site.author }} 2018&ndash;{{ 'now' | date: '%Y' }} &middot; All rights reserved</p>
-	<p><a href="https://beian.miit.gov.cn/">沪ICP备2024055727号</a></p>
+    <p class="ink-parting">{% include fortune.html %}</p>
+
+    <div class="ink-colophon">
+        <p>{{ site.author }}<span class="sep">·</span>2018&ndash;{{ 'now' | date: '%Y' }}<span class="sep">·</span>Set in Newsreader &amp; Monaco</p>
+        <p><a href="https://beian.miit.gov.cn/">沪ICP备2024055727号</a></p>
+    </div>
+
 </footer>
