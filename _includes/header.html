@@ -1,21 +1,42 @@
-<header class="c-page__header rw-head">
+{% if page.title == 'Home' %}
+<header class="ink-masthead ink-masthead--home">
 
-    <div class="rw-rule-ascii">&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;</div>
+    <div class="ink-enso" aria-hidden="true">
+        <svg viewBox="0 0 120 120" role="presentation">
+            <!-- enso 円相: one breath, drawn with an open gap and uneven weight -->
+            <path class="enso-stroke"
+                  d="M100.5 42.8 C 108.7 62.2, 102.1 84.7, 84.6 96.5
+                     C 67.1 108.3, 43.8 106.0, 28.9 91.1
+                     C 14.0 76.2, 11.7 52.9, 23.5 35.4
+                     C 35.3 17.9, 57.8 11.3, 77.2 19.5"
+                  stroke-width="6"/>
+        </svg>
+    </div>
 
-    <h1 class="rw-sitetitle">
-        <a href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a>
+    <h1 class="ink-wordmark">
+        <a href="{{ "/" | prepend: site.baseurl }}">{{ site.title | remove: "'s blog" }}</a>
     </h1>
 
-    <p class="rw-tagline">{{ site.description }}</p>
+    <p class="ink-koan">热爱生活 · 保持理智 · 相信未来</p>
 
-    <nav class="rw-nav">
-        <a href="{{ "/" | prepend: site.baseurl }}">Home</a>
+    <nav class="ink-nav" aria-label="Primary">
         <a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a>
         <a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a>
         <a href="{{ "/about/" | prepend: site.baseurl }}">About</a>
         <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a>
     </nav>
 
-    <div class="rw-rule-ascii">&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;&deg;&middot;</div>
-
+    <hr class="ink-rule">
 </header>
+{% else %}
+<header class="ink-masthead ink-masthead--page">
+    <h1 class="ink-wordmark">
+        <a href="{{ "/" | prepend: site.baseurl }}">{{ site.title | remove: "'s blog" }}</a>
+    </h1>
+    <nav class="ink-nav" aria-label="Primary">
+        <a href="{{ "/timeline/" | prepend: site.baseurl }}">Timeline</a>
+        <a href="{{ "/tags/" | prepend: site.baseurl }}">Tags</a>
+        <a href="{{ "/about/" | prepend: site.baseurl }}">About</a>
+    </nav>
+</header>
+{% endif %}
