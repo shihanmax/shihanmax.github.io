@@ -13,7 +13,7 @@ $stone:   #565249;   // secondary ink
 $mist:    #8c8779;   // faint ink — meta / captions
 $line:    #e6e3db;   // hairline
 $wash:    #f4f2ec;   // faint stone wash (code, quiet fills)
-$cinnabar:#b83a2e;   // 朱 — seal red ONLY (and focus ring)
+$cinnabar:#b83a2e;   // reserved for the keyboard focus ring only
 
 $serif: "Newsreader", "Source Han Serif SC", "Noto Serif CJK SC",
         "Songti SC", "SimSun", Georgia, serif;
@@ -49,8 +49,8 @@ body.dark-theme {
     font-feature-settings: "kern" 1, "liga" 1;
 }
 
-::selection      { background: rgba(184, 58, 46, 0.14); color: $ink; }
-::-moz-selection { background: rgba(184, 58, 46, 0.14); color: $ink; }
+::selection      { background: rgba(27, 26, 23, 0.12); color: $ink; }
+::-moz-selection { background: rgba(27, 26, 23, 0.12); color: $ink; }
 
 :focus-visible {
     outline: 2px solid $cinnabar;
@@ -485,29 +485,6 @@ pre {
     hr { display: none; }
 }
 
-/* carved vermilion name seal 世瀚 */
-.ink-seal {
-    display: inline-grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    margin: 0 auto 2.2rem;
-    background: $cinnabar;
-    color: $paper;
-    border-radius: 5px;
-    font-family: $serif;
-    font-size: 1.18rem;
-    line-height: 1;
-    writing-mode: vertical-rl;
-    letter-spacing: 0.05em;
-    text-indent: 0;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12),
-                inset 0 0 6px rgba(0,0,0,0.18);
-    user-select: none;
-    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-}
-.ink-seal:hover { transform: rotate(-3deg); }
-
 .ink-parting {
     font-family: $serif !important;
     font-style: italic;
@@ -581,14 +558,95 @@ pre {
 }
 
 @media (max-width: 640px) {
-    body { font-size: 1.125rem; }
-    .u-container { padding: 0 1.3rem !important; }
-    .ink-masthead--home { padding-top: 3.5rem !important; margin-bottom: 3.2rem !important; }
-    .ink-enso { width: 104px; height: 104px; }
-    .c-article__title { font-size: 2rem !important; }
-    .ink-masthead--page { gap: 0.6rem 1rem; }
-    .ink-nav a { margin: 0 0.55rem; }
-    .s7-pn { flex-direction: column; gap: 1rem; }
+    /* — body & container — */
+    body { font-size: 1rem !important; line-height: 1.7 !important; }     /* 16px */
+    .u-container { padding: 0 1.2rem !important; }
+
+    /* — Home masthead — */
+    .ink-masthead--home { padding-top: 3rem !important; margin-bottom: 2.6rem !important; }
+    .ink-enso { width: 88px; height: 88px; margin-bottom: 1.6rem; }
+    .ink-wordmark { font-size: 1.4rem !important; }
+    .ink-koan { font-size: 0.95rem; margin-top: 0.7rem !important; }
+    .ink-nav { margin-top: 1.6rem !important; font-size: 0.7rem; letter-spacing: 0.14em; }
+    .ink-nav a { margin: 0 0.5rem; }
+    .ink-rule { margin-top: 2rem; }
+
+    /* — Inner-page masthead — */
+    .ink-masthead--page {
+        padding: 1.6rem 0 0.9rem !important;
+        margin-bottom: 2rem !important;
+        gap: 0.3rem 0.8rem;
+    }
+    .ink-masthead--page .ink-wordmark { font-size: 1rem !important; }
+
+    /* — Article copy: tighten everything — */
+    .c-article__main {
+        font-size: 1rem !important;          /* 16px */
+        line-height: 1.7 !important;
+    }
+    .c-article__main > * { margin-bottom: 1.1rem !important; }
+    .c-article__main h2 {
+        font-size: 1.28rem !important;
+        margin-top: 1.9rem !important;
+        margin-bottom: 0.3rem !important;
+        padding-top: 0.3rem;
+    }
+    .c-article__main h3 { font-size: 1.12rem !important; margin-top: 1.5rem !important; }
+    .c-article__main h4 { font-size: 1rem !important; }
+    .c-article__main blockquote { font-size: 1rem !important; padding-left: 1.1rem !important; margin: 1.3rem 0 !important; }
+    .c-article__main ul, .c-article__main ol { padding-left: 1.2rem; }
+    .c-article__main li { margin-bottom: 0.3rem; }
+
+    /* — Article header — */
+    .c-article__header { margin-bottom: 1.8rem !important; }
+    .c-article__title { font-size: 1.65rem !important; margin-bottom: 0.6rem !important; }
+    .c-article__time { font-size: 0.7rem !important; letter-spacing: 0.14em; }
+
+    /* — Archive ledger (home + timeline) — */
+    .c-archives__year {
+        font-size: 0.7rem !important;
+        letter-spacing: 0.18em;
+        margin: 2.2rem 0 0.2rem !important;
+    }
+    .c-archives__item {
+        padding: 0.7rem 0 !important;
+        gap: 0.5rem 0.9rem;
+    }
+    .c-archives__item h3 { font-size: 1rem !important; line-height: 1.4 !important; }
+    .c-archives__item p { font-size: 0.72rem !important; }
+
+    /* — Tags — */
+    .c-article__footer { margin-top: 2rem !important; padding-top: 1rem !important; }
+    .c-tag { font-size: 0.72rem !important; margin-right: 0.6rem; }
+
+    /* — Prev / next — */
+    .s7-pn { flex-direction: column; gap: 0.9rem; margin-top: 1.8rem !important; padding-top: 1.1rem; }
     .s7-pn__slot--next { text-align: left; }
-    .c-archives__item { gap: 0.8rem; }
+    .s7-pn a .s7-pn__title { font-size: 0.95rem; }
+
+    /* — Footer — */
+    .c-page__footer { margin: 4rem auto 2.6rem !important; }
+    .ink-parting { font-size: 0.95rem !important; }
+    .ink-colophon { font-size: 0.68rem; }
+    .ink-colophon p { font-size: 0.68rem !important; }
+    .ink-colophon .sep { margin: 0 0.35rem; }
+
+    /* — Code: prevent overflow tax on narrow screens — */
+    pre { padding: 0.9rem 1rem !important; font-size: 0.82rem !important; }
+    code { font-size: 0.85rem !important; }
+
+    /* — 404 — */
+    .ink-empty { margin: 2.4rem auto 4rem; }
+    .ink-empty .ink-empty__circle { width: 64px; height: 64px; margin-bottom: 1.8rem; }
+    .ink-empty h1 { font-size: 1.4rem; }
+    .ink-empty p { font-size: 0.95rem; }
+}
+
+/* Very narrow phones (≤ 380px): one more notch */
+@media (max-width: 380px) {
+    body { font-size: 0.95rem !important; }
+    .c-article__main { font-size: 0.95rem !important; }
+    .ink-wordmark { font-size: 1.25rem !important; }
+    .c-article__title { font-size: 1.5rem !important; }
+    .ink-nav a { margin: 0 0.35rem; }
 }
