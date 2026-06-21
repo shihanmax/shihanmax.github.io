@@ -429,17 +429,79 @@ code {
     border-radius: 3px !important;
     padding: 0.1em 0.4em !important;
 }
+
+/* Single outer code block ——
+   Only the top-level pre carries padding/border so nested rouge
+   structures (figure > pre > code > pre, or table-based line-numbers)
+   never compound spacing. */
 pre {
     background: $wash !important;
     color: $ink !important;
     border: 0 !important;
     border-left: 2px solid $line !important;
     border-radius: 0 !important;
-    padding: 1.1rem 1.3rem !important;
-    line-height: 1.6 !important;
-    overflow-x: auto;
+    padding: 1rem 1.2rem !important;
+    line-height: 1.55 !important;
+    overflow-x: auto !important;
     box-shadow: none !important;
-    > code { background: transparent !important; padding: 0 !important; border: 0 !important; }
+    margin: 1.4rem 0 !important;
+}
+pre > code,
+pre code,
+pre pre,
+.highlight pre,
+.highlight code,
+.highlighter-rouge pre,
+.highlighter-rouge code,
+figure.highlight pre,
+figure.highlight code {
+    background: transparent !important;
+    border: 0 !important;
+    border-left: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+/* Defensive: if any legacy post still emits the rouge line-numbers
+   <table>, render it tightly instead of with table-cell spacing. */
+.highlight table,
+.highlighter-rouge table,
+figure.highlight table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background: transparent;
+}
+.highlight table td,
+.highlighter-rouge table td,
+figure.highlight table td {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    vertical-align: top;
+}
+.highlight td.gutter,
+.highlight td.gl,
+.highlighter-rouge td.gutter,
+.highlighter-rouge td.gl {
+    width: 1%;                           /* shrink to content */
+    padding-right: 0.9em !important;
+    border-right: 1px solid $line !important;
+    margin-right: 0.9em !important;
+    color: $mist !important;
+    user-select: none;
+    text-align: right;
+}
+.highlight td.code,
+.highlighter-rouge td.code {
+    padding-left: 0.9em !important;
+    width: auto;
+}
+.highlight .lineno {
+    color: $mist !important;
+    user-select: none;
 }
 
 /* --------------------------------------------------------------------------
