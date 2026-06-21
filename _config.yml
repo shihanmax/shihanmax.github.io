@@ -20,9 +20,7 @@ kramdown:
     span:
       line_numbers: false
     block:
-      line_numbers: true
-      start_line: 1
-      theme: solarized
+      line_numbers: false
 
 future: true
 permalink: /:year/:month/:title
