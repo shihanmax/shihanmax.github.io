@@ -1,24 +1,30 @@
 ---
-layout: post
+layout: page
 title: Timeline
 permalink: /timeline/
 ---
 
-<ul>
-  {% for post in site.posts %}
+<section class="c-archives">
+{% for post in site.posts %}
+    {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+    {% capture next_year %}{{ post.previous.date | date: "%Y" }}{% endcapture %}
 
-    {% unless post.next %}
-      <h2>{{ post.date | date: '%Y' }}</h2>
+    {% if forloop.first %}
+        <h2 class="c-archives__year">{{ this_year }}</h2>
+        <ul class="c-archives__list">
+    {% endif %}
+        <li class="c-archives__item">
+            <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+            <p>{{ post.date | date: "%m.%d" }}</p>
+        </li>
+    {% if forloop.last %}
+        </ul>
     {% else %}
-      {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
-      {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
-      {% if year != nyear %}
-      
-      <h2>{{ post.date | date: '%Y' }}</h2>
-      {% endif %}
-    {% endunless %}
-
-    &nbsp;&nbsp;{{ post.date | date:"%Y-%m-%d：" }} <a href="{{ post.url }}">{{ post.title }}</a>
-    <br/>
-  {% endfor %}
-</ul>
+        {% if this_year != next_year %}
+        </ul>
+        <h2 class="c-archives__year">{{ next_year }}</h2>
+        <ul class="c-archives__list">
+        {% endif %}
+    {% endif %}
+{% endfor %}
+</section>
