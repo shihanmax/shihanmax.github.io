@@ -4,32 +4,29 @@
 ---
 @charset "UTF-8";
 
-// Helpers
 @import
     'helpers/mixins',
     'helpers/variables',
-    'helpers/tables';  // table 样式
+    'helpers/tables';
 
-// Base
 @import
     'base/reset';
 
-// Utilities
 @import
     'utilities/layout',
     'utilities/separator';
 
-// Components
 @import
     'components/page',
     'components/article',
     'components/tag',
     'components/archives';
 
-// Vendor
 @import
     'vendor/highlight';
 
-// "Inkstone" theme — keep last so it overrides everything above
 @import
     'my/inkstone';
+
+@import
+    'my/wide';
