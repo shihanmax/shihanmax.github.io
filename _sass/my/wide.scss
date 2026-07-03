@@ -1,0 +1,17 @@
+/* Slightly wider reading column override. Keep after Inkstone. */
+.u-container {
+    max-width: 48rem !important;
+}
+
+.c-archives,
+.c-page__footer {
+    max-width: 48rem !important;
+}
+
+.c-article__header,
+.c-article__main,
+.c-article__footer,
+.s7-pn,
+.ink-parting {
+    max-width: 40rem !important;
+}
